@@ -30,28 +30,33 @@ def search(targetid, mission, search_func=lk.search_targetpixelfile):
     return sr
 
 
-def build_X(tpf, flux, t_model=None, background=False, cbvs=None, spline=True, spline_period=2):
+def build_X(tpf, flux, t_model=None, background=False, cbvs=None, spline=True, spline_period=2, sff=False):
     """Build a design matrix to use in the model"""
     r, c = np.nan_to_num(tpf.pos_corr1), np.nan_to_num(tpf.pos_corr2)
     r[np.abs(r) > 10] = 0
     c[np.abs(r) > 10] = 0
 
-    breaks = np.where((np.diff(tpf.time) > (0.0202 * 10)))[0] - 1
-    breaks = breaks[breaks > 0]
-
-    if r.sum() == 0:
-        ts0 = np.asarray([np.in1d(tpf.time, t) for t in np.array_split(tpf.time, breaks)])
-        ts1 = np.asarray([np.in1d(tpf.time, t) * (tpf.time - t.mean())/(t[-1] - t[0]) for t in np.array_split(tpf.time, breaks)])
-        centroids = np.vstack([ts0, ts1, ts1**2]).T
-
+    if sff:
+        r = lk.SFFCorrector(lk.LightCurve(tpf.time, flux))
+        _ = r.correct()
+        centroids = r.X['sff']
     else:
-        rs0 = np.asarray([np.in1d(tpf.time, t) for t in np.array_split(tpf.time, breaks)])
-        rs1 = np.asarray([np.in1d(tpf.time, t) * (r - r[np.in1d(tpf.time, t)].mean()) for t in np.array_split(tpf.time, breaks)])
-        cs1 = np.asarray([np.in1d(tpf.time, t) * (c - c[np.in1d(tpf.time, t)].mean()) for t in np.array_split(tpf.time, breaks)])
-        centroids = np.vstack([
-                               rs1, cs1, rs1*cs1,
-                               rs1**2, cs1**2, rs1**2*cs1, rs1*cs1**2, rs1**2*cs1**2,
-                               rs1**3*cs1**3, rs1**3*cs1**2, rs1**3*cs1, rs1**3, cs1**3, cs1**3*rs1, cs1**3*rs1**2]).T
+        breaks = np.where((np.diff(tpf.time) > (0.0202 * 10)))[0] - 1
+        breaks = breaks[breaks > 0]
+
+        if r.sum() == 0:
+            ts0 = np.asarray([np.in1d(tpf.time, t) for t in np.array_split(tpf.time, breaks)])
+            ts1 = np.asarray([np.in1d(tpf.time, t) * (tpf.time - t.mean())/(t[-1] - t[0]) for t in np.array_split(tpf.time, breaks)])
+            centroids = np.vstack([ts0, ts1, ts1**2]).T
+
+        else:
+            rs0 = np.asarray([np.in1d(tpf.time, t) for t in np.array_split(tpf.time, breaks)])
+            rs1 = np.asarray([np.in1d(tpf.time, t) * (r - r[np.in1d(tpf.time, t)].mean()) for t in np.array_split(tpf.time, breaks)])
+            cs1 = np.asarray([np.in1d(tpf.time, t) * (c - c[np.in1d(tpf.time, t)].mean()) for t in np.array_split(tpf.time, breaks)])
+            centroids = np.vstack([
+                                   rs1, cs1, rs1*cs1,
+                                   rs1**2, cs1**2, rs1**2*cs1, rs1*cs1**2, rs1**2*cs1**2,
+                                   rs1**3*cs1**3, rs1**3*cs1**2, rs1**3*cs1, rs1**3, cs1**3, cs1**3*rs1, cs1**3*rs1**2]).T
 
 
     A = np.copy(centroids)
@@ -181,7 +186,7 @@ def get_centroid_plot(targetid, period, t0, duration, mission='kepler', gaia=Fal
 #            window_length = [(window_length + 1) if ((window_length % 2) == 0) else window_length][0]
 
 
-            clc = build_lc(tpf, aper, background=background, cadence_mask=t_mask, spline_period=period * 4)
+            clc = build_lc(tpf, aper, background=background, cadence_mask=t_mask, spline_period=2)
             if target is None:
                 target = clc
             else:
@@ -253,8 +258,8 @@ def get_centroid_plot(targetid, period, t0, duration, mission='kepler', gaia=Fal
             scalebar = AnchoredSizeBar(ax.transData,
                                27*u.arcsec.to(u.deg), "27 arcsec", 'lower center',
                                pad=0.1,
-                               color='white',
-                               frameon=black,
+                               color='black',
+                               frameon=False,
                                size_vertical=27/100*u.arcsec.to(u.deg))
         else:
             scalebar = AnchoredSizeBar(ax.transData,
