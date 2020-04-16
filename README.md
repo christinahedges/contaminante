@@ -1,7 +1,5 @@
-<center>
-<header>contaminante</header>
-<it>kohn - tah - mee - nahn - teh</it>
-</center>
+#contaminante
+*kohn - tah - mee - nahn - teh*
 
 A package to help find the contaminant transiting source in NASA's *Kepler*, *K2* or *TESS* data. When hunting for transiting planets, sometimes signals come from neighboring contaminants. This package helps users identify where the transiting signal comes from in their data.
 
