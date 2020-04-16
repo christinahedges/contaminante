@@ -1,5 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from mpl_toolkits.axes_grid1.anchored_artists import AnchoredSizeBar
+
 import lightkurve as lk
 from astropy.stats import sigma_clip, sigma_clipped_stats
 import pandas as pd
@@ -9,6 +11,8 @@ import warnings
 
 from numpy.linalg import solve
 from scipy.sparse import csr_matrix, diags
+
+import astropy.units as u
 
 from .gaia import plot_gaia
 
@@ -169,36 +173,41 @@ def get_centroid_plot(targetid, period, t0, duration, mission='kepler', gaia=Fal
             if not (aper.any()):
                 aper = tpf.create_threshold_mask()
             lc = tpf.to_lightcurve(aperture_mask=aper)
-            bls = lc.normalize().flatten(21).to_periodogram('bls', period=[period, period])
-            t_model = bls.get_transit_model(period=period, transit_time=t0, duration=duration).flux
-            if t_model.sum() == 0:
-                continue
-            t_model -= np.nanmedian(t_model)
-            t_model /= bls.depth[0]
 
-
+            bls = lc.flatten(21).to_periodogram('bls', period=[period, period])
             t_mask = bls.get_transit_mask(period=period, transit_time=t0, duration=duration)
 #            window_length = int(len(lc.time)/((lc.time[-1] - lc.time[0])/(4*period)))
 #            window_length = np.min([window_length, len(lc.time)//3])
 #            window_length = [(window_length + 1) if ((window_length % 2) == 0) else window_length][0]
 
 
+            clc = build_lc(tpf, aper, background=background, cadence_mask=t_mask, spline_period=period * 4)
             if target is None:
-                target = build_lc(tpf, aper, background=background, cadence_mask=t_mask, spline_period=period * 4)#lc.flatten(window_length)
+                target = clc
             else:
-                target = target.append(build_lc(tpf, aper, background=background, cadence_mask=t_mask, spline_period=period * 4))#lc.flatten(window_length))
+                target = target.append(clc)#lc.flatten(window_length))
+            ra_target.append(np.average(tpf.get_coordinates()[0][:, aper].mean(axis=0), weights=np.nanmedian(tpf.flux, axis=0)[aper]**0.5))
+            dec_target.append(np.average(tpf.get_coordinates()[1][:, aper].mean(axis=0), weights=np.nanmedian(tpf.flux, axis=0)[aper]**0.5))
 
-            # if mission.lower() == 'kepler':
-            #     cbvs = lk.correctors.KeplerCBVCorrector(lc).cbv_array[:2].T
-            # else:
-            #     cbvs = None
+            if (mission.lower() == 'kepler') | (mission.lower() == 'k2'):
+                cbvs = lk.correctors.KeplerCBVCorrector(lc).cbv_array[:2].T
+            else:
+                cbvs = None
 
-            cbvs = None
+            t_model = bls.get_transit_model(period=period, transit_time=t0, duration=duration).flux
+            t_model -= np.nanmedian(t_model)
+            t_model /= bls.depth[0]
+            if t_model.sum() == 0:
+                continue
 
+#            cbvs = None
             model2, transit_pixels, transit_pixels_err = build_model(tpf, lc, cbvs=cbvs, t_model=t_model, background=background)
 
             contaminant_aper = (transit_pixels/transit_pixels_err) > 5
 
+            # If all the "transit" pixels are contained in the aperture, continue.
+            if np.in1d(np.where(contaminant_aper.ravel()), np.where(aper.ravel())).all():
+                continue
 
             coords = np.asarray(tpf.get_coordinates())[:, :, contaminant_aper].mean(axis=1)
             coords_ra.append(coords[0])
@@ -211,12 +220,9 @@ def get_centroid_plot(targetid, period, t0, duration, mission='kepler', gaia=Fal
                 else:
                     contaminator = contaminator.append(build_lc(tpf, contaminant_aper, background=background, cadence_mask=t_mask, spline_period=period * 4))#contaminated_lc.flatten(window_length))
 
-            ra_target.append(np.average(tpf.get_coordinates()[0][:, aper].mean(axis=0), weights=np.nanmedian(tpf.flux, axis=0)[aper]**0.5))
-            dec_target.append(np.average(tpf.get_coordinates()[1][:, aper].mean(axis=0), weights=np.nanmedian(tpf.flux, axis=0)[aper]**0.5))
-
         ra_target, dec_target = np.mean(ra_target), np.mean(dec_target)
 
-        if len(np.hstack(coords_ra)) != 0:
+        if len(coords_ra) != 0:
             ra = np.average(np.hstack(coords_ra), weights=np.hstack(coords_weights))
             dec = np.average(np.hstack(coords_dec), weights=np.hstack(coords_weights))
         else:
@@ -243,6 +249,22 @@ def get_centroid_plot(targetid, period, t0, duration, mission='kepler', gaia=Fal
         ax.legend(frameon=True)
         ax.set_xlim(*xlim)
         ax.set_ylim(*ylim)
+        if mission.lower() == 'tess':
+            scalebar = AnchoredSizeBar(ax.transData,
+                               27*u.arcsec.to(u.deg), "27 arcsec", 'lower center',
+                               pad=0.1,
+                               color='white',
+                               frameon=black,
+                               size_vertical=27/100*u.arcsec.to(u.deg))
+        else:
+            scalebar = AnchoredSizeBar(ax.transData,
+                               4*u.arcsec.to(u.deg), "4 arcsec", 'lower center',
+                               pad=0.1,
+                               color='black',
+                               frameon=False,
+                               size_vertical=4/100*u.arcsec.to(u.deg))
+
+        ax.add_artist(scalebar)
 #        ax.set_aspect('auto')
         ax.set_xlabel('RA [deg]')
         ax.set_ylabel('Dec [deg]')
@@ -253,4 +275,4 @@ def get_centroid_plot(targetid, period, t0, duration, mission='kepler', gaia=Fal
         target.fold(period, t0).bin(bin_points, method='median').errorbar(c='g', label="Target", ax=ax, marker='.')
         if contaminator is not None:
             contaminator.fold(period, t0).bin(bin_points, method='median').errorbar(ax=ax, c='r', marker='.', label="Source of Transit")
-        return fig
+        return fig, target
