@@ -44,7 +44,7 @@ def build_X(tpf, flux, t_model=None, background=False, cbvs=None, spline=True, s
         rs0 = np.asarray([np.in1d(tpf.time, t) for t in np.array_split(tpf.time, breaks)])
         rs1 = np.asarray([np.in1d(tpf.time, t) * (r - r[np.in1d(tpf.time, t)].mean()) for t in np.array_split(tpf.time, breaks)])
         cs1 = np.asarray([np.in1d(tpf.time, t) * (c - c[np.in1d(tpf.time, t)].mean()) for t in np.array_split(tpf.time, breaks)])
-        centroids = np.vstack([rs0,
+        centroids = np.vstack([
                                rs1, cs1, rs1*cs1,
                                rs1**2, cs1**2, rs1**2*cs1, rs1*cs1**2, rs1**2*cs1**2,
                                rs1**3*cs1**3, rs1**3*cs1**2, rs1**3*cs1, rs1**3, cs1**3, cs1**3*rs1, cs1**3*rs1**2]).T
@@ -150,11 +150,11 @@ def get_centroid_plot(targetid, period, t0, duration, mission='kepler', gaia=Fal
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", category=RuntimeWarning)
 
-        background = [True if mission.lower() == 'tess' else False][0]
-
+        background = False
         sr = search(targetid, mission)
         if (mission.lower() == 'tess') and (len(sr) == 0):
             tpfs = search(targetid, period, lk.search_tesscut).download_all(cutout_size=(10, 10))
+            background = True
         elif len(sr) == 0:
             raise ValueError('No target pixel files exist for {} from {}'.format(targetid, mission))
         else:
@@ -164,7 +164,7 @@ def get_centroid_plot(targetid, period, t0, duration, mission='kepler', gaia=Fal
         coords_weights, coords_ra, coords_dec, ra_target, dec_target = [], [], [], [], []
 
         for tpf in tqdm(tpfs, desc='Modeling TPFs'):
-            tpf = tpf[np.nansum(tpf.flux, axis=(1, 2)) != 0]
+            tpf = tpf[(np.nansum(tpf.flux, axis=(1, 2)) != 0) & (np.nansum(tpf.flux_err, axis=(1, 2)) != 0)]
             aper = tpf.pipeline_mask
             if not (aper.any()):
                 aper = tpf.create_threshold_mask()
@@ -227,15 +227,23 @@ def get_centroid_plot(targetid, period, t0, duration, mission='kepler', gaia=Fal
         ax = plt.subplot2grid((1, 4), (0, 0))
         ax.set_title('Target ID: {}'.format(tpfs[0].targetid))
 
+        xlim = [1e10, -1e10]
+        ylim = [1e10, -1e10]
         for idx in range(len(tpfs)):
-            ax.pcolormesh(*np.asarray(tpfs[idx].get_coordinates()).mean(axis=1), np.log10(np.median(tpfs[idx].flux, axis=0)), alpha=1/len(tpfs), cmap='Greys_r')
-
+            ax.pcolormesh(*np.asarray(np.median(tpfs[idx].get_coordinates(), axis=1)), np.log10(np.nanmedian(tpfs[idx].flux, axis=0)), alpha=1/len(tpfs), cmap='Greys_r')
+            xlim[0] = np.min([np.percentile(tpfs[0].get_coordinates()[0], 1), xlim[0]])
+            xlim[1] = np.max([np.percentile(tpfs[0].get_coordinates()[0], 99), xlim[1]])
+            ylim[0] = np.min([np.percentile(tpfs[0].get_coordinates()[1], 1), ylim[0]])
+            ylim[1] = np.max([np.percentile(tpfs[0].get_coordinates()[1], 99), ylim[1]])
+    #        import pdb;pdb.set_trace()
         if gaia:
             plot_gaia(tpfs, ax=ax)
         ax.scatter(ra_target, dec_target, c='g', marker='x', label='Target', s=100)
         ax.scatter(ra, dec, c='r', marker='x', label='Source Of Transit', s=100)
         ax.legend(frameon=True)
-        ax.set_aspect('equal')
+        ax.set_xlim(*xlim)
+        ax.set_ylim(*ylim)
+#        ax.set_aspect('auto')
         ax.set_xlabel('RA [deg]')
         ax.set_ylabel('Dec [deg]')
 
