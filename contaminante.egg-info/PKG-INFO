@@ -1,0 +1,21 @@
+Metadata-Version: 1.1
+Name: contaminante
+Version: 0.1.dev0
+Summary: Find the contaminant transiting source in Kepler, K2 or TESS data. 
+Home-page: UNKNOWN
+Author: Christina Hedges
+Author-email: christina.l.hedges@nasa.gov
+License: MIT
+Description: # Contaminante
+        
+        kohn - tah - mee - nahn - teh
+        
+        Find the contaminant transiting source in Kepler, K2 or TESS data.
+        
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Classifier: Intended Audience :: Science/Research
+Classifier: Topic :: Scientific/Engineering :: Astronomy
