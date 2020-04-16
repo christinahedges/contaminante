@@ -1,4 +1,4 @@
-"""Tools to query Gaia"""
+"""Tools to query Gaias"""
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd

@@ -145,7 +145,7 @@ def build_lc(tpf, aperture_mask, cbvs=None, errors=False, cadence_mask=None, bac
         return raw_lc.copy()/model
 
 
-def get_centroid_plot(targetid, period, t0, duration, mission='kepler'):
+def get_centroid_plot(targetid, period, t0, duration, mission='kepler', gaia=False):
     """ Plot where the centroids of the transiting target are in a TPF"""
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", category=RuntimeWarning)
@@ -170,11 +170,14 @@ def get_centroid_plot(targetid, period, t0, duration, mission='kepler'):
                 aper = tpf.create_threshold_mask()
             lc = tpf.to_lightcurve(aperture_mask=aper)
             bls = lc.normalize().flatten(21).to_periodogram('bls', period=[period, period])
-            t_model = bls.get_transit_model(period=period, transit_time=t0, duration=duration/24).flux
+            t_model = bls.get_transit_model(period=period, transit_time=t0, duration=duration).flux
+            if t_model.sum() == 0:
+                continue
             t_model -= np.nanmedian(t_model)
             t_model /= bls.depth[0]
 
-            t_mask = bls.get_transit_mask(period=period, transit_time=t0, duration=duration/24)
+
+            t_mask = bls.get_transit_mask(period=period, transit_time=t0, duration=duration)
 #            window_length = int(len(lc.time)/((lc.time[-1] - lc.time[0])/(4*period)))
 #            window_length = np.min([window_length, len(lc.time)//3])
 #            window_length = [(window_length + 1) if ((window_length % 2) == 0) else window_length][0]
@@ -185,11 +188,12 @@ def get_centroid_plot(targetid, period, t0, duration, mission='kepler'):
             else:
                 target = target.append(build_lc(tpf, aper, background=background, cadence_mask=t_mask, spline_period=period * 4))#lc.flatten(window_length))
 
-            if mission.lower() == 'kepler':
-                cbvs = lk.correctors.KeplerCBVCorrector(lc).cbv_array[:2].T
-            else:
-                cbvs = None
+            # if mission.lower() == 'kepler':
+            #     cbvs = lk.correctors.KeplerCBVCorrector(lc).cbv_array[:2].T
+            # else:
+            #     cbvs = None
 
+            cbvs = None
 
             model2, transit_pixels, transit_pixels_err = build_model(tpf, lc, cbvs=cbvs, t_model=t_model, background=background)
 
@@ -226,7 +230,8 @@ def get_centroid_plot(targetid, period, t0, duration, mission='kepler'):
         for idx in range(len(tpfs)):
             ax.pcolormesh(*np.asarray(tpfs[idx].get_coordinates()).mean(axis=1), np.log10(np.median(tpfs[idx].flux, axis=0)), alpha=1/len(tpfs), cmap='Greys_r')
 
-        plot_gaia(tpfs, ax=ax)
+        if gaia:
+            plot_gaia(tpfs, ax=ax)
         ax.scatter(ra_target, dec_target, c='g', marker='x', label='Target', s=100)
         ax.scatter(ra, dec, c='r', marker='x', label='Source Of Transit', s=100)
         ax.legend(frameon=True)
