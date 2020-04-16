@@ -5,7 +5,7 @@ from mpl_toolkits.axes_grid1.anchored_artists import AnchoredSizeBar
 import lightkurve as lk
 from astropy.stats import sigma_clip, sigma_clipped_stats
 import pandas as pd
-from tqdm.notebook import tqdm
+from tqdm import tqdm
 
 import warnings
 
