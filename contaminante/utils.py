@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1.anchored_artists import AnchoredSizeBar
+from matplotlib.patches import Ellipse
+import matplotlib.transforms as transforms
 
 import lightkurve as lk
 from astropy.stats import sigma_clip, sigma_clipped_stats
@@ -16,13 +18,74 @@ import astropy.units as u
 
 from .gaia import plot_gaia
 
+
+
+def confidence_ellipse(x, y, ax, n_std=3.0, facecolor='none', **kwargs):
+    """
+    Create a plot of the covariance confidence ellipse of `x` and `y`
+
+    Parameters
+    ----------
+    x, y : array_like, shape (n, )
+        Input data.
+
+    ax : matplotlib.axes.Axes
+        The axes object to draw the ellipse into.
+
+    n_std : float
+        The number of standard deviations to determine the ellipse's radiuses.
+
+    Returns
+    -------
+    matplotlib.patches.Ellipse
+
+    Other parameters
+    ----------------
+    kwargs : `~matplotlib.patches.Patch` properties
+    """
+    if x.size != y.size:
+        raise ValueError("x and y must be the same size")
+
+    cov = np.cov(x, y)
+    pearson = cov[0, 1]/np.sqrt(cov[0, 0] * cov[1, 1])
+    # Using a special case to obtain the eigenvalues of this
+    # two-dimensionl dataset.
+    ell_radius_x = np.sqrt(1 + pearson)
+    ell_radius_y = np.sqrt(1 - pearson)
+    ellipse = Ellipse((0, 0),
+        width=ell_radius_x * 2,
+        height=ell_radius_y * 2,
+        facecolor=facecolor,
+        **kwargs)
+
+    # Calculating the stdandard deviation of x from
+    # the squareroot of the variance and multiplying
+    # with the given number of standard deviations.
+    scale_x = np.sqrt(cov[0, 0]) * n_std
+    mean_x = np.mean(x)
+
+    # calculating the stdandard deviation of y ...
+    scale_y = np.sqrt(cov[1, 1]) * n_std
+    mean_y = np.mean(y)
+
+    transf = transforms.Affine2D() \
+        .rotate_deg(45) \
+        .scale(scale_x, scale_y) \
+        .translate(mean_x, mean_y)
+
+    ellipse.set_transform(transf + ax.transData)
+    return ax.add_patch(ellipse)
+
+
 def search(targetid, mission, search_func=lk.search_targetpixelfile):
     """Convenience function to help lightkurve searches"""
     if search_func == lk.search_targetpixelfile:
-        sr = search_func(targetid, mission=mission)
-        numeric = int(''.join([char for char in "KIC {}".format(targetid) if char.isnumeric()]))
-        numeric_s = np.asarray([int(''.join([char for char in sr.target_name[idx] if char.isnumeric()])) for idx in range(len(sr))])
-        sr = lk.SearchResult(sr.table[numeric_s == numeric])
+        with warnings.catch_warnings():
+            warnings.simplefilter('ignore')
+            sr = search_func(targetid, mission=mission)
+            numeric = int(''.join([char for char in "KIC {}".format(targetid) if char.isnumeric()]))
+            numeric_s = np.asarray([int(''.join([char for char in sr.target_name[idx] if char.isnumeric()])) for idx in range(len(sr))])
+            sr = lk.SearchResult(sr.table[numeric_s == numeric])
     elif search_func == lk.search_tesscut:
         sr = search_func(targetid)
     else:
@@ -162,7 +225,7 @@ def get_centroid_plot(targetid, period, t0, duration, mission='kepler', gaia=Fal
         background = False
         sr = search(targetid, mission)
         if (mission.lower() == 'tess') and (len(sr) == 0):
-            tpfs = search(targetid, period, lk.search_tesscut).download_all(cutout_size=(10, 10))
+            tpfs = search(targetid, mission, lk.search_tesscut).download_all(cutout_size=(10, 10))
             background = True
         elif len(sr) == 0:
             raise ValueError('No target pixel files exist for {} from {}'.format(targetid, mission))
@@ -170,7 +233,7 @@ def get_centroid_plot(targetid, period, t0, duration, mission='kepler', gaia=Fal
             tpfs = sr.download_all()
         contaminator = None
         target = None
-        coords_weights, coords_ra, coords_dec, ra_target, dec_target = [], [], [], [], []
+        coords_weights, coords_weights_err, coords_ra, coords_dec, ra_target, dec_target = [], [], [], [], [], []
 
         for tpf in tqdm(tpfs, desc='Modeling TPFs'):
             tpf = tpf[(np.nansum(tpf.flux, axis=(1, 2)) != 0) & (np.nansum(tpf.flux_err, axis=(1, 2)) != 0)]
@@ -217,7 +280,8 @@ def get_centroid_plot(targetid, period, t0, duration, mission='kepler', gaia=Fal
             coords = np.asarray(tpf.get_coordinates())[:, :, contaminant_aper].mean(axis=1)
             coords_ra.append(coords[0])
             coords_dec.append(coords[1])
-            coords_weights.append((transit_pixels/transit_pixels_err)[contaminant_aper])
+            coords_weights.append(transit_pixels[contaminant_aper])
+            coords_weights_err.append(transit_pixels_err[contaminant_aper])
             if contaminant_aper.any():
                 contaminated_lc = tpf.to_lightcurve(aperture_mask=contaminant_aper)
                 if contaminator is None:
@@ -225,59 +289,73 @@ def get_centroid_plot(targetid, period, t0, duration, mission='kepler', gaia=Fal
                 else:
                     contaminator = contaminator.append(build_lc(tpf, contaminant_aper, background=background, cadence_mask=t_mask, spline_period=period * 4))#contaminated_lc.flatten(window_length))
 
-        ra_target, dec_target = np.mean(ra_target), np.mean(dec_target)
+        #ra_target, dec_target = np.mean(ra_target), np.mean(dec_target)
 
         if len(coords_ra) != 0:
-            ra = np.average(np.hstack(coords_ra), weights=np.hstack(coords_weights))
-            dec = np.average(np.hstack(coords_dec), weights=np.hstack(coords_weights))
+            ras, decs = np.zeros(50), np.zeros(50)
+            for count in range(50):
+                w = np.hstack(coords_weights)
+                w += np.random.normal(np.zeros(len(w)), np.hstack(coords_weights_err))
+                ras[count] = np.average(np.hstack(coords_ra), weights=w)
+                decs[count] = np.average(np.hstack(coords_dec), weights=w)
+#            ra, dec = ras.mean(), decs.mean()
+#            ra_err, dec_err = ras.std(), decs.std()
         else:
-            ra, dec = np.nan, np.nan
+            ras, decs = np.asarray([np.nan]), np.asarray([np.nan])
+#            ra_err, dec_err = np.nan, np.nan
 
+#        import pdb; pdb.set_trace()
 
-        fig = plt.figure(figsize=(17, 3.5))
-        ax = plt.subplot2grid((1, 4), (0, 0))
-        ax.set_title('Target ID: {}'.format(tpfs[0].targetid))
+        with plt.style.context('seaborn-white'):
+            fig = plt.figure(figsize=(17, 3.5))
+            ax = plt.subplot2grid((1, 4), (0, 0))
+            ax.set_title('Target ID: {}'.format(tpfs[0].targetid))
 
-        xlim = [1e10, -1e10]
-        ylim = [1e10, -1e10]
-        for idx in range(len(tpfs)):
-            ax.pcolormesh(*np.asarray(np.median(tpfs[idx].get_coordinates(), axis=1)), np.log10(np.nanmedian(tpfs[idx].flux, axis=0)), alpha=1/len(tpfs), cmap='Greys_r')
-            xlim[0] = np.min([np.percentile(tpfs[0].get_coordinates()[0], 1), xlim[0]])
-            xlim[1] = np.max([np.percentile(tpfs[0].get_coordinates()[0], 99), xlim[1]])
-            ylim[0] = np.min([np.percentile(tpfs[0].get_coordinates()[1], 1), ylim[0]])
-            ylim[1] = np.max([np.percentile(tpfs[0].get_coordinates()[1], 99), ylim[1]])
-    #        import pdb;pdb.set_trace()
-        if gaia:
-            plot_gaia(tpfs, ax=ax)
-        ax.scatter(ra_target, dec_target, c='g', marker='x', label='Target', s=100)
-        ax.scatter(ra, dec, c='r', marker='x', label='Source Of Transit', s=100)
-        ax.legend(frameon=True)
-        ax.set_xlim(*xlim)
-        ax.set_ylim(*ylim)
-        if mission.lower() == 'tess':
-            scalebar = AnchoredSizeBar(ax.transData,
-                               27*u.arcsec.to(u.deg), "27 arcsec", 'lower center',
-                               pad=0.1,
-                               color='black',
-                               frameon=False,
-                               size_vertical=27/100*u.arcsec.to(u.deg))
-        else:
-            scalebar = AnchoredSizeBar(ax.transData,
-                               4*u.arcsec.to(u.deg), "4 arcsec", 'lower center',
-                               pad=0.1,
-                               color='black',
-                               frameon=False,
-                               size_vertical=4/100*u.arcsec.to(u.deg))
+            xlim = [1e10, -1e10]
+            ylim = [1e10, -1e10]
+            for idx in range(len(tpfs)):
+                ax.pcolormesh(*np.asarray(np.median(tpfs[idx].get_coordinates(), axis=1)), np.log10(np.nanmedian(tpfs[idx].flux, axis=0)), alpha=1/len(tpfs), cmap='Greys_r')
+                xlim[0] = np.min([np.percentile(tpfs[0].get_coordinates()[0], 1), xlim[0]])
+                xlim[1] = np.max([np.percentile(tpfs[0].get_coordinates()[0], 99), xlim[1]])
+                ylim[0] = np.min([np.percentile(tpfs[0].get_coordinates()[1], 1), ylim[0]])
+                ylim[1] = np.max([np.percentile(tpfs[0].get_coordinates()[1], 99), ylim[1]])
+        #        import pdb;pdb.set_trace()
+            if gaia:
+                plot_gaia(tpfs, ax=ax)
+            ax.scatter(np.mean(ra_target), np.mean(dec_target), c='g', marker='x', label='Target', s=100, zorder=9)
+            ax.scatter(ras.mean(), decs.mean(), c='r', marker='x', label='Source Of Transit', s=100, zorder=10)
+            confidence_ellipse(ras, decs, ax,
+                alpha=0.5, facecolor='pink', edgecolor='r', zorder=5)
+            # confidence_ellipse(np.asarray(ra_target), np.asarray(dec_target), ax,
+            #     alpha=0.5, facecolor='lime', edgecolor='g', zorder=5)
 
-        ax.add_artist(scalebar)
-#        ax.set_aspect('auto')
-        ax.set_xlabel('RA [deg]')
-        ax.set_ylabel('Dec [deg]')
+            ax.legend(frameon=True)
+            ax.set_xlim(*xlim)
+            ax.set_ylim(*ylim)
+            if mission.lower() == 'tess':
+                scalebar = AnchoredSizeBar(ax.transData,
+                                   27*u.arcsec.to(u.deg), "27 arcsec", 'lower center',
+                                   pad=0.1,
+                                   color='black',
+                                   frameon=False,
+                                   size_vertical=27/100*u.arcsec.to(u.deg))
+            else:
+                scalebar = AnchoredSizeBar(ax.transData,
+                                   4*u.arcsec.to(u.deg), "4 arcsec", 'lower center',
+                                   pad=0.1,
+                                   color='black',
+                                   frameon=False,
+                                   size_vertical=4/100*u.arcsec.to(u.deg))
 
-        ax = plt.subplot2grid((1, 4), (0, 1), colspan=3)
-        ax.set_title('Target ID: {}'.format(tpfs[0].targetid))
-        bin_points = np.max([2, int(len(lc.time)/((lc.time[-1] - lc.time[0])/0.5*period))])
-        target.fold(period, t0).bin(bin_points, method='median').errorbar(c='g', label="Target", ax=ax, marker='.')
-        if contaminator is not None:
-            contaminator.fold(period, t0).bin(bin_points, method='median').errorbar(ax=ax, c='r', marker='.', label="Source of Transit")
+            ax.add_artist(scalebar)
+    #        ax.set_aspect('auto')
+            ax.set_xlabel('RA [deg]')
+            ax.set_ylabel('Dec [deg]')
+
+            ax = plt.subplot2grid((1, 4), (0, 1), colspan=3)
+            ax.set_title('Target ID: {}'.format(tpfs[0].targetid))
+            bin_points = np.max([2, int(len(lc.time)/((lc.time[-1] - lc.time[0])/0.5*period))])
+            target.fold(period, t0).bin(bin_points, method='median').errorbar(c='g', label="Target", ax=ax, marker='.')
+            if contaminator is not None:
+                contaminator.fold(period, t0).bin(bin_points, method='median').errorbar(ax=ax, c='r', marker='.', label="Source of Transit")
         return fig, target
