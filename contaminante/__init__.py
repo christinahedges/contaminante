@@ -12,4 +12,4 @@ if platform.system() == "Linux" and os.environ.get('DISPLAY', '') == '':
     matplotlib.use('Agg')
 
 from .version import __version__
-from .utils import get_centroid_plot
+from .utils import calculate_contamination
