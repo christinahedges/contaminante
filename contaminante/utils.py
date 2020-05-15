@@ -459,12 +459,12 @@ def calculate_contamination(targetid, period, t0, duration, mission='kepler', pl
             #        import pdb;pdb.set_trace()
                 if gaia:
                     plot_gaia(tpfs, ax=ax)
-                ax.scatter(np.hstack(ra_target), np.hstack(dec_target), c='g', marker='.', s=0.1, label='Target', zorder=11, alpha=1/len(tpfs))
-                ax.scatter(np.hstack(coords_ra), np.hstack(coords_dec), c='r', marker='.', s=0.1, label='Source Of Transit', zorder=10, alpha=0.1)
+                ax.scatter(np.hstack(ra_target), np.hstack(dec_target), c='C0', marker='.', s=2, label='Target', zorder=11, alpha=1/len(tpfs))
+                ax.scatter(np.hstack(coords_ra), np.hstack(coords_dec), c='r', marker='.', s=1, label='Source Of Transit', zorder=10, alpha=0.1)
     #            confidence_ellipse(ras, decs, ax,
     #                alpha=0.5, facecolor='pink', edgecolor='r', zorder=5)
                 # confidence_ellipse(np.asarray(ra_target), np.asarray(dec_target), ax,
-                #     alpha=0.5, facecolor='lime', edgecolor='g', zorder=5)
+                #     alpha=0.5, facecolor='lime', edgecolor='C0', zorder=5)
 
                 ax.set_xlim(*xlim)
                 ax.set_ylim(*ylim)
@@ -493,12 +493,12 @@ def calculate_contamination(targetid, period, t0, duration, mission='kepler', pl
                 if bin_points == None:
                     bin_points = int(((target.time[-1] - target.time[0])/(4*period)))
                 if bin_points > 1:
-                    target.fold(period, t0).bin(bin_points, method='median').errorbar(c='g', label="Target", ax=ax, marker='.')
+                    target.fold(period, t0).bin(bin_points, method='median').errorbar(c='C0', label="Target", ax=ax, marker='.', markersize=2)
                     if contaminator is not None:
-                        contaminator.fold(period, t0).bin(bin_points, method='median').errorbar(ax=ax, c='r', marker='.', label="Source of Transit")
+                        contaminator.fold(period, t0).bin(bin_points, method='median').errorbar(ax=ax, c='r', marker='.', label="Source of Transit", markersize=2)
                 else:
-                    target.fold(period, t0).errorbar(c='g', label="Target", ax=ax, marker='.')
+                    target.fold(period, t0).errorbar(c='C0', label="Target", ax=ax, marker='.', markersize=2)
                     if contaminator is not None:
-                        contaminator.fold(period, t0).errorbar(ax=ax, c='r', marker='.', label="Source of Transit")
+                        contaminator.fold(period, t0).errorbar(ax=ax, c='r', marker='.', label="Source of Transit", markersize=2)
         return fig, res
     return res
