@@ -44,7 +44,7 @@ python setup.py install
 
 ### Help, I can't install `contaminante`
 
-You might not be able to install `contaminante` because your computer doesn't support some of the features, or perhaps you're new to Python. Don't worry, you can still use `contaminante`! If you're struggling to install, try running `contaminante` online using Google's Colaboratory. You can click [here](broken) to open a new Colaboratory notebook and run `contaminante` in the cloud!
+You might not be able to install `contaminante` because your computer doesn't support some of the features, or perhaps you're new to Python. Don't worry, you can still use `contaminante`! If you're struggling to install, try running `contaminante` online using Google's Colaboratory. You can click [here](https://colab.research.google.com/github/christinahedges/contaminante/blob/master/tutorials/Colaboratory-Notebook.ipynb) to open a new Colaboratory notebook and run `contaminante` in the cloud!
 
 ## Dependencies
 
