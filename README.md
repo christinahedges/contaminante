@@ -1,12 +1,14 @@
+<center><img width = "900" src="https://github.com/christinahedges/contaminante/blob/master/docs/figures/logo.png?raw=true"/></center>
+
 # contaminante
 *kohn - tah - mee - nahn - teh*
 
 A package to help find the contaminant transiting source in NASA's *Kepler*, *K2* or *TESS* data. When hunting for transiting planets, sometimes signals come from neighboring contaminants. This package helps users identify where the transiting signal comes from in their data.
 
-
 ## What does `contaminante` do?
 
-`contaminante` uses pixel level modeling of the *TargetPixelFile* data from NASA's astrophysics missions that are processed with the *Kepler* pipeline. The output of `contaminante` is a figure showing
+`contaminante` uses pixel level modeling of the *TargetPixelFile* data from NASA's astrophysics missions that are processed with the *Kepler* pipeline. The output of `contaminante` is a Python dictionary containing the source location and transit depth, and a contaminant location and depth. Optionally you can output a figure showing
+
 1.  Where the main target is centered in all available TPFs.
 2.  What the phase curve looks like for the main target
 3.  Where the transiting source is centered in all available TPFs, if a transiting source is located outside the main target
@@ -26,4 +28,24 @@ You can check out our [tutorial](https://github.com/christinahedges/contaminante
 
 ## Installation
 
-TODO
+You can install `contaminante` using pip:
+
+```
+pip install contaminate --upgrade
+```
+
+You can also install `contaminante` by cloning this repo:
+
+```
+git clone https://github.com/christinahedges/contaminante
+cd contaminante
+python setup.py install
+```
+
+### Help, I can't install `contaminante`
+
+You might not be able to install `contaminante` because your computer doesn't support some of the features, or perhaps you're new to Python. Don't worry, you can still use `contaminante`! If you're struggling to install, try running `contaminante` online using Google's Colaboratory. You can click [here](broken) to open a new Colaboratory notebook and run `contaminante` in the cloud!
+
+## Requirements
+
+`contaminante` uses the most up to date version of [`lightkurve`](https://github.com/keplerGO/lightkurve), and uses some of the features available in v2.0. Make sure your `lightkurve` installation is up to date before using contaminante.
