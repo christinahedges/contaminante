@@ -46,6 +46,8 @@ python setup.py install
 
 You might not be able to install `contaminante` because your computer doesn't support some of the features, or perhaps you're new to Python. Don't worry, you can still use `contaminante`! If you're struggling to install, try running `contaminante` online using Google's Colaboratory. You can click [here](broken) to open a new Colaboratory notebook and run `contaminante` in the cloud!
 
-## Requirements
+## Dependencies
 
 `contaminante` uses the most up to date version of [`lightkurve`](https://github.com/keplerGO/lightkurve), and uses some of the features available in v2.0. Make sure your `lightkurve` installation is up to date before using contaminante.
+
+## Acknowledgements
