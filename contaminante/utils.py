@@ -500,5 +500,5 @@ def calculate_contamination(targetid, period, t0, duration, mission='kepler', pl
                     target.fold(period, t0).errorbar(c='C0', label="Target", ax=ax, marker='.', markersize=2)
                     if contaminator is not None:
                         contaminator.fold(period, t0).errorbar(ax=ax, c='r', marker='.', label="Source of Transit", markersize=2)
-        return fig, res
+            return fig, res
     return res
