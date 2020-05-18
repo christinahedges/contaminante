@@ -1,4 +1,4 @@
-<center><img width = "900" src="https://github.com/christinahedges/contaminante/blob/master/docs/figures/logo.png?raw=true"/></center>
+<center><img width = "200" src="https://github.com/christinahedges/contaminante/blob/master/docs/figures/logo.png?raw=true"/></center>
 
 # contaminante
 *kohn - tah - mee - nahn - teh*
@@ -20,7 +20,7 @@ An example output is shown below for a target with a transiting contaminant.
 
 Where as a transit that is centered on the target gives the following output:
 
-<center><img width = "200" src="https://github.com/christinahedges/contaminante/blob/master/docs/figures/real.png?raw=true"/></center>
+<center><img width = "900" src="https://github.com/christinahedges/contaminante/blob/master/docs/figures/real.png?raw=true"/></center>
 
 ## How to use `contaminante`
 
