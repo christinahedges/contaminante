@@ -1,4 +1,4 @@
-<center><img width = "200" src="https://github.com/christinahedges/contaminante/blob/master/docs/figures/logo.png?raw=true"/></center>
+<div style="text-align:center"><img width = "200" src="https://github.com/christinahedges/contaminante/blob/master/docs/figures/logo.png?raw=true"/></div>
 
 # contaminante
 *kohn - tah - mee - nahn - teh*
