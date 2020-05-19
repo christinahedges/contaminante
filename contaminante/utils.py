@@ -1,86 +1,44 @@
+""" Utility functions for contaminante """
 import numpy as np
-import matplotlib.pyplot as plt
-from mpl_toolkits.axes_grid1.anchored_artists import AnchoredSizeBar
-from matplotlib.patches import Ellipse
-import matplotlib.transforms as transforms
+import pandas as pd
+from tqdm import tqdm
+import warnings
 
 import lightkurve as lk
 from astropy.stats import sigma_clip, sigma_clipped_stats
-import pandas as pd
-from tqdm import tqdm
-
-import warnings
 
 from numpy.linalg import solve
 from scipy.sparse import csr_matrix, diags
 
 import astropy.units as u
 
-from .gaia import plot_gaia
-
-from scipy.sparse import csr_matrix
-from numpy.linalg import solve
-
-
-def confidence_ellipse(x, y, ax, n_std=3.0, facecolor='none', **kwargs):
-    """
-    Create a plot of the covariance confidence ellipse of `x` and `y`
+def search(targetid, mission, search_func=lk.search_targetpixelfile, quarter=None, sector=None, campaign=None):
+    """Convenience function to help lightkurve searches
 
     Parameters
     ----------
-    x, y : array_like, shape (n, )
-        Input data.
-
-    ax : matplotlib.axes.Axes
-        The axes object to draw the ellipse into.
-
-    n_std : float
-        The number of standard deviations to determine the ellipse's radiuses.
+    targetid : str
+        The ID of the target, either KIC, EPIC or TIC from Kepler, K2 or TESS
+    mission : str
+        Kepler, K2 or TESS
+    search_func : func
+        The search function to use, default is `lk.search_targetpixelfile`. Users may
+        want `lk.search_tesscut`
+    quarter : int, list or None
+        Quarter of Kepler data to use. Specify either using an integer (e.g. `1`) or
+        a range (e.g. `[1, 2, 3]`). `None` will return all quarters.
+    sector : int, list or None
+        Sector of TESS data to use. Specify either using an integer (e.g. `1`) or
+        a range (e.g. `[1, 2, 3]`). `None` will return all sectors.
+    campaign : int, list or None
+        Campaign of K2 data to use. Specify either using an integer (e.g. `1`) or
+        a range (e.g. `[1, 2, 3]`). `None` will return all campaigns.
 
     Returns
     -------
-    matplotlib.patches.Ellipse
-
-    Other parameters
-    ----------------
-    kwargs : `~matplotlib.patches.Patch` properties
+    sr : lk.search.SearchResult
+        Search result object containing the valid files.
     """
-    if x.size != y.size:
-        raise ValueError("x and y must be the same size")
-
-    cov = np.cov(x, y)
-    pearson = cov[0, 1]/np.sqrt(cov[0, 0] * cov[1, 1])
-    # Using a special case to obtain the eigenvalues of this
-    # two-dimensionl dataset.
-    ell_radius_x = np.sqrt(1 + pearson)
-    ell_radius_y = np.sqrt(1 - pearson)
-    ellipse = Ellipse((0, 0),
-        width=ell_radius_x * 2,
-        height=ell_radius_y * 2,
-        facecolor=facecolor,
-        **kwargs)
-
-    # Calculating the stdandard deviation of x from
-    # the squareroot of the variance and multiplying
-    # with the given number of standard deviations.
-    scale_x = np.sqrt(cov[0, 0]) * n_std
-    mean_x = np.mean(x)
-
-    # calculating the stdandard deviation of y ...
-    scale_y = np.sqrt(cov[1, 1]) * n_std
-    mean_y = np.mean(y)
-
-    transf = transforms.Affine2D() \
-        .rotate_deg(45) \
-        .scale(scale_x, scale_y) \
-        .translate(mean_x, mean_y)
-
-    ellipse.set_transform(transf + ax.transData)
-    return ax.add_patch(ellipse)
-
-
-def search(targetid, mission, search_func=lk.search_targetpixelfile, quarter=None, sector=None, campaign=None):
-    """Convenience function to help lightkurve searches"""
     if search_func == lk.search_targetpixelfile:
         with warnings.catch_warnings():
             warnings.simplefilter('ignore')
@@ -101,10 +59,33 @@ def search(targetid, mission, search_func=lk.search_targetpixelfile, quarter=Non
         raise ValueError('Search Function is wrong')
     return sr
 
-
 def build_X(tpf, flux, t_model=None, background=False, cbvs=None, spline=True, spline_period=2, sff=False):
-    """Build a design matrix to use in the model"""
+    """Build a design matrix to model pixel in target pixel files
 
+    Parameters
+    ----------
+    tpf : lightkurve.TargetPixelFile
+        Input target pixel file to make the design matrix for
+    flux : np.ndarray
+        The SAP flux to use for creating the design matrix
+    t_model: None or np.ndarray
+        The transit model, if None no transit model will be used in the design matrix
+    background: None or np.ndarray
+        Background model, useful for TESS data. If None will not be used in design matrix
+    cbvs: None or np.ndarray
+        Cotrending Basis vectors. If None will not be used in design matrix
+    spline: bool
+        Whether to use a B-Spline in time
+    spline_period: float
+        If using a spline, what time period the knots should be spaced at
+    sff : bool
+        Whether to use the SFF method of buildign centroids
+
+    Returns
+    -------
+    SA : scipy.sparse.csr_matrix
+        The design matrix to use to detrend the input TPF
+    """
 
     r, c = np.nan_to_num(tpf.pos_corr1), np.nan_to_num(tpf.pos_corr2)
     r[np.abs(r) > 10] = 0
@@ -132,9 +113,6 @@ def build_X(tpf, flux, t_model=None, background=False, cbvs=None, spline=True, s
                                    rs1**2, cs1**2, rs1**2*cs1, rs1*cs1**2, rs1**2*cs1**2,
                                    rs1**3*cs1**3, rs1**3*cs1**2, rs1**3*cs1, rs1**3, cs1**3, cs1**3*rs1, cs1**3*rs1**2]).T
 
-
-
-
     A = np.copy(centroids)
     if cbvs is not None:
         A = np.hstack([A, np.nan_to_num(cbvs)])
@@ -152,7 +130,42 @@ def build_X(tpf, flux, t_model=None, background=False, cbvs=None, spline=True, s
     return csr_matrix(SA)
 
 def build_model(tpf, flux, cbvs=None, t_model=None, errors=False, cadence_mask=None, background=False, spline=True):
-    """ Build a model for the pixel level light curve """
+    """ Build a model for the pixel level light curve
+
+        Parameters
+        ----------
+        tpf : lightkurve.TargetPixelFile
+            Input target pixel file to make the design matrix for
+        flux : np.ndarray
+            The SAP flux to use for creating the design matrix
+        cbvs: None or np.ndarray
+            Cotrending Basis vectors. If None will not be used in design matrix
+        t_model: None or np.ndarray
+            The transit model, if None no transit model will be used in the design matrix
+        errors: bool
+            Whether to return the errors of the models
+        cadence_mask: None or np.ndarray
+            A mask to specify which cadences to use. Cadences where True will not be used in the analysis.
+        background: bool
+            Whether to estimate the background flux, useful for TESS
+        spline: bool
+            Whether to use a B-Spline in time
+        Returns
+        -------
+        model : np.ndarray
+            Model of the TPF, with shape ncadences x npixels x npixels.
+        model_err: np.ndarray
+            If errors is true, returns model errors
+        transit_pixels : np.ndarray
+            If t_model is specified, the weight of the transit in each pixel.
+            Shape npixel x npixel
+        transit_pixels_err : np.ndarray
+            If t_model is specified, the error of the weight of the transit in each pixel.
+            Shape npixel x npixel
+        aper : bool
+            The aperture that contains the transit signal (npixels x npixels)
+    """
+
     with warnings.catch_warnings():
         # I don't want to fix runtime warnings...
         warnings.simplefilter("ignore", category=RuntimeWarning)
@@ -244,16 +257,38 @@ def build_model(tpf, flux, cbvs=None, t_model=None, errors=False, cadence_mask=N
             return model, model_err, aper
         return model, aper
 
-
 def build_lc(tpf, aperture_mask, cbvs=None, errors=False, cadence_mask=None, background=False, spline=True, spline_period=2):
-    """ Build a corrected light curve """
+    """ Build a corrected light curve
+
+        Parameters
+        ----------
+        tpf : lightkurve.TargetPixelFile
+            Input target pixel file to make the design matrix for
+        aperture_mask : np.ndarray of bool
+            Aperture mask to sum the light curve over
+        cbvs: None or np.ndarray
+            Cotrending Basis vectors. If None will not be used in design matrix
+        errors: bool
+            Whether to calculate the errors on the model and propagate them
+        cadence_mask: None or np.ndarray
+            A mask to specify which cadences to use. Cadences where True will not be used in the analysis.
+        background: bool
+            Whether to calculate a background model
+        spline: bool
+            Whether to use a B-Spline in time
+        spline_period: float
+            If using a spline, what time period the knots should be spaced at
+
+        Returns
+        -------
+        corrected_lc : lightkurve.LightCurve
+            The corrected light curve
+        """
     with warnings.catch_warnings():
         # I don't want to fix runtime warnings...
         warnings.simplefilter("ignore", category=RuntimeWarning)
         if cadence_mask is None:
             cadence_mask = np.ones(len(tpf.time)).astype(bool)
-
-
 
         SA = build_X(tpf, np.ones(len(tpf.time)), cbvs=cbvs, spline=spline, background=background, spline_period=spline_period)
         SA = SA[:, :-1]
@@ -270,235 +305,3 @@ def build_lc(tpf, aperture_mask, cbvs=None, errors=False, cadence_mask=None, bac
         model = SA.dot(w)
 
         return raw_lc.copy()/model
-
-
-def calculate_contamination(targetid, period, t0, duration, mission='kepler', plot=True, gaia=False, quarter=None, sector=None, campaign=None, bin_points=None):
-    """ Plot where the centroids of the transiting target are in a TPF"""
-    with warnings.catch_warnings():
-        warnings.simplefilter("ignore", category=RuntimeWarning)
-
-        background = False
-        sr = search(targetid, mission, quarter=quarter, sector=sector, campaign=campaign)
-
-        if (mission.lower() == 'tess') and (len(sr) == 0):
-            tpfs = search(targetid, mission, lk.search_tesscut, sector=sector).download_all(cutout_size=(10, 10))
-            background = True
-        elif len(sr) == 0:
-            raise ValueError('No target pixel files exist for {} from {}'.format(targetid, mission))
-        else:
-            tpfs = sr.download_all()
-        contaminator = None
-        target = None
-        coords_weights, coords_weights_err, coords_ra, coords_dec, ra_target, dec_target = [], [], [], [], [], []
-
-        for tpf in tqdm(tpfs, desc='Modeling TPFs'):
-            aper = tpf.pipeline_mask
-            if not (aper.any()):
-                aper = tpf.create_threshold_mask()
-            mask = (np.abs((tpf.pos_corr1)) < 10) & ((np.gradient(tpf.pos_corr2)) < 10)
-            #mask &= ~tpf.to_lightcurve(aperture_mask=aper).remove_outliers(return_mask=True)[1]
-            mask &= np.isfinite(tpf.to_lightcurve(aperture_mask=aper).flux)
-            tpf = tpf[mask]
-            lc = tpf.to_lightcurve(aperture_mask=aper)
-
-            bls = lc.flatten(21).to_periodogram('bls', period=[period, period])
-            t_mask = bls.get_transit_mask(period=period, transit_time=t0, duration=duration)
-#            window_length = int(len(lc.time)/((lc.time[-1] - lc.time[0])/(4*period)))
-#            window_length = np.min([window_length, len(lc.time)//3])
-#            window_length = [(window_length + 1) if ((window_length % 2) == 0) else window_length][0]
-
-
-            clc = build_lc(tpf, aper, background=background, cadence_mask=t_mask, spline_period=2)
-            if target is None:
-                target = clc
-            else:
-                target = target.append(clc)#lc.flatten(window_length))
-
-            if (mission.lower() == 'kepler') | (mission.lower() == 'k2'):
-                cbvs = lk.correctors.KeplerCBVCorrector(lc).cbv_array[:2].T
-                cbv_dm = lk.DesignMatrix(cbvs, name='cbvs', prior_mu=[1, 1], prior_sigma=[1e2, 1e2]).to_sparse()
-                breaks = np.where((np.diff(tpf.time) > (0.0202 * 10)))[0] - 1
-                breaks = breaks[breaks > 0]
-                breaks = breaks[np.diff(np.append(0, breaks)) > 100]
-                cbv_dm.split(list(np.sort(breaks)), inplace=True)
-            else:
-                cbvs = None
-
-
-            t_model = bls.get_transit_model(period=period, transit_time=t0, duration=duration)
-            if (t_model.flux == np.mean(t_model.flux)).all():
-                continue
-            fold = t_model.fold(period, t0)
-            med = np.median(fold.flux[np.abs(fold.time) > ((duration/period)/2)])
-            depth = np.nanmax([0.00001, med - np.nanmedian(fold.flux[np.abs(fold.time) <= ((duration/period)/2)])])
-            t_model -= med
-            t_model /= depth
-            t_model = t_model.flux
-
-
-
-            n_knots = int(np.max([4, int(tpf.time[-1] - tpf.time[0]/(duration * 2))]))
-            spline_dm = lk.designmatrix.create_sparse_spline_matrix(lc.time, n_knots=n_knots)
-            if cbvs is not None:
-                dm = lk.SparseDesignMatrixCollection([spline_dm, cbv_dm])
-            else:
-                dm = spline_dm
-
-            r = lk.RegressionCorrector(lc)
-            try:
-                clc = r.correct(dm, sigma=2.5, cadence_mask=t_mask)
-            except:
-                clc = r.correct(dm, sigma=2.5)
-            s_lc = r.diagnostic_lightcurves['spline'].normalize()
-
-
-#            r.diagnose()
-#            return
-#            cbvs = None
-            model, transit_pixels, transit_pixels_err, contaminant_aper = build_model(tpf, s_lc.flux, cbvs=cbvs, t_model=t_model, background=background)
-
-
-            # # If all the "transit" pixels are contained in the aperture, continue.
-            # if np.in1d(np.where(contaminant_aper.ravel()), np.where(aper.ravel())).all():
-            #     continue
-
-            if not contaminant_aper.any():
-                continue
-
-            thumb = np.nanmean(tpf.flux, axis=0)
-            Y, X = np.mgrid[:tpf.shape[1], :tpf.shape[2]]
-            k = tpf.pipeline_mask
-            cxs, cys = [], []
-            for count in range(100):
-                err = np.random.normal(0, thumb[k]**0.5)
-                cxs.append(np.average(X[k], weights=thumb[k] + err))
-                cys.append(np.average(Y[k], weights=thumb[k] + err))
-            cxs, cys = np.asarray(cxs), np.asarray(cys)
-            cras, cdecs = tpf.wcs.wcs_pix2world(np.asarray([cxs + 0.5, cys + 0.5]).T, 1).T
-            ra_target.append(cras)
-            dec_target.append(cdecs)
-
-            Y, X = np.mgrid[:tpf.shape[1], :tpf.shape[2]]
-            k = transit_pixels/transit_pixels_err > 1
-            xs, ys = [], []
-            for count in range(1000):
-                err = np.random.normal(0, transit_pixels_err[k])
-                xs.append(np.average(X[k], weights=np.nan_to_num(transit_pixels[k] + err)))
-                ys.append(np.average(Y[k], weights=np.nan_to_num(transit_pixels[k] + err)))
-            xs, ys = np.asarray(xs), np.asarray(ys)
-            ras, decs = tpf.wcs.wcs_pix2world(np.asarray([xs + 0.5, ys + 0.5]).T, 1).T
-            coords_ra.append(ras)
-            coords_dec.append(decs)
-
-
-            # coords = np.asarray(tpf.get_coordinates())[:, :, contaminant_aper].mean(axis=1)
-            # coords_ra.append(coords[0])
-            # coords_dec.append(coords[1])
-            # coords_weights.append(transit_pixels[contaminant_aper])
-            # coords_weights_err.append(transit_pixels_err[contaminant_aper])
-            if contaminant_aper.any():
-                contaminated_lc = tpf.to_lightcurve(aperture_mask=contaminant_aper)
-                if contaminator is None:
-                    contaminator = build_lc(tpf, contaminant_aper, cbvs=cbvs, background=background, cadence_mask=t_mask, spline_period=duration * 6)#contaminated_lc#.flatten(window_length)
-                else:
-                    contaminator = contaminator.append(build_lc(tpf, contaminant_aper, cbvs=cbvs, background=background, cadence_mask=t_mask, spline_period=duration * 6))#contaminated_lc.flatten(window_length))
-
-        #ra_target, dec_target = np.mean(ra_target), np.mean(dec_target)
-
-#         if len(coords_ra) != 0:
-#             ras, decs = np.zeros(50), np.zeros(50)
-#             for count in range(50):
-#                 w = np.hstack(coords_weights)
-#                 w += np.random.normal(np.zeros(len(w)), np.hstack(coords_weights_err))
-#                 ras[count] = np.average(np.hstack(coords_ra), weights=w)
-#                 decs[count] = np.average(np.hstack(coords_dec), weights=w)
-# #            ra, dec = ras.mean(), decs.mean()
-# #            ra_err, dec_err = ras.std(), decs.std()
-#         else:
-#             ras, decs = np.asarray([np.nan]), np.asarray([np.nan])
-# #            ra_err, dec_err = np.nan, np.nan
-#
-# #        import pdb; pdb.set_trace()
-        bls = target.to_periodogram('bls', period=[period, period])
-        target_depth = bls.compute_stats(period=period, duration=duration, transit_time=t0)['depth']
-        res = {'target_depth': target_depth}
-        res['target_ra'] = np.hstack(ra_target).mean(), np.hstack(ra_target).std()
-        res['target_dec'] = np.hstack(dec_target).mean(), np.hstack(dec_target).std()
-        res['target_lc'] = target
-        contaminated = False
-        if contaminator is not None:
-            bls = contaminator.to_periodogram('bls', period=[period, period])
-            contaminator_depth = bls.compute_stats(period=period, duration=duration, transit_time=t0)['depth']
-            res['contaminator_depth'] = contaminator_depth
-            res['contaminator_ra'] = np.hstack(coords_ra).mean(), np.hstack(coords_ra).std()
-            res['contaminator_dec'] = np.hstack(coords_dec).mean(), np.hstack(coords_dec).std()
-            res['contaminator_lc'] = contaminator
-
-            d, de = (contaminator_depth[0] - target_depth[0]), np.hypot(contaminator_depth[1], target_depth[1])
-            res['delta_transit_depth[sigma]'] = d/de
-
-            if d/de > 8:
-                contaminated = True
-
-        res['contaminated'] = contaminated
-
-        if plot:
-            with plt.style.context('seaborn-white'):
-                fig = plt.figure(figsize=(17, 3.5))
-                ax = plt.subplot2grid((1, 4), (0, 0))
-                ax.set_title('Target ID: {}'.format(tpfs[0].targetid))
-
-                xlim = [1e10, -1e10]
-                ylim = [1e10, -1e10]
-                for idx in range(len(tpfs)):
-                    ax.pcolormesh(*np.asarray(np.median(tpfs[idx].get_coordinates(), axis=1)), np.log10(np.nanmedian(tpfs[idx].flux, axis=0)), alpha=1/len(tpfs), cmap='Greys_r')
-                    xlim[0] = np.min([np.percentile(tpfs[0].get_coordinates()[0], 1), xlim[0]])
-                    xlim[1] = np.max([np.percentile(tpfs[0].get_coordinates()[0], 99), xlim[1]])
-                    ylim[0] = np.min([np.percentile(tpfs[0].get_coordinates()[1], 1), ylim[0]])
-                    ylim[1] = np.max([np.percentile(tpfs[0].get_coordinates()[1], 99), ylim[1]])
-            #        import pdb;pdb.set_trace()
-                if gaia:
-                    plot_gaia(tpfs, ax=ax)
-                ax.scatter(np.hstack(ra_target), np.hstack(dec_target), c='C0', marker='.', s=2, label='Target', zorder=11, alpha=1/len(tpfs))
-                ax.scatter(np.hstack(coords_ra), np.hstack(coords_dec), c='r', marker='.', s=1, label='Source Of Transit', zorder=10, alpha=0.1)
-    #            confidence_ellipse(ras, decs, ax,
-    #                alpha=0.5, facecolor='pink', edgecolor='r', zorder=5)
-                # confidence_ellipse(np.asarray(ra_target), np.asarray(dec_target), ax,
-                #     alpha=0.5, facecolor='lime', edgecolor='C0', zorder=5)
-
-                ax.set_xlim(*xlim)
-                ax.set_ylim(*ylim)
-                if mission.lower() == 'tess':
-                    scalebar = AnchoredSizeBar(ax.transData,
-                                       27*u.arcsec.to(u.deg), "27 arcsec", 'lower center',
-                                       pad=0.1,
-                                       color='black',
-                                       frameon=False,
-                                       size_vertical=27/100*u.arcsec.to(u.deg))
-                else:
-                    scalebar = AnchoredSizeBar(ax.transData,
-                                       4*u.arcsec.to(u.deg), "4 arcsec", 'lower center',
-                                       pad=0.1,
-                                       color='black',
-                                       frameon=False,
-                                       size_vertical=4/100*u.arcsec.to(u.deg))
-
-                ax.add_artist(scalebar)
-        #        ax.set_aspect('auto')
-                ax.set_xlabel('RA [deg]')
-                ax.set_ylabel('Dec [deg]')
-
-                ax = plt.subplot2grid((1, 4), (0, 1), colspan=3)
-                ax.set_title('Target ID: {}'.format(tpfs[0].targetid))
-                if bin_points == None:
-                    bin_points = int(((target.time[-1] - target.time[0])/(4*period)))
-                if bin_points > 1:
-                    target.fold(period, t0).bin(bin_points, method='median').errorbar(c='C0', label="Target", ax=ax, marker='.', markersize=2)
-                    if contaminator is not None:
-                        contaminator.fold(period, t0).bin(bin_points, method='median').errorbar(ax=ax, c='r', marker='.', label="Source of Transit", markersize=2)
-                else:
-                    target.fold(period, t0).errorbar(c='C0', label="Target", ax=ax, marker='.', markersize=2)
-                    if contaminator is not None:
-                        contaminator.fold(period, t0).errorbar(ax=ax, c='r', marker='.', label="Source of Transit", markersize=2)
-            return fig, res
-    return res
