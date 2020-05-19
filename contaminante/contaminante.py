@@ -153,7 +153,7 @@ def calculate_contamination(targetid, period, t0, duration, mission='kepler', pl
             dec_target.append(cdecs)
 
             Y, X = np.mgrid[:tpf.shape[1], :tpf.shape[2]]
-            k = transit_pixels/transit_pixels_err > 1
+            k = transit_pixels/transit_pixels_err > 3
             xs, ys = [], []
             for count in range(1000):
                 err = np.random.normal(0, transit_pixels_err[k])
