@@ -11,9 +11,7 @@
    :maxdepth: 2
    :caption: Contents:
 
-   README.md
    API <api>
-   Tutorial <tutorial.ipynb>
 
 Indices and tables
 ==================
