@@ -46,6 +46,6 @@ def plot_gaia(tpfs, ax=None, color='magenta'):
             c_prime = c.apply_space_motion(t)
             ras.append(c_prime.ra.deg)
             decs.append(c_prime.dec.deg)
-        ax.plot(ras, decs, lw=4, c=color, label=label)
+        ax.scatter(ras, decs, lw=4, c=color, label=label, zorder=20, marker='o')
         label = ''
     return ax

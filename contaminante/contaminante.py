@@ -15,6 +15,8 @@ import astropy.units as u
 from .gaia import plot_gaia
 from .utils import build_X, build_lc, build_model, search
 
+from astropy.timeseries import BoxLeastSquares
+
 def calculate_contamination(targetid, period, t0, duration, mission='kepler', plot=True, gaia=False, quarter=None, sector=None, campaign=None, bin_points=None):
     """Calculate the contamination for a target
 
@@ -171,16 +173,27 @@ def calculate_contamination(targetid, period, t0, duration, mission='kepler', pl
                 else:
                     contaminator = contaminator.append(build_lc(tpf, contaminant_aper, cbvs=cbvs, background=background, cadence_mask=t_mask, spline_period=duration * 6))#contaminated_lc.flatten(window_length))
 
-        bls = target.to_periodogram('bls', period=[period, period])
-        target_depth = bls.compute_stats(period=period, duration=duration, transit_time=t0)['depth']
+
+        bls = BoxLeastSquares(target.time, target.flux, target.flux_err)
+        depths = []
+        for i in range(50):
+            bls.y = target.flux + np.random.normal(0, target.flux_err)
+            depths.append(bls.power(period, duration)['depth'][0])
+        target_depth = (np.mean(depths), np.std(depths))
+
         res = {'target_depth': target_depth}
         res['target_ra'] = np.hstack(ra_target).mean(), np.hstack(ra_target).std()
         res['target_dec'] = np.hstack(dec_target).mean(), np.hstack(dec_target).std()
         res['target_lc'] = target
         contaminated = False
         if contaminator is not None:
-            bls = contaminator.to_periodogram('bls', period=[period, period])
-            contaminator_depth = bls.compute_stats(period=period, duration=duration, transit_time=t0)['depth']
+            bls = BoxLeastSquares(contaminator.time, contaminator.flux, contaminator.flux_err)
+            depths = []
+            for i in range(50):
+                bls.y = contaminator.flux + np.random.normal(0, contaminator.flux_err)
+                depths.append(bls.power(period, duration)['depth'][0])
+            contaminator_depth = (np.mean(depths), np.std(depths))
+
             res['contaminator_depth'] = contaminator_depth
             res['contaminator_ra'] = np.hstack(coords_ra).mean(), np.hstack(coords_ra).std()
             res['contaminator_dec'] = np.hstack(coords_dec).mean(), np.hstack(coords_dec).std()
@@ -209,10 +222,10 @@ def calculate_contamination(targetid, period, t0, duration, mission='kepler', pl
                     ylim[0] = np.min([np.percentile(tpfs[0].get_coordinates()[1], 1), ylim[0]])
                     ylim[1] = np.max([np.percentile(tpfs[0].get_coordinates()[1], 99), ylim[1]])
             #        import pdb;pdb.set_trace()
-                if gaia:
-                    plot_gaia(tpfs, ax=ax)
                 ax.scatter(np.hstack(ra_target), np.hstack(dec_target), c='C0', marker='.', s=2, label='Target', zorder=11, alpha=1/len(tpfs))
                 ax.scatter(np.hstack(coords_ra), np.hstack(coords_dec), c='r', marker='.', s=1, label='Source Of Transit', zorder=10, alpha=0.1)
+                if gaia:
+                    plot_gaia(tpfs, ax=ax)
 
                 ax.set_xlim(*xlim)
                 ax.set_ylim(*ylim)

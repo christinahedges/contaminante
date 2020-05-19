@@ -1,4 +1,4 @@
-<center><img width = "200" src="https://github.com/christinahedges/contaminante/blob/master/docs/figures/logo.png?raw=true"/></center>
+<center><img width = "400" src="https://github.com/christinahedges/contaminante/blob/master/docs/figures/logo.png?raw=true"/></center>
 
 # contaminante
 *kohn - tah - mee - nahn - teh*
@@ -31,7 +31,7 @@ You can check out our [tutorial](https://christinahedges.github.io/contaminante/
 You can install `contaminante` using pip:
 
 ```
-pip install contaminate --upgrade
+pip install contaminante --upgrade
 ```
 
 You can also install `contaminante` by cloning this repo:

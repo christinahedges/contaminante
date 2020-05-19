@@ -33,7 +33,7 @@ You can check out our [tutorial](https://christinahedges.github.io/contaminante/
 You can install `contaminante` using pip:
 
 ```
-pip install contaminate --upgrade
+pip install contaminante --upgrade
 ```
 
 You can also install `contaminante` by cloning this repo:
