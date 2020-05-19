@@ -52,7 +52,6 @@ coverage.xmld
 *.log
 
 # Sphinx documentation
-docs/_build/
 docs/source/api/*
 
 # PyBuilder
