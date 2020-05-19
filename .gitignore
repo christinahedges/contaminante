@@ -41,7 +41,7 @@ htmlcov/
 .coverage.*
 .cache
 nosetests.xml
-coverage.xml
+coverage.xmld
 *,cover
 
 # Translations
@@ -53,8 +53,6 @@ coverage.xml
 
 # Sphinx documentation
 docs/_build/
-docs/_static
-docs/_templates
 docs/source/api/*
 
 # PyBuilder
