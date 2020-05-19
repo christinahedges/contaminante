@@ -16,7 +16,7 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="contaminante API" href="api.html" />
+    <link rel="next" title="How does contaminante work?" href="how-does-it-work.html" />
     <link rel="prev" title="contaminante" href="index.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -48,12 +48,12 @@
 <p>An example output is shown below for a target with a transiting contaminant.</p>
 <center><img width = "900" src="https://github.com/christinahedges/contaminante/blob/master/docs/figures/FP.png?raw=true"/></center><p>Where as a transit that is centered on the target gives the following output:</p>
 <center><img width = "900" src="https://github.com/christinahedges/contaminante/blob/master/docs/figures/real.png?raw=true"/></center></div>
-<div class="section" id="how-to-use-contaminante">
-<h2>How to use <code class="docutils literal notranslate"><span class="pre">contaminante</span></code><a class="headerlink" href="#how-to-use-contaminante" title="Permalink to this headline">¶</a></h2>
-<p>You can check out our <a class="reference external" href="https://github.com/christinahedges/contaminante/blob/master/tutorials/tutorial-1_how-to-use-contaminante.ipynb">tutorial</a> for how to run <code class="docutils literal notranslate"><span class="pre">contaminante</span></code>. To run <code class="docutils literal notranslate"><span class="pre">contaminante</span></code> you will need a target name, a transit period, a transit center and a transit duration.</p>
+<div class="section" id="how-do-i-use-contaminante">
+<h2>How do I use <code class="docutils literal notranslate"><span class="pre">contaminante</span></code>?<a class="headerlink" href="#how-do-i-use-contaminante" title="Permalink to this headline">¶</a></h2>
+<p>You can check out our <a class="reference external" href="https://christinahedges.github.io/contaminante/_build/html/tutorial.html">tutorial</a> for how to run <code class="docutils literal notranslate"><span class="pre">contaminante</span></code>. To run <code class="docutils literal notranslate"><span class="pre">contaminante</span></code> you will need a target name, a transit period, a transit center and a transit duration.</p>
 </div>
-<div class="section" id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="how-do-i-install-contaminante">
+<h2>How do I install <code class="docutils literal notranslate"><span class="pre">contaminante</span></code>?<a class="headerlink" href="#how-do-i-install-contaminante" title="Permalink to this headline">¶</a></h2>
 <p>You can install <code class="docutils literal notranslate"><span class="pre">contaminante</span></code> using pip:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">contaminate</span> <span class="o">--</span><span class="n">upgrade</span>
 </pre></div>
@@ -65,16 +65,13 @@
 </pre></div>
 </div>
 <div class="section" id="help-i-can-t-install-contaminante">
-<h3>Help, I can't install <code class="docutils literal notranslate"><span class="pre">contaminante</span></code><a class="headerlink" href="#help-i-can-t-install-contaminante" title="Permalink to this headline">¶</a></h3>
+<h3>Help, I can't install <code class="docutils literal notranslate"><span class="pre">contaminante</span></code>!<a class="headerlink" href="#help-i-can-t-install-contaminante" title="Permalink to this headline">¶</a></h3>
 <p>You might not be able to install <code class="docutils literal notranslate"><span class="pre">contaminante</span></code> because your computer doesn't support some of the features, or perhaps you're new to Python. Don't worry, you can still use <code class="docutils literal notranslate"><span class="pre">contaminante</span></code>! If you're struggling to install, try running <code class="docutils literal notranslate"><span class="pre">contaminante</span></code> online using Google's Colaboratory. You can click <a class="reference external" href="https://colab.research.google.com/github/christinahedges/contaminante/blob/master/tutorials/Colaboratory-Notebook.ipynb">here</a> to open a new Colaboratory notebook and run <code class="docutils literal notranslate"><span class="pre">contaminante</span></code> in the cloud!</p>
 </div>
 </div>
 <div class="section" id="dependencies">
 <h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">contaminante</span></code> uses the most up to date version of <a class="reference external" href="https://github.com/keplerGO/lightkurve"><code class="docutils literal notranslate"><span class="pre">lightkurve</span></code></a>, and uses some of the features available in v2.0. Make sure your <code class="docutils literal notranslate"><span class="pre">lightkurve</span></code> installation is up to date before using contaminante.</p>
-</div>
-<div class="section" id="acknowledgements">
-<h2>Acknowledgements<a class="headerlink" href="#acknowledgements" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -89,25 +86,24 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">contaminante</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#what-does-contaminante-do">What does <code class="docutils literal notranslate"><span class="pre">contaminante</span></code> do?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#how-to-use-contaminante">How to use <code class="docutils literal notranslate"><span class="pre">contaminante</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#help-i-can-t-install-contaminante">Help, I can't install <code class="docutils literal notranslate"><span class="pre">contaminante</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-do-i-use-contaminante">How do I use <code class="docutils literal notranslate"><span class="pre">contaminante</span></code>?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-do-i-install-contaminante">How do I install <code class="docutils literal notranslate"><span class="pre">contaminante</span></code>?</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#help-i-can-t-install-contaminante">Help, I can't install <code class="docutils literal notranslate"><span class="pre">contaminante</span></code>!</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#dependencies">Dependencies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#acknowledgements">Acknowledgements</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="how-does-it-work.html">How does <code class="docutils literal notranslate"><span class="pre">contaminante</span></code> work?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
-<li class="toctree-l1"><a class="reference external" href="`Run online using Colab &lt;https://colab.research.google.com/github/christinahedges/contaminante/blob/master/tutorials/Colaboratory-Notebook.ipynb&gt;`_">`Run online using Colab &lt;https://colab.research.google.com/github/christinahedges/contaminante/blob/master/tutorials/Colaboratory-Notebook.ipynb&gt;`_</a></li>
 </ul>
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="index.html" title="previous chapter"><cite>contaminante</cite></a></li>
-      <li>Next: <a href="api.html" title="next chapter"><cite>contaminante</cite> API</a></li>
+      <li>Next: <a href="how-does-it-work.html" title="next chapter">How does <code class="docutils literal notranslate"><span class="pre">contaminante</span></code> work?</a></li>
   </ul></li>
 </ul>
 </div>

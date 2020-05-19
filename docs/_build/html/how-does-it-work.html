@@ -1,0 +1,113 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="python">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>How does contaminante work? &#8212; contaminante 0.2 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="contaminante API" href="api.html" />
+    <link rel="prev" title="contaminante" href="README.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="how-does-contaminante-work">
+<h1>How does <code class="docutils literal notranslate"><span class="pre">contaminante</span></code> work?<a class="headerlink" href="#how-does-contaminante-work" title="Permalink to this headline">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">contaminante</span></code> uses pixel level modeling to model the systematics and astrophysics in each pixel. Each pixel is modeled by components that include:</p>
+<ul class="simple">
+<li>A B-spline in time (with knots every 2 days by default)</li>
+<li>A prediction of the centroid position, either using the Kepler Pipieline <code class="docutils literal notranslate"><span class="pre">POSCORR</span></code> values, or building an arclength model similar to that used in the self flat fielding method (see lightkurve.SFFCorrector)</li>
+<li>Optionally, an estimate of the scattered background light (useful for TESS data)</li>
+<li>Optionally, the top Cotrending Basis Vectors from the Kepler pipeline</li>
+<li>A transit model, with period, transit mid point and duration specified by the user.</li>
+</ul>
+<p>These components create a design matrix, consisting of predictors of the systematics of the light curve.</p>
+<p>In each pixel, <code class="docutils literal notranslate"><span class="pre">contaminante</span></code> finds the best fitting model \(m\) for each pixel, where \(m\) is given by</p>
+<p>\[ m = S . X . w\]</p>
+<p>where \(S\) is an estimate of the astrophysical flux, and \(X\) is the design matrix described above. \(w\) are the weights of each component. Using L2 regularization, <code class="docutils literal notranslate"><span class="pre">contaminante</span></code> finds the optimum values of \(w\) to find the best fitting model \(m\) in each pixel. Contaminante then samples to find the uncertainty of each weight \(\sigma_w\), assuming Gaussian errors. The weight for the transit model component in each pixel can then be interpretted as the strength of the transiting signal in each pixel. Using the uncertainty, <code class="docutils literal notranslate"><span class="pre">contaminante</span></code> identifies pixels where the transiting signal is measured at a significance &gt;\(3\sigma\). These pixels are summed across every quarter, campaign or sector available to find simple aperture photometry of all pixels containing a significant transiting signal. <code class="docutils literal notranslate"><span class="pre">contaminante</span></code> then finds the source center and the original target center, and returns the measured transit depth in each light curve.</p>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="README.html">contaminante</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">How does <code class="docutils literal notranslate"><span class="pre">contaminante</span></code> work?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="README.html" title="previous chapter">contaminante</a></li>
+      <li>Next: <a href="api.html" title="next chapter"><cite>contaminante</cite> API</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/how-does-it-work.md.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Christina Hedges.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/how-does-it-work.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

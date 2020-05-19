@@ -22,11 +22,11 @@ Where as a transit that is centered on the target gives the following output:
 
 <center><img width = "900" src="https://github.com/christinahedges/contaminante/blob/master/docs/figures/real.png?raw=true"/></center>
 
-## How to use `contaminante`
+## How do I use `contaminante`?
 
-You can check out our [tutorial](https://github.com/christinahedges/contaminante/blob/master/tutorials/tutorial-1_how-to-use-contaminante.ipynb) for how to run `contaminante`. To run `contaminante` you will need a target name, a transit period, a transit center and a transit duration.
+You can check out our [tutorial](https://christinahedges.github.io/contaminante/_build/html/tutorial.html) for how to run `contaminante`. To run `contaminante` you will need a target name, a transit period, a transit center and a transit duration.
 
-## Installation
+## How do I install `contaminante`?
 
 You can install `contaminante` using pip:
 
@@ -42,12 +42,11 @@ cd contaminante
 python setup.py install
 ```
 
-### Help, I can't install `contaminante`
+### Help, I can't install `contaminante`!
 
 You might not be able to install `contaminante` because your computer doesn't support some of the features, or perhaps you're new to Python. Don't worry, you can still use `contaminante`! If you're struggling to install, try running `contaminante` online using Google's Colaboratory. You can click [here](https://colab.research.google.com/github/christinahedges/contaminante/blob/master/tutorials/Colaboratory-Notebook.ipynb) to open a new Colaboratory notebook and run `contaminante` in the cloud!
+
 
 ## Dependencies
 
 `contaminante` uses the most up to date version of [`lightkurve`](https://github.com/keplerGO/lightkurve), and uses some of the features available in v2.0. Make sure your `lightkurve` installation is up to date before using contaminante.
-
-## Acknowledgements
