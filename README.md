@@ -1,9 +1,9 @@
-<div style="text-align:center"><img width = "200" src="https://github.com/christinahedges/contaminante/blob/master/docs/figures/logo.png?raw=true"/></div>
+<p align="center"><img width = "400" src="https://github.com/christinahedges/contaminante/blob/master/docs/figures/logo.png?raw=true"/></p>
 
 # contaminante
 *kohn - tah - mee - nahn - teh*
 
-(Read the docs here!)[http://christinahedges.github.io/contaminante]
+[Read the docs here!](http://christinahedges.github.io/contaminante)
 
 A package to help find the contaminant transiting source in NASA's *Kepler*, *K2* or *TESS* data. When hunting for transiting planets, sometimes signals come from neighboring contaminants. This package helps users identify where the transiting signal comes from in their data.
 
