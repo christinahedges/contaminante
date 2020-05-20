@@ -133,7 +133,6 @@ def calculate_contamination(targetid, period, t0, duration, mission='kepler', pl
 #            cbvs = None
             model, transit_pixels, transit_pixels_err, contaminant_aper = build_model(tpf, s_lc.flux, cbvs=cbvs, t_model=t_model, background=background)
 
-
             # # If all the "transit" pixels are contained in the aperture, continue.
             # if np.in1d(np.where(contaminant_aper.ravel()), np.where(aper.ravel())).all():
             #     continue
@@ -174,6 +173,12 @@ def calculate_contamination(targetid, period, t0, duration, mission='kepler', pl
                     contaminator = contaminator.append(build_lc(tpf, contaminant_aper, cbvs=cbvs, background=background, cadence_mask=t_mask, spline_period=duration * 6))#contaminated_lc.flatten(window_length))
 
 
+
+
+        bls = BoxLeastSquares(target.time, target.flux, target.flux_err)
+        outlier_mask = target.remove_outliers(sigma=10, return_mask=True)[1]
+        outlier_mask &= bls.transit_mask(target.time, period, duration, t0)
+        target = target[~outlier_mask]
         bls = BoxLeastSquares(target.time, target.flux, target.flux_err)
         depths = []
         for i in range(50):
@@ -188,6 +193,11 @@ def calculate_contamination(targetid, period, t0, duration, mission='kepler', pl
         contaminated = False
         if contaminator is not None:
             bls = BoxLeastSquares(contaminator.time, contaminator.flux, contaminator.flux_err)
+            outlier_mask = contaminator.remove_outliers(sigma=10, return_mask=True)[1]
+            outlier_mask &= bls.transit_mask(contaminator.time, period, duration, t0)
+            contaminator = contaminator[~outlier_mask]
+            bls = BoxLeastSquares(contaminator.time, contaminator.flux, contaminator.flux_err)
+
             depths = []
             for i in range(50):
                 bls.y = contaminator.flux + np.random.normal(0, contaminator.flux_err)

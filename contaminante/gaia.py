@@ -18,7 +18,7 @@ def get_gaia(tpf):
     result = Vizier.query_region(c1, catalog=["I/345/gaia2"],
                                  radius=(np.hypot(*np.asarray(tpf.shape[1:])/2) * 4) *u.arcsec)
     result = result[0].to_pandas()
-    result = result[result.Gmag < 18]
+    result = result[result.Gmag < 20]
     cs = []
     for idx, d in result.iterrows():
         if d.Plx > 0:
@@ -34,7 +34,7 @@ def get_gaia(tpf):
                            radial_velocity=np.nanmax([0, d.RV])*(u.km/u.s)))
     return cs
 
-def plot_gaia(tpfs, ax=None, color='magenta'):
+def plot_gaia(tpfs, ax=None, color='lime'):
     """ Plot the Gaia sources in TPFs, including their space motion. """
     cs = get_gaia(tpfs[0])
     if ax is None:
@@ -46,6 +46,6 @@ def plot_gaia(tpfs, ax=None, color='magenta'):
             c_prime = c.apply_space_motion(t)
             ras.append(c_prime.ra.deg)
             decs.append(c_prime.dec.deg)
-        ax.scatter(ras, decs, lw=4, c=color, label=label, zorder=20, marker='o')
+        ax.scatter(ras, decs, lw=1, c=color, label=label, zorder=30, marker='x')
         label = ''
     return ax

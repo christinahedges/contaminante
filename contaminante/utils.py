@@ -209,6 +209,8 @@ def build_model(tpf, flux, cbvs=None, t_model=None, errors=False, cadence_mask=N
             for jdx in range(tpf.shape[2]):
 
                 f = pixels[:, idx, jdx]
+                if (f < 0).any():
+                    continue
                 fe = pixels_err[:, idx, jdx]
 
                 fe /= np.nanmean(f)
@@ -231,14 +233,15 @@ def build_model(tpf, flux, cbvs=None, t_model=None, errors=False, cadence_mask=N
 
                 if t_model is not None:
                     samples = np.random.multivariate_normal(w, sigma_w, size=100)[:, -1]
-                    transit_pixels[idx, jdx] = np.mean(samples)
-                    transit_pixels_err[idx, jdx] = np.std(samples)
+                    transit_pixels[idx, jdx] = np.nanmean(samples)
+                    transit_pixels_err[idx, jdx] = np.nanstd(samples)
 
                 if errors:
                     samp = np.random.multivariate_normal(w, sigma_w, size=100)
                     samples = np.asarray([SA.dot(samp1) for samp1 in samp]).T
-                    model_err[:, idx, jdx] = np.median(samples, axis=1) - np.percentile(samples, 16, axis=1)
+                    model_err[:, idx, jdx] = np.nanmedian(samples, axis=1) - np.nanpercentile(samples, 16, axis=1)
 
+        transit_pixels = np.nan_to_num(transit_pixels)
         #aper = np.copy(transit_pixels/transit_pixels_err)
         #Fix saturated pixels
         for jdx, s in enumerate(saturated.T):
