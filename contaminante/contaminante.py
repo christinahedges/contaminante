@@ -62,7 +62,7 @@ def calculate_contamination(targetid, period, t0, duration, mission='kepler', pl
         sr = search(targetid, mission, quarter=quarter, sector=sector, campaign=campaign)
 
         if (mission.lower() == 'tess') and (len(sr) == 0):
-            tpfs = search(targetid, mission, lk.search_tesscut, sector=sector).download_all(cutout_size=(10, 10))
+            tpfs = search(targetid, mission, lk.search_tesscut, sector=sector).download_all(cutout_size=(8, 8))
             background = True
         elif len(sr) == 0:
             raise ValueError('No target pixel files exist for {} from {}'.format(targetid, mission))
@@ -77,13 +77,12 @@ def calculate_contamination(targetid, period, t0, duration, mission='kepler', pl
             if not (aper.any()):
                 aper = tpf.create_threshold_mask()
             mask = (np.abs((tpf.pos_corr1)) < 10) & ((np.gradient(tpf.pos_corr2)) < 10)
-            mask &= np.isfinite(tpf.to_lightcurve(aperture_mask=aper).flux)
+            mask &= np.nan_to_num(tpf.to_lightcurve(aperture_mask=aper).flux) != 0
             tpf = tpf[mask]
             lc = tpf.to_lightcurve(aperture_mask=aper)
 
             bls = lc.flatten(21).to_periodogram('bls', period=[period, period])
             t_mask = bls.get_transit_mask(period=period, transit_time=t0, duration=duration)
-
             clc = build_lc(tpf, aper, background=background, cadence_mask=t_mask, spline_period=2)
             if target is None:
                 target = clc
@@ -142,7 +141,7 @@ def calculate_contamination(targetid, period, t0, duration, mission='kepler', pl
 
             thumb = np.nanmean(tpf.flux, axis=0)
             Y, X = np.mgrid[:tpf.shape[1], :tpf.shape[2]]
-            k = tpf.pipeline_mask
+            k = aper
             cxs, cys = [], []
             for count in range(100):
                 err = np.random.normal(0, thumb[k]**0.5)
@@ -155,15 +154,22 @@ def calculate_contamination(targetid, period, t0, duration, mission='kepler', pl
 
             Y, X = np.mgrid[:tpf.shape[1], :tpf.shape[2]]
             k = transit_pixels/transit_pixels_err > 3
-            xs, ys = [], []
-            for count in range(1000):
-                err = np.random.normal(0, transit_pixels_err[k])
-                xs.append(np.average(X[k], weights=np.nan_to_num(transit_pixels[k] + err)))
-                ys.append(np.average(Y[k], weights=np.nan_to_num(transit_pixels[k] + err)))
-            xs, ys = np.asarray(xs), np.asarray(ys)
-            ras, decs = tpf.wcs.wcs_pix2world(np.asarray([xs + 0.5, ys + 0.5]).T, 1).T
-            coords_ra.append(ras)
-            coords_dec.append(decs)
+#            xs, ys = [], []
+#            for count in range(1000):
+#                err = np.random.normal(0, transit_pixels_err[k])
+#                xs.append(np.average(X[k], weights=np.nan_to_num(transit_pixels[k] + err)))
+#                ys.append(np.average(Y[k], weights=np.nan_to_num(transit_pixels[k] + err)))
+#            xs, ys = np.asarray(xs), np.asarray(ys)
+#            ras, decs = tpf.wcs.wcs_pix2world(np.asarray([xs + 0.5, ys + 0.5]).T, 1).T
+#            coords_ra.append(ras)
+#            coords_dec.append(decs)
+
+            x = np.average(X[k], weights=np.nan_to_num((transit_pixels/transit_pixels_err)[k]))
+            y = np.average(Y[k], weights=np.nan_to_num((transit_pixels/transit_pixels_err)[k]))
+            ra, dec = tpf.wcs.wcs_pix2world(np.asarray([np.atleast_1d(x) + 0.5, np.atleast_1d(y) + 0.5]).T, 1).T
+            coords_ra.append(ra[0])
+            coords_dec.append(dec[0])
+
 
             if contaminant_aper.any():
                 contaminated_lc = tpf.to_lightcurve(aperture_mask=contaminant_aper)
@@ -216,6 +222,8 @@ def calculate_contamination(targetid, period, t0, duration, mission='kepler', pl
                 contaminated = True
 
         res['contaminated'] = contaminated
+        if gaia:
+            res['gaia_targets'] = get_gaia(tpfs[0])
 
         if plot:
             with plt.style.context('seaborn-white'):
@@ -233,7 +241,7 @@ def calculate_contamination(targetid, period, t0, duration, mission='kepler', pl
                     ylim[1] = np.max([np.percentile(tpfs[0].get_coordinates()[1], 99), ylim[1]])
             #        import pdb;pdb.set_trace()
                 ax.scatter(np.hstack(ra_target), np.hstack(dec_target), c='C0', marker='.', s=2, label='Target', zorder=11, alpha=1/len(tpfs))
-                ax.scatter(np.hstack(coords_ra), np.hstack(coords_dec), c='r', marker='.', s=1, label='Source Of Transit', zorder=10, alpha=0.1)
+                ax.scatter(np.hstack(coords_ra), np.hstack(coords_dec), c='r', marker='.', s=5, label='Source Of Transit', zorder=10)
                 if gaia:
                     plot_gaia(tpfs, ax=ax)
 

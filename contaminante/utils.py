@@ -129,7 +129,7 @@ def build_X(tpf, flux, t_model=None, background=False, cbvs=None, spline=True, s
         SA = np.hstack([SA, np.atleast_2d(np.ones(len(tpf.time))).T])
     return csr_matrix(SA)
 
-def build_model(tpf, flux, cbvs=None, t_model=None, errors=False, cadence_mask=None, background=False, spline=True):
+def build_model(tpf, flux, cbvs=None, t_model=None, errors=False, cadence_mask=None, background=False, spline=True, spline_period=2, return_weights=False):
     """ Build a model for the pixel level light curve
 
         Parameters
@@ -150,6 +150,8 @@ def build_model(tpf, flux, cbvs=None, t_model=None, errors=False, cadence_mask=N
             Whether to estimate the background flux, useful for TESS
         spline: bool
             Whether to use a B-Spline in time
+        spline_period: float
+            If using a spline, what time period the knots should be spaced at
         Returns
         -------
         model : np.ndarray
@@ -172,7 +174,7 @@ def build_model(tpf, flux, cbvs=None, t_model=None, errors=False, cadence_mask=N
         if cadence_mask is None:
             cadence_mask = np.ones(len(tpf.time)).astype(bool)
 
-        SA = build_X(tpf, flux, t_model=t_model, cbvs=cbvs, spline=spline, background=background, spline_period=10)
+        SA = build_X(tpf, flux, t_model=t_model, cbvs=cbvs, spline=spline, background=background, spline_period=spline_period)
 
         prior_sigma = np.ones(SA.shape[1]) * 1e-2
         prior_mu = np.zeros(SA.shape[1])
@@ -205,6 +207,7 @@ def build_model(tpf, flux, cbvs=None, t_model=None, errors=False, cadence_mask=N
                 pixels[:, l, jdx] = tpf.flux[:, s, jdx].sum(axis=(1))
                 pixels_err[:, l, jdx] = ((tpf.flux_err[:, s, jdx]**2).sum(axis=(1))**0.5)/s.sum()
 
+        ws = np.zeros((tpf.shape[1], tpf.shape[2], SA.shape[1]))
         for idx in (range(tpf.shape[1])):
             for jdx in range(tpf.shape[2]):
 
@@ -216,17 +219,23 @@ def build_model(tpf, flux, cbvs=None, t_model=None, errors=False, cadence_mask=N
                 fe /= np.nanmean(f)
                 f /= np.nanmean(f)
 
+                k = np.nan_to_num(fe) != 0
+
+                if (~k).all():
+                    continue
+
                 if not np.isfinite(f).any():
                     continue
 
-                SA_dot_sigma_f_inv = csr_matrix(SA[cadence_mask].multiply(1/fe[cadence_mask, None]**2))
-                sigma_w_inv = (SA[cadence_mask].T.dot(SA_dot_sigma_f_inv)).toarray()
+                SA_dot_sigma_f_inv = csr_matrix(SA[cadence_mask & k].multiply(1/fe[cadence_mask & k, None]**2))
+                sigma_w_inv = (SA[cadence_mask & k].T.dot(SA_dot_sigma_f_inv)).toarray()
                 sigma_w_inv += np.diag(1. / prior_sigma**2)
 
-                B = (SA[cadence_mask].T.dot((f/fe**2)[cadence_mask]))
+                B = (SA[cadence_mask & k].T.dot((f/fe**2)[cadence_mask & k]))
                 B += (prior_mu / prior_sigma**2)
 
                 w = solve(sigma_w_inv, B)
+                ws[idx, jdx, :] = w
 
                 model[:, idx, jdx] = SA.dot(w)
                 sigma_w = np.linalg.inv(sigma_w_inv)
@@ -252,13 +261,14 @@ def build_model(tpf, flux, cbvs=None, t_model=None, errors=False, cadence_mask=N
 
         aper = transit_pixels/transit_pixels_err > 3
 
-        if t_model is not None:
-            if errors:
-                return model, model_err, transit_pixels, transit_pixels_err, aper
-            return model, transit_pixels, transit_pixels_err, aper
+        result = [model]
         if errors:
-            return model, model_err, aper
-        return model, aper
+            result.append(model_err)
+        if t_model is not None:
+            [result.append(i) for i in [transit_pixels, transit_pixels_err, aper]]
+        if return_weights:
+            result.append(ws)
+        return result
 
 def build_lc(tpf, aperture_mask, cbvs=None, errors=False, cadence_mask=None, background=False, spline=True, spline_period=2):
     """ Build a corrected light curve
@@ -301,9 +311,11 @@ def build_lc(tpf, aperture_mask, cbvs=None, errors=False, cadence_mask=None, bac
         f = raw_lc.flux
         fe = raw_lc.flux_err
 
-        SA_dot_sigma_f_inv = csr_matrix(SA[cadence_mask].multiply(1/fe[cadence_mask, None]**2))
-        sigma_w_inv = (SA[cadence_mask].T.dot(SA_dot_sigma_f_inv)).toarray()
-        B = (SA[cadence_mask].T.dot((f/fe**2)[cadence_mask]))
+        k = np.nan_to_num(fe) != 0
+
+        SA_dot_sigma_f_inv = csr_matrix(SA[cadence_mask & k].multiply(1/fe[cadence_mask & k, None]**2))
+        sigma_w_inv = (SA[cadence_mask & k].T.dot(SA_dot_sigma_f_inv)).toarray()
+        B = (SA[cadence_mask & k].T.dot((f/fe**2)[cadence_mask & k]))
         w = solve(sigma_w_inv, B)
         model = SA.dot(w)
 

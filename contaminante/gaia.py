@@ -12,13 +12,13 @@ import astropy.units as u
 import warnings
 
 
-def get_gaia(tpf):
+def get_gaia(tpf, magnitude_limit=20):
     """Get the gaia sources in a TPF as SkyCoord objects"""
     c1 = SkyCoord(tpf.ra, tpf.dec, frame='icrs', unit='deg')
     result = Vizier.query_region(c1, catalog=["I/345/gaia2"],
                                  radius=(np.hypot(*np.asarray(tpf.shape[1:])/2) * 4) *u.arcsec)
     result = result[0].to_pandas()
-    result = result[result.Gmag < 20]
+    result = result[result.Gmag < magnitude_limit]
     cs = []
     for idx, d in result.iterrows():
         if d.Plx > 0:
@@ -34,9 +34,9 @@ def get_gaia(tpf):
                            radial_velocity=np.nanmax([0, d.RV])*(u.km/u.s)))
     return cs
 
-def plot_gaia(tpfs, ax=None, color='lime'):
+def plot_gaia(tpfs, ax=None, color='magenta', magnitude_limit=20):
     """ Plot the Gaia sources in TPFs, including their space motion. """
-    cs = get_gaia(tpfs[0])
+    cs = get_gaia(tpfs[0], magnitude_limit=magnitude_limit)
     if ax is None:
         _, ax = plt.subplots()
     label = 'Gaia Sources'
