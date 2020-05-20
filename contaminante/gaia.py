@@ -34,7 +34,7 @@ def get_gaia(tpf, magnitude_limit=20):
                            radial_velocity=np.nanmax([0, d.RV])*(u.km/u.s)))
     return cs
 
-def plot_gaia(tpfs, ax=None, color='magenta', magnitude_limit=20):
+def plot_gaia(tpfs, ax=None, color='lime', magnitude_limit=20):
     """ Plot the Gaia sources in TPFs, including their space motion. """
     cs = get_gaia(tpfs[0], magnitude_limit=magnitude_limit)
     if ax is None:

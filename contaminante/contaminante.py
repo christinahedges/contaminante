@@ -12,7 +12,7 @@ import lightkurve as lk
 
 import astropy.units as u
 
-from .gaia import plot_gaia
+from .gaia import plot_gaia, get_gaia
 from .utils import build_X, build_lc, build_model, search
 
 from astropy.timeseries import BoxLeastSquares
