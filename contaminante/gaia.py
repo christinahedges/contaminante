@@ -26,12 +26,12 @@ def get_gaia(tpf, magnitude_limit=20):
         else:
             dist = np.nan * u.parsec
 
-        cs.append(SkyCoord(d.RA_ICRS*u.deg, d.DE_ICRS*u.deg,
+        cs.append((SkyCoord(d.RA_ICRS*u.deg, d.DE_ICRS*u.deg,
                            distance=dist,
                            pm_ra_cosdec=d.pmRA*u.milliarcsecond/u.year,
                            pm_dec=d.pmDE*u.milliarcsecond/u.year,
                            obstime=Time('J2015.5'),
-                           radial_velocity=np.nanmax([0, d.RV])*(u.km/u.s)))
+                           radial_velocity=np.nanmax([0, d.RV])*(u.km/u.s)), d.Gmag))
     return cs
 
 def plot_gaia(tpfs, ax=None, color='lime', magnitude_limit=20):
@@ -43,7 +43,7 @@ def plot_gaia(tpfs, ax=None, color='lime', magnitude_limit=20):
     for c in cs:
         ras, decs = [], []
         for t in [tpf.astropy_time[0] for tpf in tpfs]:
-            c_prime = c.apply_space_motion(t)
+            c_prime = c[0].apply_space_motion(t)
             ras.append(c_prime.ra.deg)
             decs.append(c_prime.dec.deg)
         ax.scatter(ras, decs, lw=1, c=color, label=label, zorder=30, marker='x')

@@ -222,6 +222,10 @@ def calculate_contamination(targetid, period, t0, duration, mission='kepler', pl
                 contaminated = True
 
         res['contaminated'] = contaminated
+        res['period'] = period
+        res['t0'] = t0
+        res['duration'] = duration
+
         if gaia:
             res['gaia_targets'] = get_gaia(tpfs[0])
 
