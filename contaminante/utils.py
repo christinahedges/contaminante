@@ -241,25 +241,28 @@ def build_model(tpf, flux, cbvs=None, t_model=None, errors=False, cadence_mask=N
                 sigma_w = np.linalg.inv(sigma_w_inv)
 
                 if t_model is not None:
-                    samples = np.random.multivariate_normal(w, sigma_w, size=100)[:, -1]
-                    transit_pixels[idx, jdx] = np.nanmean(samples)
-                    transit_pixels_err[idx, jdx] = np.nanstd(samples)
+                   #samples = np.random.multivariate_normal(w, sigma_w, size=100)[:, -1]
+                   transit_pixels[idx, jdx] = w[-1]
+                   transit_pixels_err[idx, jdx] = sigma_w.diagonal()[-1]**0.5
+
 
                 if errors:
-                    samp = np.random.multivariate_normal(w, sigma_w, size=100)
-                    samples = np.asarray([SA.dot(samp1) for samp1 in samp]).T
-                    model_err[:, idx, jdx] = np.nanmedian(samples, axis=1) - np.nanpercentile(samples, 16, axis=1)
+#                    samp = np.random.multivariate_normal(w, sigma_w, size=100)
+#                    samples = np.asarray([SA.dot(samp1) for samp1 in samp]).T
+#                    model_err[:, idx, jdx] = np.nanmedian(samples, axis=1) - np.nanpercentile(samples, 16, axis=1)
+                    model_err[:, idx, jdx] = sigma_w.diagonal()**0.5
 
-        transit_pixels = np.nan_to_num(transit_pixels)
-        #aper = np.copy(transit_pixels/transit_pixels_err)
-        #Fix saturated pixels
-        for jdx, s in enumerate(saturated.T):
-            if any(s):
-                l = (np.where(s)[0][s.sum()//2])
-                transit_pixels[s, jdx] = transit_pixels[l, jdx]
-                transit_pixels_err[s, jdx] = transit_pixels_err[l, jdx]
+        if t_model is not None:
+            transit_pixels = np.nan_to_num(transit_pixels)
+            #aper = np.copy(transit_pixels/transit_pixels_err)
+            #Fix saturated pixels
+            for jdx, s in enumerate(saturated.T):
+                if any(s):
+                    l = (np.where(s)[0][s.sum()//2])
+                    transit_pixels[s, jdx] = transit_pixels[l, jdx]
+                    transit_pixels_err[s, jdx] = transit_pixels_err[l, jdx]
 
-        aper = transit_pixels/transit_pixels_err > 3
+            aper = transit_pixels/transit_pixels_err > 3
 
         result = [model]
         if errors:

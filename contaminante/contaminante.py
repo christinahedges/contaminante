@@ -17,7 +17,7 @@ from .utils import build_X, build_lc, build_model, search
 
 from astropy.timeseries import BoxLeastSquares
 
-def calculate_contamination(targetid, period, t0, duration, mission='kepler', plot=True, gaia=False, quarter=None, sector=None, campaign=None, bin_points=None):
+def calculate_contamination(targetid, period, t0, duration, mission='kepler', plot=True, gaia=False, quarter=None, sector=None, campaign=None, bin_points=None, spline_period=2):
     """Calculate the contamination for a target
 
     Parameters
@@ -81,9 +81,10 @@ def calculate_contamination(targetid, period, t0, duration, mission='kepler', pl
             tpf = tpf[mask]
             lc = tpf.to_lightcurve(aperture_mask=aper)
 
-            bls = lc.flatten(21).to_periodogram('bls', period=[period, period])
+            bls = lc.to_periodogram('bls', period=[period, period], duration=duration)
             t_mask = bls.get_transit_mask(period=period, transit_time=t0, duration=duration)
-            clc = build_lc(tpf, aper, background=background, cadence_mask=t_mask, spline_period=2)
+            clc = build_lc(tpf, aper, background=background, cadence_mask=t_mask, spline_period=spline_period)
+
             if target is None:
                 target = clc
             else:
@@ -99,7 +100,7 @@ def calculate_contamination(targetid, period, t0, duration, mission='kepler', pl
             else:
                 cbvs = None
 
-
+            bls = clc.to_periodogram('bls', period=[period, period], duration=duration)
             t_model = bls.get_transit_model(period=period, transit_time=t0, duration=duration)
             if (t_model.flux == np.mean(t_model.flux)).all():
                 continue
@@ -109,11 +110,13 @@ def calculate_contamination(targetid, period, t0, duration, mission='kepler', pl
             t_model -= med
             t_model /= depth
             t_model = t_model.flux
+            if np.mean(t_model[t_mask]) < 0:
+                raise ValueError("Transit is negative?")
 
 
-
-            n_knots = int(np.max([4, int(tpf.time[-1] - tpf.time[0]/(duration * 2))]))
-            spline_dm = lk.designmatrix.create_sparse_spline_matrix(lc.time, n_knots=n_knots)
+#            n_knots = int(np.max([4, int(tpf.time[-1] - tpf.time[0]/(duration * 2))]))
+#            spline_dm = lk.designmatrix.create_sparse_spline_matrix(lc.time, n_knots=n_knots)
+            spline_dm = lk.correctors.designmatrix.create_sparse_spline_matrix(tpf.time, n_knots=int(np.max([4, int((tpf.time[-1] - tpf.time[0])//spline_period)])))
             if cbvs is not None:
                 dm = lk.SparseDesignMatrixCollection([spline_dm, cbv_dm])
             else:
@@ -126,11 +129,10 @@ def calculate_contamination(targetid, period, t0, duration, mission='kepler', pl
                 clc = r.correct(dm, sigma=2.5)
             s_lc = r.diagnostic_lightcurves['spline'].normalize()
 
-
 #            r.diagnose()
 #            return
 #            cbvs = None
-            model, transit_pixels, transit_pixels_err, contaminant_aper = build_model(tpf, s_lc.flux, cbvs=cbvs, t_model=t_model, background=background)
+            model, transit_pixels, transit_pixels_err, contaminant_aper = build_model(tpf, s_lc.flux, cbvs=cbvs, t_model=t_model, background=background, spline_period=spline_period)
 
             # # If all the "transit" pixels are contained in the aperture, continue.
             # if np.in1d(np.where(contaminant_aper.ravel()), np.where(aper.ravel())).all():
@@ -140,13 +142,14 @@ def calculate_contamination(targetid, period, t0, duration, mission='kepler', pl
                 continue
 
             thumb = np.nanmean(tpf.flux, axis=0)
+            err = (np.sum(tpf.flux_err**2, axis=0)**0.5)/len(tpf.time)
             Y, X = np.mgrid[:tpf.shape[1], :tpf.shape[2]]
             k = aper
             cxs, cys = [], []
             for count in range(100):
-                err = np.random.normal(0, thumb[k]**0.5)
-                cxs.append(np.average(X[k], weights=thumb[k] + err))
-                cys.append(np.average(Y[k], weights=thumb[k] + err))
+                err1 = np.random.normal(0, err[k])
+                cxs.append(np.average(X[k], weights=thumb[k] + err1))
+                cys.append(np.average(Y[k], weights=thumb[k] + err1))
             cxs, cys = np.asarray(cxs), np.asarray(cys)
             cras, cdecs = tpf.wcs.wcs_pix2world(np.asarray([cxs + 0.5, cys + 0.5]).T, 1).T
             ra_target.append(cras)
@@ -154,31 +157,29 @@ def calculate_contamination(targetid, period, t0, duration, mission='kepler', pl
 
             Y, X = np.mgrid[:tpf.shape[1], :tpf.shape[2]]
             k = transit_pixels/transit_pixels_err > 3
-#            xs, ys = [], []
-#            for count in range(1000):
-#                err = np.random.normal(0, transit_pixels_err[k])
-#                xs.append(np.average(X[k], weights=np.nan_to_num(transit_pixels[k] + err)))
-#                ys.append(np.average(Y[k], weights=np.nan_to_num(transit_pixels[k] + err)))
-#            xs, ys = np.asarray(xs), np.asarray(ys)
-#            ras, decs = tpf.wcs.wcs_pix2world(np.asarray([xs + 0.5, ys + 0.5]).T, 1).T
-#            coords_ra.append(ras)
-#            coords_dec.append(decs)
-
-            x = np.average(X[k], weights=np.nan_to_num((transit_pixels/transit_pixels_err)[k]))
-            y = np.average(Y[k], weights=np.nan_to_num((transit_pixels/transit_pixels_err)[k]))
-            ra, dec = tpf.wcs.wcs_pix2world(np.asarray([np.atleast_1d(x) + 0.5, np.atleast_1d(y) + 0.5]).T, 1).T
-            coords_ra.append(ra[0])
-            coords_dec.append(dec[0])
-
+            xs, ys = [], []
+            for count in range(1000):
+                err = np.random.normal(0, transit_pixels_err[k])
+                xs.append(np.average(X[k], weights=np.nan_to_num(transit_pixels[k] + err)))
+                ys.append(np.average(Y[k], weights=np.nan_to_num(transit_pixels[k] + err)))
+            xs, ys = np.asarray(xs), np.asarray(ys)
+            ras, decs = tpf.wcs.wcs_pix2world(np.asarray([xs + 0.5, ys + 0.5]).T, 1).T
+            coords_ra.append(ras)
+            coords_dec.append(decs)
+            # 
+            # x = np.average(X[k], weights=np.nan_to_num((transit_pixels/transit_pixels_err)[k]))
+            # y = np.average(Y[k], weights=np.nan_to_num((transit_pixels/transit_pixels_err)[k]))
+            # ra, dec = tpf.wcs.wcs_pix2world(np.asarray([np.atleast_1d(x) + 0.5, np.atleast_1d(y) + 0.5]).T, 1).T
+            # coords_ra.append(ra[0])
+            # coords_dec.append(dec[0])
+            #
 
             if contaminant_aper.any():
                 contaminated_lc = tpf.to_lightcurve(aperture_mask=contaminant_aper)
                 if contaminator is None:
-                    contaminator = build_lc(tpf, contaminant_aper, cbvs=cbvs, background=background, cadence_mask=t_mask, spline_period=duration * 6)#contaminated_lc#.flatten(window_length)
+                    contaminator = build_lc(tpf, contaminant_aper, cbvs=cbvs, background=background, cadence_mask=t_mask, spline_period=spline_period)#contaminated_lc#.flatten(window_length)
                 else:
-                    contaminator = contaminator.append(build_lc(tpf, contaminant_aper, cbvs=cbvs, background=background, cadence_mask=t_mask, spline_period=duration * 6))#contaminated_lc.flatten(window_length))
-
-
+                    contaminator = contaminator.append(build_lc(tpf, contaminant_aper, cbvs=cbvs, background=background, cadence_mask=t_mask, spline_period=spline_period))#contaminated_lc.flatten(window_length))
 
 
         bls = BoxLeastSquares(target.time, target.flux, target.flux_err)
