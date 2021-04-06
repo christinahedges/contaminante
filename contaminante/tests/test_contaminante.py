@@ -23,28 +23,31 @@ def pytest_runtest_setup(item):
 
 
 def test_contaminante():
-    print(lk.__version__)
-    tpfc = contaminante.TargetPixelFileCollection(lk.read(fname))
+    tpfc = lk.read(fname)
     period = 0.700606
     t0 = 131.59767
     duration = 0.993 / 24
 
-    res = tpfc.calculate_contamination(period, t0, duration, plot=False, cbvs=False)
-    assert res[0]["delta_transit_depth[sigma]"] > 5
-    assert res[0]["centroid_shift"][0].value > 5
-
-    res = tpfc.calculate_contamination(period, t0, duration, plot=False, cbvs=True)
-    assert res[0]["delta_transit_depth[sigma]"] > 5
-    assert res[0]["centroid_shift"][0].value > 5
-
-    res = tpfc.calculate_contamination(
-        period, t0, duration, plot=False, cbvs=True, spline=False
+    res = contaminante.calculate_contamination(
+        tpfc, period, t0, duration, plot=False, cbvs=False
     )
     assert res[0]["delta_transit_depth[sigma]"] > 5
     assert res[0]["centroid_shift"][0].value > 5
 
-    res = tpfc.calculate_contamination(
-        period, t0, duration, plot=False, cbvs=True, sff=True
+    res = contaminante.calculate_contamination(
+        tpfc, period, t0, duration, plot=False, cbvs=True
+    )
+    assert res[0]["delta_transit_depth[sigma]"] > 5
+    assert res[0]["centroid_shift"][0].value > 5
+
+    res = contaminante.calculate_contamination(
+        tpfc, period, t0, duration, plot=False, cbvs=True, spline=False
+    )
+    assert res[0]["delta_transit_depth[sigma]"] > 5
+    assert res[0]["centroid_shift"][0].value > 5
+
+    res = contaminante.calculate_contamination(
+        tpfc, period, t0, duration, plot=False, cbvs=True, sff=True
     )
     assert res[0]["delta_transit_depth[sigma]"] > 5
     assert res[0]["centroid_shift"][0].value > 5

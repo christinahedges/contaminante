@@ -22,4 +22,4 @@ if platform.system() == "Linux" and os.environ.get("DISPLAY", "") == "":
     matplotlib.use("Agg")
 
 from .version import __version__
-from .contaminante import TargetPixelFileCollection
+from .contaminante import calculate_contamination

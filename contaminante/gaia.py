@@ -13,13 +13,20 @@ import astropy.units as u
 import warnings
 
 
-def get_gaia(tpf, magnitude_limit=20):
+def get_gaia(tpf, magnitude_limit=18):
     """Get the gaia sources in a TPF as SkyCoord objects"""
+    if tpf.mission.lower() in ["kepler", "ktwo", "k2"]:
+        pixel_scale = 4
+    elif tpf.mission.lower() in ["tess"]:
+        pixel_scale = 27
+    else:
+        raise ValueError("Can not parse TPF mission")
+
     c1 = SkyCoord(tpf.ra, tpf.dec, frame="icrs", unit="deg")
     result = Vizier.query_region(
         c1,
         catalog=["I/345/gaia2"],
-        radius=(np.hypot(*np.asarray(tpf.shape[1:]) / 2) * 4) * u.arcsec,
+        radius=(np.hypot(*np.asarray(tpf.shape[1:]) / 2) * pixel_scale) * u.arcsec,
     )
     result = result[0].to_pandas()
     result = result[result.Gmag < magnitude_limit]
@@ -59,6 +66,18 @@ def plot_gaia(tpfs, ax=None, color="lime", magnitude_limit=20):
             c_prime = c[0].apply_space_motion(t)
             ras.append(c_prime.ra.deg)
             decs.append(c_prime.dec.deg)
-        ax.scatter(ras, decs, lw=1, c=color, label=label, zorder=30, marker="x")
+        ax.scatter(
+            ras,
+            decs,
+            lw=1,
+            facecolor=color,
+            edgecolor="grey",
+            label=label,
+            zorder=30,
+            marker="o",
+            s=np.max([(18 - c[1]) * 3, 1]),
+            alpha=0.5,
+        )
+
         label = ""
     return ax

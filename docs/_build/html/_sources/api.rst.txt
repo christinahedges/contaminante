@@ -5,5 +5,5 @@
 `contaminante` Core Functions
 -----------------------------
 
-.. automodule:: contaminante.TargetPixelFileCollection
+.. automodule:: contaminante.contaminante
    :members:

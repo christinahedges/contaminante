@@ -215,7 +215,18 @@ the <em>Kepler</em> quarters.</p>
 should take less than 5 minutes.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [58]:
+<span></span>In [1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">autoreload</span> 2
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -226,7 +237,7 @@ should take less than 5 minutes.</p>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [59]:
+<span></span>In [3]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -236,7 +247,7 @@ should take less than 5 minutes.</p>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>Out[59]:
+<span></span>Out[3]:
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
@@ -246,7 +257,7 @@ should take less than 5 minutes.</p>
 </div>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [60]:
+<span></span>In [49]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -259,11 +270,11 @@ should take less than 5 minutes.</p>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [61]:
+<span></span>In [59]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">result</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">TargetPixelFileCollection</span><span class="p">(</span><span class="n">tpfs</span><span class="p">)</span><span class="o">.</span><span class="n">calculate_contamination</span><span class="p">(</span><span class="n">period</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">);</span>
+<span></span><span class="n">result</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">calculate_contamination</span><span class="p">(</span><span class="n">tpfs</span><span class="p">,</span> <span class="n">period</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sff</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">spline_period</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">cbvs</span><span class="o">=</span><span class="kc">True</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
@@ -272,62 +283,44 @@ should take less than 5 minutes.</p>
 </div>
 <div class="stderr output_area docutils container">
 <div class="highlight"><pre>
-Modeling TPFs:   0%|          | 0/3 [00:00&lt;?, ?it/s]/Users/ch/.pyenv/versions/3.8.0/lib/python3.8/site-packages/lightkurve/correctors/designmatrix.py:307: LightkurveWarning: The design matrix has low rank (3) compared to the number of columns (8), which suggests that the matrix contains duplicate or correlated columns. This may prevent the regression from succeeding. Consider reducing the dimensionality by calling the `pca()` method.
-  warnings.warn(
-/Users/ch/.pyenv/versions/3.8.0/lib/python3.8/site-packages/lightkurve/correctors/designmatrix.py:307: LightkurveWarning: The design matrix has low rank (3) compared to the number of columns (8), which suggests that the matrix contains duplicate or correlated columns. This may prevent the regression from succeeding. Consider reducing the dimensionality by calling the `pca()` method.
-  warnings.warn(
-/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:180: RuntimeWarning: invalid value encountered in true_divide
-  contaminant_aper = (transit_pixels / transit_pixels_err) &gt; sigma
-/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:231: RuntimeWarning: Mean of empty slice
-  thumb = np.nanmean(tpf.flux.value, axis=0)
-/Users/ch/.pyenv/versions/3.8.0/lib/python3.8/site-packages/numpy/lib/nanfunctions.py:993: RuntimeWarning: All-NaN slice encountered
-  result = np.apply_along_axis(_nanmedian1d, axis, a, overwrite_input)
-Modeling TPFs:  33%|███▎      | 1/3 [00:07&lt;00:14,  7.31s/it]WARNING: The fit may be unsuccessful; check fit_info[&#39;message&#39;] for more information. [astropy.modeling.fitting]
-WARNING: The fit may be unsuccessful; check fit_info[&#39;message&#39;] for more information. [astropy.modeling.fitting]
-/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:180: RuntimeWarning: invalid value encountered in true_divide
-  contaminant_aper = (transit_pixels / transit_pixels_err) &gt; sigma
-/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:231: RuntimeWarning: Mean of empty slice
-  thumb = np.nanmean(tpf.flux.value, axis=0)
-/Users/ch/.pyenv/versions/3.8.0/lib/python3.8/site-packages/numpy/lib/nanfunctions.py:993: RuntimeWarning: All-NaN slice encountered
-  result = np.apply_along_axis(_nanmedian1d, axis, a, overwrite_input)
-Modeling TPFs:  67%|██████▋   | 2/3 [00:15&lt;00:07,  7.95s/it]WARNING: The fit may be unsuccessful; check fit_info[&#39;message&#39;] for more information. [astropy.modeling.fitting]
-WARNING: The fit may be unsuccessful; check fit_info[&#39;message&#39;] for more information. [astropy.modeling.fitting]
-/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:180: RuntimeWarning: invalid value encountered in true_divide
-  contaminant_aper = (transit_pixels / transit_pixels_err) &gt; sigma
-/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:231: RuntimeWarning: Mean of empty slice
-  thumb = np.nanmean(tpf.flux.value, axis=0)
-/Users/ch/.pyenv/versions/3.8.0/lib/python3.8/site-packages/numpy/lib/nanfunctions.py:993: RuntimeWarning: All-NaN slice encountered
-  result = np.apply_along_axis(_nanmedian1d, axis, a, overwrite_input)
-Modeling TPFs: 100%|██████████| 3/3 [00:21&lt;00:00,  7.32s/it]
+Modeling TPFs:   0%|          | 0/3 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:266: RuntimeWarning: invalid value encountered in true_divide
+  cxs, cys = [], []
+Modeling TPFs:  33%|███▎      | 1/3 [00:06&lt;00:12,  6.18s/it]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:266: RuntimeWarning: invalid value encountered in true_divide
+  cxs, cys = [], []
+Modeling TPFs:  67%|██████▋   | 2/3 [00:11&lt;00:05,  5.82s/it]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:266: RuntimeWarning: invalid value encountered in true_divide
+  cxs, cys = [], []
+Modeling TPFs: 100%|██████████| 3/3 [00:16&lt;00:00,  5.47s/it]
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_6_1.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_6_1.png" />
+<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_7_1.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_7_1.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_6_2.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_6_2.png" />
+<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_7_2.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_7_2.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_6_3.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_6_3.png" />
+<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_7_3.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_7_3.png" />
 </div>
 </div>
 <p>Using <code class="docutils literal notranslate"><span class="pre">contaminante</span></code> we can see two pieces of evidence that this
 target is contaminated. 1. There is a significant offset between the
 center of the <strong>target</strong> (blue dot) in the image, and the <strong>source of
-the transiting signal</strong> (red dot). 2. There is a significant difference
-between the <strong>target</strong> phase curve (blue phase curve) and the <strong>source
-of the transiting signal</strong> phase curve (red phase curve).</p>
+the transiting signal</strong> (red dot). <strong>NOTE: The blue dot is the weighted
+average of the flux inside the pipeline aperture, for crowded sources
+this may not be accurate.</strong> 2. There is a significant difference between
+the <strong>target</strong> phase curve (blue phase curve) and the <strong>source of the
+transiting signal</strong> phase curve (red phase curve).</p>
 <p>We name the source of the transiting signal that <code class="docutils literal notranslate"><span class="pre">contaminante</span></code> finds
 the &quot;contaminator&quot;.</p>
 <p>The result is a list of dictionaries contains the depth and positions of
@@ -339,7 +332,7 @@ contaminated. In the above cases there is a significant difference
 between the contaminator and the target.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [62]:
+<span></span>In [60]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -349,38 +342,38 @@ between the contaminator and the target.</p>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>Out[62]:
+<span></span>Out[60]:
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>[{&#39;target_depth&#39;: (2.7592504393343383e-05, 4.842852396032292e-06),
-  &#39;target_ra&#39;: (298.48318669888425, 1.7334604995912366e-09),
-  &#39;target_dec&#39;: (42.24187174842664, 1.2286256670945875e-09),
+<span></span>[{&#39;target_depth&#39;: (2.6802764358274484e-05, 4.054373618487692e-06),
+  &#39;target_ra&#39;: (298.48318669878716, 1.7445106673522628e-09),
+  &#39;target_dec&#39;: (42.24187174849672, 1.1745150091724413e-09),
   &#39;target_lc&#39;: &lt;KeplerLightCurve length=4436 LABEL=&quot;KIC 6804648&quot; QUARTER=10 CAMPAIGN=None&gt;
          time               flux        ... cadenceno quality
                                         ...
         object            float64       ...   int32    int32
   ------------------ ------------------ ... --------- -------
-   906.8458248060851 0.9999192556002194 ...     39049       0
-   906.8662592900218  1.000118857587548 ...     39050       0
-    906.886693673965   1.00005407908495 ...     39051       0
-   906.9071281576762 1.0000383202591014 ...     39052     128
-   906.9275624413785 0.9999716777790035 ...     39053       0
-   906.9479968246233 0.9999422761845655 ...     39054       0
-   906.9684313078615 0.9999595310153173 ...     39055       0
-   906.9888655908726 1.0000121030682079 ...     39056       0
-   907.0092999736517 1.0000263137097785 ...     39057       0
+   906.8458248060851 0.9998834409577795 ...     39049       0
+   906.8662592900218  1.000124118445111 ...     39050       0
+    906.886693673965 1.0000414874046624 ...     39051       0
+   906.9071281576762 1.0000099381260454 ...     39052     128
+   906.9275624413785  0.999892003922948 ...     39053       0
+   906.9479968246233 0.9999607055625797 ...     39054       0
+   906.9684313078615 0.9999491057129979 ...     39055       0
+   906.9888655908726 1.0000180109390528 ...     39056       0
+   907.0092999736517 0.9998898861670931 ...     39057       0
                  ...                ... ...       ...     ...
-  1000.0851898831825  1.000010712635298 ...     43612       0
-  1000.1056229714231 1.0000679459114057 ...     43613       0
-  1000.1260561591916 0.9998951716303704 ...     43614    8192
-  1000.1464891469659 1.0001332711842204 ...     43615       0
-   1000.166922334276  1.000029612927612 ...     43616       0
-  1000.1873554213453 1.0000543444297199 ...     43617       0
-  1000.2077884081882 1.0000944352687575 ...     43618       0
-  1000.2282215947926 0.9999603953349843 ...     43619       0
-  1000.2486546809378 0.9999998447701794 ...     43620       0
-  1000.2690876668494 0.9998091709824628 ...     43621       0,
+  1000.0851898831825 0.9999551024001835 ...     43612       0
+  1000.1056229714231 1.0000391357585516 ...     43613       0
+  1000.1260561591916 0.9998485596466309 ...     43614    8192
+  1000.1464891469659 1.0000864769487188 ...     43615       0
+   1000.166922334276 0.9999897268297215 ...     43616       0
+  1000.1873554213453 1.0000424732681419 ...     43617       0
+  1000.2077884081882 1.0000830571070023 ...     43618       0
+  1000.2282215947926 0.9999801862137017 ...     43619       0
+  1000.2486546809378  1.000032779199553 ...     43620       0
+  1000.2690876668494  0.999811392172271 ...     43621       0,
   &#39;target_aper&#39;: array([[False, False, False, False, False, False, False],
          [False, False, False, False,  True, False, False],
          [False, False,  True,  True,  True,  True, False],
@@ -388,34 +381,34 @@ between the contaminator and the target.</p>
          [False, False,  True,  True,  True,  True, False],
          [False, False,  True,  True,  True,  True, False],
          [False, False, False, False, False, False, False]]),
-  &#39;contaminator_ra&#39;: (298.48600690108634, 7.60127308792341e-09),
-  &#39;contaminator_dec&#39;: (42.24105842765048, 8.43698495209535e-09),
-  &#39;contaminator_depth&#39;: (0.001154232401192623, 4.75290369563914e-05),
+  &#39;contaminator_ra&#39;: (298.48660320220324, 1.6574996887712306e-05),
+  &#39;contaminator_dec&#39;: (42.241699727399876, 2.0935749766654715e-05),
+  &#39;contaminator_depth&#39;: (0.0012007441556371587, 4.997062338284275e-05),
   &#39;contaminator_lc&#39;: &lt;KeplerLightCurve length=4436 LABEL=&quot;KIC 6804648&quot; QUARTER=10 CAMPAIGN=None&gt;
          time               flux        ... cadenceno quality
                                         ...
         object            float64       ...   int32    int32
   ------------------ ------------------ ... --------- -------
-   906.8458248060851 1.0007207055173581 ...     39049       0
-   906.8662592900218 0.9996944416441748 ...     39050       0
-    906.886693673965 0.9996697126458242 ...     39051       0
-   906.9071281576762  0.999166643861368 ...     39052     128
-   906.9275624413785 0.9998616014275006 ...     39053       0
-   906.9479968246233 0.9991841217540282 ...     39054       0
-   906.9684313078615  1.001209734081206 ...     39055       0
-   906.9888655908726 0.9986459784373702 ...     39056       0
-   907.0092999736517 0.9981346864324356 ...     39057       0
+   906.8458248060851  1.000258333875035 ...     39049       0
+   906.8662592900218 0.9994980892841774 ...     39050       0
+    906.886693673965 0.9995369884744718 ...     39051       0
+   906.9071281576762 0.9991988302049277 ...     39052     128
+   906.9275624413785 0.9999732121814077 ...     39053       0
+   906.9479968246233 0.9992955066274554 ...     39054       0
+   906.9684313078615 1.0013237454436092 ...     39055       0
+   906.9888655908726 0.9986719083142246 ...     39056       0
+   907.0092999736517 0.9981485119448209 ...     39057       0
                  ...                ... ...       ...     ...
-  1000.0851898831825 0.9995320081262163 ...     43612       0
-  1000.1056229714231 0.9998717825909812 ...     43613       0
-  1000.1260561591916 1.0009721786802226 ...     43614    8192
-  1000.1464891469659 1.0000937452593117 ...     43615       0
-   1000.166922334276 0.9991694909272214 ...     43616       0
-  1000.1873554213453 1.0002176822488744 ...     43617       0
-  1000.2077884081882  1.000876342633441 ...     43618       0
-  1000.2282215947926 1.0008800824286666 ...     43619       0
-  1000.2486546809378 0.9983058644589567 ...     43620       0
-  1000.2690876668494 0.9983742281723905 ...     43621       0,
+  1000.0851898831825 0.9993106655937168 ...     43612       0
+  1000.1056229714231 0.9995725515281534 ...     43613       0
+  1000.1260561591916 1.0006020443006833 ...     43614    8192
+  1000.1464891469659  0.999553345398554 ...     43615       0
+   1000.166922334276 0.9994003978630305 ...     43616       0
+  1000.1873554213453  1.000156007992151 ...     43617       0
+  1000.2077884081882 1.0006825046920422 ...     43618       0
+  1000.2282215947926 1.0007822944331957 ...     43619       0
+  1000.2486546809378 0.9993891379492238 ...     43620       0
+  1000.2690876668494 0.9983383958109301 ...     43621       0,
   &#39;contaminator_aper&#39;: array([[False, False, False, False, False, False, False],
          [False, False, False, False, False, False, False],
          [False, False, False, False, False, False, False],
@@ -423,116 +416,181 @@ between the contaminator and the target.</p>
          [False,  True, False, False, False, False, False],
          [False,  True,  True, False, False, False, False],
          [False, False, False, False, False, False, False]]),
-  &#39;delta_transit_depth[sigma]&#39;: 23.58214438313531,
+  &#39;delta_transit_depth[sigma]&#39;: 23.41568524018127,
   &#39;period&#39;: 0.700606,
   &#39;t0&#39;: 131.59767,
   &#39;duration&#39;: 0.041375,
-  &#39;centroid_shift&#39;: (&lt;Quantity 10.56649439 arcsec&gt;,
-   &lt;Quantity 0.00022911 arcsec&gt;),
+  &#39;centroid_shift&#39;: (&lt;Quantity 12.31499272 arcsec&gt;,
+   &lt;Quantity 2.9999619 arcsec&gt;),
+  &#39;transit_depth&#39;: array([[ 0.00000000e+00,  0.00000000e+00,  2.51212318e-04,
+          -6.18675062e-05, -3.24107917e-04, -1.27717470e-04,
+          -3.11168403e-04],
+         [ 0.00000000e+00,  6.07204816e-04, -6.62213371e-04,
+          -1.17489077e-04,  2.12298293e-05, -6.56595881e-05,
+          -6.83488103e-05],
+         [-4.76153501e-03, -5.98350127e-04,  1.81242470e-05,
+          -1.51123289e-05,  3.42311056e-05,  4.60574553e-05,
+          -1.80697323e-04],
+         [-2.17706508e-03,  1.73032265e-04, -5.07045230e-06,
+           2.51473679e-05, -9.13165503e-06, -5.65080992e-05,
+           8.21840797e-04],
+         [ 2.92096860e-03,  3.09669560e-03,  1.89843166e-05,
+          -1.84933963e-05,  1.35129628e-05, -3.04517808e-05,
+          -3.23842300e-04],
+         [-1.06757110e-04,  2.84768261e-03,  3.17815637e-04,
+          -1.10234775e-04, -1.40851604e-04,  1.42629348e-04,
+          -5.34333381e-04],
+         [ 0.00000000e+00,  5.70787558e-04,  3.20865474e-04,
+           2.41066603e-04,  1.10746882e-03,  1.07930555e-03,
+           0.00000000e+00]]),
+  &#39;transit_depth_err&#39;: array([[0.00000000e+00, 0.00000000e+00, 1.36503710e-04, 1.84539798e-04,
+          2.15612619e-04, 1.86051800e-04, 4.54683076e-04],
+         [0.00000000e+00, 8.59291049e-04, 6.05383109e-04, 1.39754442e-04,
+          5.01110421e-05, 8.43692154e-05, 1.70765426e-04],
+         [2.33797249e-03, 6.47270634e-04, 1.45983789e-04, 2.92233824e-05,
+          3.15265285e-05, 4.93980441e-05, 2.16399969e-04],
+         [1.26299239e-03, 2.98363926e-04, 1.38313794e-05, 9.72992923e-06,
+          2.08945566e-05, 8.20539015e-05, 3.80021098e-04],
+         [1.00316565e-03, 1.66018625e-04, 1.93459074e-05, 1.05310760e-05,
+          2.44854656e-05, 1.14963588e-04, 8.38188454e-04],
+         [9.54544367e-04, 1.70709074e-04, 5.84870868e-05, 7.10063135e-05,
+          9.83097584e-05, 1.44532769e-04, 5.87668637e-04],
+         [0.00000000e+00, 3.84894397e-04, 2.84336669e-04, 3.60349901e-04,
+          9.10805376e-04, 9.52575695e-04, 0.00000000e+00]]),
   &#39;fig&#39;: &lt;Figure size 1224x252 with 2 Axes&gt;},
- {&#39;target_depth&#39;: (3.1695660521356e-05, 4.876853110755291e-06),
-  &#39;target_ra&#39;: (298.4832623564175, 1.1159582083111094e-09),
-  &#39;target_dec&#39;: (42.241906119733216, 1.0618712337950607e-09),
+ {&#39;target_depth&#39;: (3.280891994423971e-05, 5.746884280953689e-06),
+  &#39;target_ra&#39;: (298.48326235630395, 1.117772385107976e-09),
+  &#39;target_dec&#39;: (42.241906119791665, 9.618189665150718e-10),
   &#39;target_lc&#39;: &lt;KeplerLightCurve length=4469 LABEL=&quot;KIC 6804648&quot; QUARTER=11 CAMPAIGN=None&gt;
          time               flux        ... cadenceno quality
                                         ...
         object            float64       ...   int32    int32
   ------------------ ------------------ ... --------- -------
-  1001.2089795090433 1.0001317029725254 ...     43667       0
-  1001.2294124814507 0.9997661676680061 ...     43668  393216
-  1001.2498456533867 1.0000279364492313 ...     43669  393216
-  1001.2702787253293 1.0000327223419596 ...     43670       0
-  1001.2907118967996 0.9998312371000195 ...     43671  393216
-  1001.3111448680429  0.999907708086014 ...     43672  393216
-  1001.3315779390541 1.0001873213406576 ...     43673       0
-   1001.352011109826 0.9999931615036239 ...     43674  393216
-  1001.3724440801379 0.9999529553773039 ...     43675       0
+  1001.2089795090433 1.0001598488422307 ...     43667       0
+  1001.2294124814507 0.9998465327458866 ...     43668  393216
+  1001.2498456533867  1.000083434754878 ...     43669  393216
+  1001.2702787253293  1.000100040454004 ...     43670       0
+  1001.2907118967996 0.9998719490105065 ...     43671  393216
+  1001.3111448680429 0.9999475816086747 ...     43672  393216
+  1001.3315779390541  1.000245323243787 ...     43673       0
+   1001.352011109826 0.9999971279363663 ...     43674  393216
+  1001.3724440801379 0.9999938332355411 ...     43675       0
                  ...                ... ...       ...     ...
-  1098.1418292774033 0.9999789598946931 ...     48411  262144
-  1098.1622619840928 0.9999119129831925 ...     48412       0
-  1098.1826948910675 0.9998224478273452 ...     48413  393216
-  1098.2031276982234 0.9998583101924826 ...     48414       0
-   1098.223560505612 0.9999782199534858 ...     48415       0
-  1098.2439933132264  0.999971187328136 ...     48416       0
-  1098.2644261210808 1.0000957585130772 ...     48417       0
-  1098.2848589291098 1.0003028253878838 ...     48418  262144
-   1098.305291837365 0.9998714488823245 ...     48419       0
-  1098.3257245459172 1.0000314951889928 ...     48420       0,
+  1098.1418292774033 1.0000587799957399 ...     48411  262144
+  1098.1622619840928  1.000001772308483 ...     48412       0
+  1098.1826948910675 0.9998936687642469 ...     48413  393216
+  1098.2031276982234 0.9999105425207185 ...     48414       0
+   1098.223560505612 1.0000306293444283 ...     48415       0
+  1098.2439933132264 0.9999973733694512 ...     48416       0
+  1098.2644261210808 1.0001470803190613 ...     48417       0
+  1098.2848589291098 1.0003168764208312 ...     48418  262144
+   1098.305291837365 0.9998587369048433 ...     48419       0
+  1098.3257245459172  1.000014852235992 ...     48420       0,
   &#39;target_aper&#39;: array([[False, False, False, False, False, False, False],
          [False, False, False, False, False, False, False],
          [False, False, False,  True,  True, False, False],
          [False, False, False,  True,  True, False, False],
          [False, False, False,  True,  True, False, False],
          [False, False, False, False, False, False, False]]),
-  &#39;contaminator_ra&#39;: (298.48286306598095, 3.51734909233505e-09),
-  &#39;contaminator_dec&#39;: (42.24222905193981, 6.503076379838163e-10),
-  &#39;contaminator_depth&#39;: (9.048505146131837e-05, 7.897227508034848e-06),
+  &#39;contaminator_ra&#39;: (298.48623980534427, 8.460847563933589e-05),
+  &#39;contaminator_dec&#39;: (42.241285137398634, 8.743546093021665e-05),
+  &#39;contaminator_depth&#39;: (8.891706022692198e-05, 7.461014633030657e-06),
   &#39;contaminator_lc&#39;: &lt;KeplerLightCurve length=4469 LABEL=&quot;KIC 6804648&quot; QUARTER=11 CAMPAIGN=None&gt;
          time               flux        ... cadenceno quality
                                         ...
         object            float64       ...   int32    int32
   ------------------ ------------------ ... --------- -------
-  1001.2089795090433 1.0001396915789718 ...     43667       0
-  1001.2294124814507 0.9996099297741398 ...     43668  393216
-  1001.2498456533867 1.0000071964429416 ...     43669  393216
-  1001.2702787253293 0.9998537467238401 ...     43670       0
-  1001.2907118967996 0.9999660908688467 ...     43671  393216
-  1001.3111448680429 0.9999905462980075 ...     43672  393216
-  1001.3315779390541 1.0003633875221891 ...     43673       0
-   1001.352011109826 0.9998260149048314 ...     43674  393216
-  1001.3724440801379 1.0000126324738368 ...     43675       0
+  1001.2089795090433   1.00029116684809 ...     43667       0
+  1001.2294124814507  0.999708988363655 ...     43668  393216
+  1001.2498456533867 1.0001570875001218 ...     43669  393216
+  1001.2702787253293 0.9998750674732719 ...     43670       0
+  1001.2907118967996 1.0000329477244871 ...     43671  393216
+  1001.3111448680429 1.0000071061394975 ...     43672  393216
+  1001.3315779390541 1.0003421551947482 ...     43673       0
+   1001.352011109826 0.9998674411729804 ...     43674  393216
+  1001.3724440801379 1.0000426780525622 ...     43675       0
                  ...                ... ...       ...     ...
-  1098.1418292774033 0.9998884449744009 ...     48411  262144
-  1098.1622619840928   0.99978150216275 ...     48412       0
-  1098.1826948910675 0.9998563090836708 ...     48413  393216
-  1098.2031276982234 0.9999774432531366 ...     48414       0
-   1098.223560505612 1.0000689801368163 ...     48415       0
-  1098.2439933132264 1.0000863785583514 ...     48416       0
-  1098.2644261210808 1.0000683000931514 ...     48417       0
-  1098.2848589291098 1.0002976407928448 ...     48418  262144
-   1098.305291837365 0.9998164925840348 ...     48419       0
-  1098.3257245459172  0.999906949372554 ...     48420       0,
+  1098.1418292774033 0.9999061343786573 ...     48411  262144
+  1098.1622619840928 0.9998645340177823 ...     48412       0
+  1098.1826948910675 0.9998235568653122 ...     48413  393216
+  1098.2031276982234 0.9998884271345754 ...     48414       0
+   1098.223560505612  1.000110826451896 ...     48415       0
+  1098.2439933132264 1.0001479430196016 ...     48416       0
+  1098.2644261210808  1.000217670177182 ...     48417       0
+  1098.2848589291098 1.0003246130295378 ...     48418  262144
+   1098.305291837365 0.9998597606756561 ...     48419       0
+  1098.3257245459172 0.9999778266375003 ...     48420       0,
   &#39;contaminator_aper&#39;: array([[False, False, False, False, False, False, False],
          [False, False, False, False, False, False, False],
          [False, False, False, False,  True, False, False],
          [False, False,  True, False, False, False, False],
          [False, False,  True, False, False, False, False],
          [False, False, False, False, False, False, False]]),
-  &#39;delta_transit_depth[sigma]&#39;: 6.333905443399099,
+  &#39;delta_transit_depth[sigma]&#39;: 5.957721222464785,
   &#39;period&#39;: 0.700606,
   &#39;t0&#39;: 131.59767,
   &#39;duration&#39;: 0.041375,
-  &#39;centroid_shift&#39;: (&lt;Quantity 1.84872553 arcsec&gt;,
-   &lt;Quantity 3.70257344e-05 arcsec&gt;),
+  &#39;centroid_shift&#39;: (&lt;Quantity 10.94945899 arcsec&gt;,
+   &lt;Quantity 3.14557589 arcsec&gt;),
+  &#39;transit_depth&#39;: array([[ 0.00000000e+00,  0.00000000e+00, -7.48225204e-04,
+          -3.25819987e-04,  1.99047539e-04,  1.08158468e-04,
+           3.72271611e-04],
+         [ 0.00000000e+00,  2.23426932e-03, -5.31057461e-04,
+          -2.59273135e-04,  8.08360778e-05,  9.09016158e-05,
+          -5.54117884e-05],
+         [ 1.87417435e-03,  2.51154542e-03, -1.97079555e-04,
+          -9.21383178e-06,  5.38267709e-05, -1.18640793e-05,
+          -1.86566586e-04],
+         [ 9.54998925e-04,  4.18995937e-04,  3.89207525e-04,
+           4.83458711e-05,  5.90467968e-06, -2.75393312e-06,
+          -8.27574389e-04],
+         [ 4.36486578e-04,  5.57651765e-04,  4.88739470e-04,
+           1.15095060e-04, -1.94937768e-05,  3.34620640e-05,
+           3.02935399e-04],
+         [ 1.79913526e-03,  6.42365805e-05,  4.57902046e-04,
+           6.08771849e-05, -6.60732542e-05,  8.67218918e-04,
+          -2.68474550e-03]]),
+  &#39;transit_depth_err&#39;: array([[0.00000000e+00, 0.00000000e+00, 6.72986807e-04, 4.72646360e-04,
+          2.70744890e-04, 1.59223447e-04, 3.30014365e-04],
+         [0.00000000e+00, 1.96872580e-03, 6.55465704e-04, 1.28371895e-04,
+          4.01786475e-05, 4.47620315e-05, 1.32626878e-04],
+         [2.56180000e-03, 1.32087206e-03, 1.66091266e-04, 1.27654142e-05,
+          1.03601293e-05, 3.52000125e-05, 1.87843907e-04],
+         [1.27848038e-03, 3.58680063e-04, 4.19253314e-05, 1.90436312e-05,
+          1.08431618e-05, 4.24067809e-05, 3.38275632e-04],
+         [8.76286293e-04, 2.04262459e-04, 6.22776798e-05, 3.53238242e-05,
+          3.20868498e-05, 6.54018972e-05, 3.24815220e-04],
+         [9.90470901e-04, 5.43199046e-04, 1.26355650e-04, 7.09594189e-05,
+          1.20106694e-04, 4.44665116e-04, 7.11890192e-04]]),
   &#39;fig&#39;: &lt;Figure size 1224x252 with 2 Axes&gt;},
- {&#39;target_depth&#39;: (3.23855745462338e-05, 5.494676328924276e-06),
-  &#39;target_ra&#39;: (298.4832131441586, 1.9774607415025218e-09),
-  &#39;target_dec&#39;: (42.24185195535288, 1.073561849729413e-09),
+ {&#39;target_depth&#39;: (3.648483017464817e-05, 6.396089618656753e-06),
+  &#39;target_ra&#39;: (298.48321314392695, 1.970981158110348e-09),
+  &#39;target_dec&#39;: (42.24185195533414, 1.1092308120007133e-09),
   &#39;target_lc&#39;: &lt;KeplerLightCurve length=3551 LABEL=&quot;KIC 6804648&quot; QUARTER=12 CAMPAIGN=None&gt;
          time               flux        ... cadenceno quality
                                         ...
         object            float64       ...   int32    int32
   ------------------ ------------------ ... --------- -------
-  1099.4086567242412 0.9999604302386583 ...     48473       0
-  1099.4290896451857 1.0000481864274915 ...     48474       0
-  1099.4495224662533 0.9999690418168383 ...     48475       0
-  1099.4699553876635 1.0000595388644569 ...     48476       0
-   1099.490388109196 0.9999713428462003 ...     48477       0
-  1099.5108209310783 0.9999988979121875 ...     48478       0
-  1099.5312538530707 0.9998850736123055 ...     48479       0
-  1099.5516866754188 1.0000459941055002 ...     48480       0
-  1099.5721193978825 0.9998986025380187 ...     48481       0
+  1099.4086567242412 0.9999593555535635 ...     48473       0
+  1099.4290896451857 1.0000261394915797 ...     48474       0
+  1099.4495224662533 0.9999657838464447 ...     48475       0
+  1099.4699553876635 1.0000522319757283 ...     48476       0
+   1099.490388109196 0.9999555418788456 ...     48477       0
+  1099.5108209310783 0.9999968772333804 ...     48478       0
+  1099.5312538530707 0.9998928054125967 ...     48479       0
+  1099.5516866754188 1.0000450210920993 ...     48480       0
+  1099.5721193978825 0.9999051152038142 ...     48481       0
                  ...                ... ...       ...     ...
-  1181.8372239690434 0.9998462796309971 ...     52507      16
-   1181.857658085697 1.0001939846303147 ...     52508    2192
-  1181.8780921026992 0.9999899448734423 ...     52509  393232
-  1181.8985263199284 0.9999663074323937 ...     52510       0
-   1181.918960437397 1.0001103454256166 ...     52511       0
-   1181.939394455214 0.9999729904648738 ...     52512       0
-   1181.959828673258 1.0000872808061234 ...     52513       0
-  1181.9802627916579 0.9998293612946071 ...     52514     128
-   1182.000697010284 0.9999771312431267 ...     52515     128
-  1182.0211310292652 0.9999370880412819 ...     52516  393216,
+  1181.8372239690434 0.9997375870576969 ...     52507      16
+   1181.857658085697 1.0002860050899494 ...     52508    2192
+  1181.8780921026992 0.9999405748490529 ...     52509  393232
+  1181.8985263199284 0.9999769896739221 ...     52510       0
+   1181.918960437397 1.0000510376760354 ...     52511       0
+   1181.939394455214 1.0000061903839086 ...     52512       0
+   1181.959828673258  1.000107547385251 ...     52513       0
+  1181.9802627916579 0.9996734943604437 ...     52514     128
+   1182.000697010284 1.0001163827874393 ...     52515     128
+  1182.0211310292652 0.9999751252805572 ...     52516  393216,
   &#39;target_aper&#39;: array([[False, False, False, False, False, False, False],
          [False, False, False, False,  True, False, False],
          [False, False,  True,  True,  True,  True, False],
@@ -540,34 +598,34 @@ between the contaminator and the target.</p>
          [False,  True,  True,  True,  True, False, False],
          [False, False,  True,  True, False, False, False],
          [False, False, False, False, False, False, False]]),
-  &#39;contaminator_ra&#39;: (298.4856819071601, 0.0),
-  &#39;contaminator_dec&#39;: (42.24165605937332, 0.0),
-  &#39;contaminator_depth&#39;: (0.0002932534738777401, 3.102871158313179e-05),
+  &#39;contaminator_ra&#39;: (298.48463521691394, 0.0002666450864180023),
+  &#39;contaminator_dec&#39;: (42.242167847923696, 0.00010504481613920637),
+  &#39;contaminator_depth&#39;: (0.0003138058905226885, 3.198751158928448e-05),
   &#39;contaminator_lc&#39;: &lt;KeplerLightCurve length=3551 LABEL=&quot;KIC 6804648&quot; QUARTER=12 CAMPAIGN=None&gt;
          time               flux        ... cadenceno quality
                                         ...
         object            float64       ...   int32    int32
   ------------------ ------------------ ... --------- -------
-  1099.4086567242412  0.999531766386513 ...     48473       0
-  1099.4290896451857 0.9997743711519026 ...     48474       0
-  1099.4495224662533 1.0001810854774722 ...     48475       0
-  1099.4699553876635 0.9995475124146548 ...     48476       0
-   1099.490388109196  1.000061068495484 ...     48477       0
-  1099.5108209310783 0.9995701694025937 ...     48478       0
-  1099.5312538530707  1.000347292351083 ...     48479       0
-  1099.5516866754188  1.000265280839029 ...     48480       0
-  1099.5721193978825 0.9996243576165639 ...     48481       0
+  1099.4086567242412 0.9994858551792853 ...     48473       0
+  1099.4290896451857   0.99943671464258 ...     48474       0
+  1099.4495224662533 0.9998727094521473 ...     48475       0
+  1099.4699553876635 0.9992327713114555 ...     48476       0
+   1099.490388109196 0.9998430757935566 ...     48477       0
+  1099.5108209310783  0.999439445570721 ...     48478       0
+  1099.5312538530707  1.000191386538218 ...     48479       0
+  1099.5516866754188 1.0001198631917458 ...     48480       0
+  1099.5721193978825  0.999587167344224 ...     48481       0
                  ...                ... ...       ...     ...
-  1181.8372239690434 0.9992983822803952 ...     52507      16
-   1181.857658085697   1.00106651520018 ...     52508    2192
-  1181.8780921026992 1.0000776622556562 ...     52509  393232
-  1181.8985263199284 1.0005013581531714 ...     52510       0
-   1181.918960437397 1.0008533938971893 ...     52511       0
-   1181.939394455214 1.0001594138186736 ...     52512       0
-   1181.959828673258 1.0000492519921886 ...     52513       0
-  1181.9802627916579 0.9985587714067208 ...     52514     128
-   1182.000697010284 0.9994790285029346 ...     52515     128
-  1182.0211310292652 0.9989693016393245 ...     52516  393216,
+  1181.8372239690434  0.998282722644458 ...     52507      16
+   1181.857658085697  1.002084092374199 ...     52508    2192
+  1181.8780921026992 0.9991804040523726 ...     52509  393232
+  1181.8985263199284 0.9999069152082476 ...     52510       0
+   1181.918960437397 1.0000293433278986 ...     52511       0
+   1181.939394455214 0.9998031444864035 ...     52512       0
+   1181.959828673258 0.9997107427583123 ...     52513       0
+  1181.9802627916579 0.9980680714219937 ...     52514     128
+   1182.000697010284 1.0010286650823037 ...     52515     128
+  1182.0211310292652 0.9989945830230331 ...     52516  393216,
   &#39;contaminator_aper&#39;: array([[False, False, False, False, False, False, False],
          [False, False, False, False, False, False, False],
          [False, False, False, False, False, False, False],
@@ -575,12 +633,47 @@ between the contaminator and the target.</p>
          [False, False,  True, False, False, False, False],
          [False, False, False, False, False, False, False],
          [False, False, False, False, False, False, False]]),
-  &#39;delta_transit_depth[sigma]&#39;: 8.278507566381055,
+  &#39;delta_transit_depth[sigma]&#39;: 8.501379712824566,
   &#39;period&#39;: 0.700606,
   &#39;t0&#39;: 131.59767,
   &#39;duration&#39;: 0.041375,
-  &#39;centroid_shift&#39;: (&lt;Quantity 8.91548267 arcsec&gt;,
-   &lt;Quantity 9.87566559e-05 arcsec&gt;),
+  &#39;centroid_shift&#39;: (&lt;Quantity 5.24424952 arcsec&gt;,
+   &lt;Quantity 4.00402976 arcsec&gt;),
+  &#39;transit_depth&#39;: array([[ 0.00000000e+00,  0.00000000e+00,  2.79946630e-05,
+          -6.16471978e-05,  1.40346452e-04,  4.34710997e-04,
+           0.00000000e+00],
+         [ 0.00000000e+00, -2.39609811e-04,  1.24946964e-03,
+          -5.13822070e-05,  3.98804442e-04,  1.34233263e-04,
+           1.08329430e-04],
+         [ 4.25502682e-04, -1.41581815e-03,  6.01449410e-05,
+          -2.70647544e-05,  7.70819744e-05,  1.58005988e-04,
+          -5.90924371e-04],
+         [ 1.25273790e-03,  3.79003526e-04, -2.05278223e-05,
+          -3.99257681e-05,  4.44786157e-05,  6.56061719e-05,
+           6.94009858e-04],
+         [-2.75975751e-04,  4.33128955e-04,  3.12276153e-04,
+          -4.44513841e-05,  2.57696035e-05,  1.39884484e-04,
+           0.00000000e+00],
+         [ 1.16062058e-04,  2.09262604e-04,  2.75360185e-04,
+           7.73344656e-06, -1.51279609e-04, -1.08777546e-03,
+           0.00000000e+00],
+         [ 0.00000000e+00,  1.68383509e-03, -4.65887119e-04,
+           1.53895470e-04,  8.76055472e-04,  0.00000000e+00,
+           0.00000000e+00]]),
+  &#39;transit_depth_err&#39;: array([[0.00000000e+00, 0.00000000e+00, 5.19088607e-04, 2.30953975e-04,
+          2.68626837e-04, 3.17335134e-04, 0.00000000e+00],
+         [0.00000000e+00, 9.68641022e-04, 8.06302844e-04, 3.67088697e-04,
+          8.81393490e-05, 1.07950478e-04, 3.11239845e-04],
+         [2.58404008e-03, 8.01930989e-04, 1.00387962e-04, 3.14780849e-05,
+          1.99042128e-05, 5.79862261e-05, 3.41252348e-04],
+         [1.37435597e-03, 2.74177148e-04, 3.36076275e-05, 1.06462500e-05,
+          1.03851180e-05, 8.20084078e-05, 6.55617738e-04],
+         [5.43109437e-04, 9.26440053e-05, 3.63623799e-05, 2.37981070e-05,
+          2.28500690e-05, 2.14215191e-04, 0.00000000e+00],
+         [5.80530031e-04, 1.42705717e-04, 7.38367753e-05, 4.96975321e-05,
+          1.51293756e-04, 8.47462038e-04, 0.00000000e+00],
+         [0.00000000e+00, 6.11313151e-04, 2.35612250e-04, 2.46859586e-04,
+          9.35762412e-04, 0.00000000e+00, 0.00000000e+00]]),
   &#39;fig&#39;: &lt;Figure size 1224x252 with 2 Axes&gt;}]
 </pre></div>
 </div>
@@ -589,16 +682,16 @@ between the contaminator and the target.</p>
 Below I run the parameters for <strong>Kepler-10</strong> through <code class="docutils literal notranslate"><span class="pre">contaminate</span></code>.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [63]:
+<span></span>In [7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">tpfs</span> <span class="o">=</span> <span class="n">lk</span><span class="o">.</span><span class="n">search_targetpixelfile</span><span class="p">(</span><span class="s1">&#39;Kepler-10&#39;</span><span class="p">,</span> <span class="n">quarter</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">],</span> <span class="n">cadence</span><span class="o">=</span><span class="s1">&#39;long&#39;</span><span class="p">,</span> <span class="n">mission</span><span class="o">=</span><span class="s1">&#39;Kepler&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">download_all</span><span class="p">()</span>
+<span></span><span class="n">tpfs</span> <span class="o">=</span> <span class="n">lk</span><span class="o">.</span><span class="n">search_targetpixelfile</span><span class="p">(</span><span class="s1">&#39;Kepler-10&#39;</span><span class="p">,</span> <span class="n">quarter</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">],</span> <span class="n">cadence</span><span class="o">=</span><span class="s1">&#39;long&#39;</span><span class="p">,</span> <span class="n">mission</span><span class="o">=</span><span class="s1">&#39;Kepler&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">download_all</span><span class="p">()</span>
 <span class="n">period</span> <span class="o">=</span> <span class="mf">0.837491</span>
 <span class="n">t0</span> <span class="o">=</span> <span class="mf">2454964.57513</span> <span class="o">-</span> <span class="mi">2454833</span>
 <span class="n">duration</span> <span class="o">=</span> <span class="mf">1.8076</span><span class="o">/</span><span class="mi">24</span>
 
-<span class="n">result</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">TargetPixelFileCollection</span><span class="p">(</span><span class="n">tpfs</span><span class="p">)</span><span class="o">.</span><span class="n">calculate_contamination</span><span class="p">(</span><span class="n">period</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">);</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">calculate_contamination</span><span class="p">(</span><span class="n">tpfs</span><span class="p">,</span> <span class="n">period</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
@@ -607,35 +700,25 @@ Below I run the parameters for <strong>Kepler-10</strong> through <code class="d
 </div>
 <div class="stderr output_area docutils container">
 <div class="highlight"><pre>
-Modeling TPFs:   0%|          | 0/2 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:180: RuntimeWarning: invalid value encountered in true_divide
-  contaminant_aper = (transit_pixels / transit_pixels_err) &gt; sigma
-/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:231: RuntimeWarning: Mean of empty slice
-  thumb = np.nanmean(tpf.flux.value, axis=0)
-/Users/ch/.pyenv/versions/3.8.0/lib/python3.8/site-packages/numpy/lib/nanfunctions.py:993: RuntimeWarning: All-NaN slice encountered
-  result = np.apply_along_axis(_nanmedian1d, axis, a, overwrite_input)
-Modeling TPFs:  50%|█████     | 1/2 [00:10&lt;00:10, 10.95s/it]WARNING: The fit may be unsuccessful; check fit_info[&#39;message&#39;] for more information. [astropy.modeling.fitting]
-WARNING: The fit may be unsuccessful; check fit_info[&#39;message&#39;] for more information. [astropy.modeling.fitting]
-/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:180: RuntimeWarning: invalid value encountered in true_divide
-  contaminant_aper = (transit_pixels / transit_pixels_err) &gt; sigma
-/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:231: RuntimeWarning: Mean of empty slice
-  thumb = np.nanmean(tpf.flux.value, axis=0)
-/Users/ch/.pyenv/versions/3.8.0/lib/python3.8/site-packages/numpy/lib/nanfunctions.py:993: RuntimeWarning: All-NaN slice encountered
-  result = np.apply_along_axis(_nanmedian1d, axis, a, overwrite_input)
-Modeling TPFs: 100%|██████████| 2/2 [00:22&lt;00:00, 11.12s/it]
+Modeling TPFs:   0%|          | 0/2 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:265: RuntimeWarning: invalid value encountered in true_divide
+  aper = (thumb / err &gt; 3) &amp; aper
+Modeling TPFs:  50%|█████     | 1/2 [00:07&lt;00:07,  7.70s/it]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:265: RuntimeWarning: invalid value encountered in true_divide
+  aper = (thumb / err &gt; 3) &amp; aper
+Modeling TPFs: 100%|██████████| 2/2 [00:14&lt;00:00,  7.18s/it]
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_10_1.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_10_1.png" />
+<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_11_1.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_11_1.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_10_2.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_10_2.png" />
+<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_11_2.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_11_2.png" />
 </div>
 </div>
 <p>Sometimes there will be no significant transiting source that was not
@@ -644,196 +727,15 @@ very similar. Sometimes there will be a weak detection due to a slight
 difference in optimal aperture. If there is only a small change in
 centroid (<span class="math notranslate">\(&lt;&lt;\)</span> than a pixel width) and only a small change in
 transit depth, this would indicate there is no contaminant.</p>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [64]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">result</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>Out[64]:
-</pre></div>
-</div>
-<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>[{&#39;target_depth&#39;: (0.00016637915175618574, 1.632458452743476e-06),
-  &#39;target_ra&#39;: (285.6796903912627, 8.353133557608556e-10),
-  &#39;target_dec&#39;: (50.24297857768845, 6.071417056405908e-10),
-  &#39;target_lc&#39;: &lt;KeplerLightCurve length=4436 LABEL=&quot;KIC 11904151&quot; QUARTER=10 CAMPAIGN=None&gt;
-         time               flux        ... cadenceno quality
-                                        ...
-        object            float64       ...   int32    int32
-  ------------------ ------------------ ... --------- -------
-   906.8456081508848 0.9999755219968387 ...     39049       0
-   906.8660422653193 1.0000355404119603 ...     39050       0
-   906.8864762797602  1.000044901197497 ...     39051       0
-   906.9069103939692 1.0000173413607967 ...     39052     128
-   906.9273443079364 1.0001197029044833 ...     39053    8192
-   906.9477783219118 1.0000356460075364 ...     39054     128
-   906.9682124356477 1.0000832526621568 ...     39055       0
-   906.9886463491566 0.9998855270358544 ...     39056       0
-   907.0090803626663 0.9999695848718062 ...     39057       0
-                 ...                ... ...       ...     ...
-  1000.0840773287273 0.9999032601498379 ...     43612       0
-  1000.1045104784353 0.9999411060171361 ...     43613       0
-  1000.1249437281367 0.9999899074255518 ...     43614       0
-  1000.1453767778439 0.9999586823368327 ...     43615       0
-  1000.1658100273198   0.99997635031202 ...     43616       0
-  1000.1862431765549 1.0000583707544173 ...     43617     128
-  1000.2066762255636  1.000022757873313 ...     43618       0
-  1000.2271094745665  0.999977950342719 ...     43619       0
-  1000.2475426233432 1.0000212002853097 ...     43620       0
-  1000.2679756718862  1.000077916862189 ...     43621       0,
-  &#39;target_aper&#39;: array([[False, False, False, False, False, False, False, False],
-         [False, False, False,  True,  True, False, False, False],
-         [False, False, False,  True,  True,  True, False, False],
-         [False, False,  True,  True,  True,  True,  True, False],
-         [False, False,  True,  True,  True,  True, False, False],
-         [False, False, False,  True,  True,  True, False, False],
-         [False, False, False,  True,  True,  True, False, False],
-         [False, False, False,  True,  True, False, False, False],
-         [False, False, False, False, False, False, False, False]]),
-  &#39;contaminator_ra&#39;: (285.6796645427061, 7.37505804188859e-10),
-  &#39;contaminator_dec&#39;: (50.24301945116033, 5.416962018558522e-10),
-  &#39;contaminator_depth&#39;: (0.0001665247718596493, 1.8742795040426161e-06),
-  &#39;contaminator_lc&#39;: &lt;KeplerLightCurve length=4436 LABEL=&quot;KIC 11904151&quot; QUARTER=10 CAMPAIGN=None&gt;
-         time               flux        ... cadenceno quality
-                                        ...
-        object            float64       ...   int32    int32
-  ------------------ ------------------ ... --------- -------
-   906.8456081508848 0.9999817008799285 ...     39049       0
-   906.8660422653193  1.000075106153053 ...     39050       0
-   906.8864762797602  1.000059257405315 ...     39051       0
-   906.9069103939692 0.9999858874141736 ...     39052     128
-   906.9273443079364 1.0000575209551597 ...     39053    8192
-   906.9477783219118 1.0000570297309086 ...     39054     128
-   906.9682124356477 1.0000702460670021 ...     39055       0
-   906.9886463491566 0.9999348164022432 ...     39056       0
-   907.0090803626663 0.9999845104697052 ...     39057       0
-                 ...                ... ...       ...     ...
-  1000.0840773287273 0.9998937821141847 ...     43612       0
-  1000.1045104784353 0.9999373305043437 ...     43613       0
-  1000.1249437281367 0.9999860491527863 ...     43614       0
-  1000.1453767778439 0.9999732929562077 ...     43615       0
-  1000.1658100273198 0.9999851277175305 ...     43616       0
-  1000.1862431765549  1.000055149914434 ...     43617     128
-  1000.2066762255636 1.0000349262771209 ...     43618       0
-  1000.2271094745665 0.9999991900219289 ...     43619       0
-  1000.2475426233432 1.0000403110236016 ...     43620       0
-  1000.2679756718862 1.0000880831884085 ...     43621       0,
-  &#39;contaminator_aper&#39;: array([[False, False, False, False, False, False, False, False],
-         [False, False, False,  True,  True, False, False, False],
-         [False, False, False,  True,  True, False, False, False],
-         [False, False,  True,  True,  True,  True,  True, False],
-         [False, False, False,  True,  True,  True, False, False],
-         [False, False, False,  True,  True,  True, False, False],
-         [False, False, False,  True,  True, False, False, False],
-         [False, False, False, False, False, False, False, False],
-         [False, False, False, False, False, False, False, False]]),
-  &#39;delta_transit_depth[sigma]&#39;: 0.05858721547628632,
-  &#39;period&#39;: 0.837491,
-  &#39;t0&#39;: 131.57512999977916,
-  &#39;duration&#39;: 0.07531666666666667,
-  &#39;centroid_shift&#39;: (&lt;Quantity 0.17409968 arcsec&gt;,
-   &lt;Quantity 1.65336209e-05 arcsec&gt;),
-  &#39;fig&#39;: &lt;Figure size 1224x252 with 2 Axes&gt;},
- {&#39;target_depth&#39;: (0.00015706943826763025, 1.7689073531382184e-06),
-  &#39;target_ra&#39;: (285.6796591653981, 8.356344651085151e-10),
-  &#39;target_dec&#39;: (50.24297585033989, 5.866108039037826e-10),
-  &#39;target_lc&#39;: &lt;KeplerLightCurve length=4469 LABEL=&quot;KIC 11904151&quot; QUARTER=11 CAMPAIGN=None&gt;
-         time               flux        ... cadenceno quality
-                                        ...
-        object            float64       ...   int32    int32
-  ------------------ ------------------ ... --------- -------
-  1001.2078489185951 0.9999136702644976 ...     43667       0
-  1001.2282819599204 1.0001049059035336 ...     43668       0
-  1001.2487152010071 1.0000226106323602 ...     43669       0
-  1001.2691483421004 0.9999450355491264 ...     43670       0
-  1001.2895815827214  1.000103282185548 ...     43671       0
-  1001.3100146235811 0.9999655619576218 ...     43672       0
-  1001.3304477639758 1.0000210922341328 ...     43673     128
-   1001.350881004364  1.000006531691087 ...     43674     128
-   1001.371314044758 1.0000102111861984 ...     43675     128
-                 ...                ... ...       ...     ...
-  1098.1421215495939 0.9999856393910072 ...     48411       0
-  1098.1625546454597  1.000048295898631 ...     48412       0
-  1098.1829879414945 1.0000046378787997 ...     48413       0
-  1098.2034211377104 1.0000313990554857 ...     48414       0
-   1098.223854334101 0.9999954832701676 ...     48415       0
-   1098.244287530717 1.0000325333823068 ...     48416       0
-   1098.264720727515  1.000045330864754 ...     48417       0
-  1098.2851539244875 0.9999520789120517 ...     48418       0
-  1098.3055872216282 1.0000150475698488 ...     48419       0
-  1098.3260203189493  0.999959331444449 ...     48420       0,
-  &#39;target_aper&#39;: array([[False, False, False, False, False, False, False, False, False],
-         [False, False, False, False,  True,  True, False, False, False],
-         [False, False,  True,  True,  True,  True,  True,  True, False],
-         [False, False,  True,  True,  True,  True,  True, False, False],
-         [False, False, False, False,  True,  True, False, False, False],
-         [False, False, False, False,  True,  True, False, False, False],
-         [False, False, False, False,  True,  True, False, False, False],
-         [False, False, False, False, False, False, False, False, False]]),
-  &#39;contaminator_ra&#39;: (285.67961340154284, 7.294832037289939e-10),
-  &#39;contaminator_dec&#39;: (50.243050731462105, 5.023676060830668e-10),
-  &#39;contaminator_depth&#39;: (0.00015770234757925668, 1.896037992821776e-06),
-  &#39;contaminator_lc&#39;: &lt;KeplerLightCurve length=4469 LABEL=&quot;KIC 11904151&quot; QUARTER=11 CAMPAIGN=None&gt;
-         time               flux        ... cadenceno quality
-                                        ...
-        object            float64       ...   int32    int32
-  ------------------ ------------------ ... --------- -------
-  1001.2078489185951 0.9999231725600318 ...     43667       0
-  1001.2282819599204 1.0001441539617129 ...     43668       0
-  1001.2487152010071  1.000049744816852 ...     43669       0
-  1001.2691483421004  1.000002569927423 ...     43670       0
-  1001.2895815827214 1.0001312330826604 ...     43671       0
-  1001.3100146235811 0.9999877246952589 ...     43672       0
-  1001.3304477639758 1.0000583611984366 ...     43673     128
-   1001.350881004364 1.0000256715219158 ...     43674     128
-   1001.371314044758  1.000038171257407 ...     43675     128
-                 ...                ... ...       ...     ...
-  1098.1421215495939 1.0000294979305833 ...     48411       0
-  1098.1625546454597 1.0000931433868658 ...     48412       0
-  1098.1829879414945 1.0000432101233137 ...     48413       0
-  1098.2034211377104 1.0000463626537832 ...     48414       0
-   1098.223854334101 1.0000296043091264 ...     48415       0
-   1098.244287530717 1.0000595900837224 ...     48416       0
-   1098.264720727515 1.0000784629541064 ...     48417       0
-  1098.2851539244875 0.9999832673663507 ...     48418       0
-  1098.3055872216282 1.0000330339540913 ...     48419       0
-  1098.3260203189493 0.9999905788778739 ...     48420       0,
-  &#39;contaminator_aper&#39;: array([[False, False, False, False, False, False, False, False, False],
-         [False, False, False, False,  True,  True, False, False, False],
-         [False, False,  True,  True,  True,  True,  True, False, False],
-         [False, False, False,  True,  True,  True, False, False, False],
-         [False, False, False, False,  True,  True, False, False, False],
-         [False, False, False, False,  True, False, False, False, False],
-         [False, False, False, False, False, False, False, False, False],
-         [False, False, False, False, False, False, False, False, False]]),
-  &#39;delta_transit_depth[sigma]&#39;: 0.24407755793620567,
-  &#39;period&#39;: 0.837491,
-  &#39;t0&#39;: 131.57512999977916,
-  &#39;duration&#39;: 0.07531666666666667,
-  &#39;centroid_shift&#39;: (&lt;Quantity 0.31592975 arcsec&gt;,
-   &lt;Quantity 1.66442436e-05 arcsec&gt;),
-  &#39;fig&#39;: &lt;Figure size 1224x252 with 2 Axes&gt;}]
-</pre></div>
-</div>
-</div>
 </div>
 <div class="section" id="Using-contaminante-on-TESS-Data">
 <h2>Using <code class="docutils literal notranslate"><span class="pre">contaminante</span></code> on <em>TESS</em> Data<a class="headerlink" href="#Using-contaminante-on-TESS-Data" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">contaminante</span></code> works on TESS data too. The background scattered light
-is removed using principle component analysis. For targets that are
-available in the TESS pipeline TPF products, the TPFs will be used. If
-no TPF is available, the data will be cut out of the FFI’s using the
-TESSCut API from MAST.</p>
+<p><code class="docutils literal notranslate"><span class="pre">contaminante</span></code> works on TESS data too. We don’t currently have a way
+to remove TESS background, so make sure to pass in TPFs that have
+already been background corrected.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [65]:
+<span></span>In [8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -843,7 +745,7 @@ TESSCut API from MAST.</p>
 <span class="n">t0</span> <span class="o">=</span> <span class="mf">2458325.78297</span> <span class="o">-</span> <span class="mi">2457000</span>
 <span class="n">duration</span> <span class="o">=</span> <span class="mf">0.3</span>
 
-<span class="n">result</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">TargetPixelFileCollection</span><span class="p">(</span><span class="n">tpfs</span><span class="p">)</span><span class="o">.</span><span class="n">calculate_contamination</span><span class="p">(</span><span class="n">period</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">);</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">calculate_contamination</span><span class="p">(</span><span class="n">tpfs</span><span class="p">,</span> <span class="n">period</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
@@ -854,9 +756,9 @@ TESSCut API from MAST.</p>
 <div class="highlight"><pre>
 /Users/ch/.pyenv/versions/3.8.0/lib/python3.8/site-packages/lightkurve/search.py:346: LightkurveWarning: Warning: 2 files available to download. Only the first file has been downloaded. Please use `download_all()` or specify additional criteria (e.g. quarter, campaign, or sector) to limit your search.
   warnings.warn(
-Modeling TPFs:   0%|          | 0/1 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:405: RuntimeWarning: invalid value encountered in log10
-  shading=&#34;auto&#34;,
-Modeling TPFs: 100%|██████████| 1/1 [00:48&lt;00:00, 48.68s/it]
+Modeling TPFs:   0%|          | 0/1 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:457: RuntimeWarning: invalid value encountered in log10
+  np.log10(np.nanmedian(np.nan_to_num(tpf.flux.value), axis=0)),
+Modeling TPFs: 100%|██████████| 1/1 [00:45&lt;00:00, 45.75s/it]
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -864,6 +766,68 @@ Modeling TPFs: 100%|██████████| 1/1 [00:48&lt;00:00, 48.68s/
 </div>
 <div class="output_area docutils container">
 <img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_14_1.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_14_1.png" />
+</div>
+</div>
+<p>In this case, it looks like there is a small offset, however the transit
+depth from contaminante is actually shallower. The aperture selected by
+<code class="docutils literal notranslate"><span class="pre">contaminante</span></code> is quite large, we can see this when we plot the two
+apertures side by side:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;target_aper&#39;</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;contaminator_aper&#39;</span><span class="p">],</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Pipeline Aperture&#39;</span><span class="p">,</span> <span class="n">xticks</span><span class="o">=</span><span class="p">[],</span> <span class="n">yticks</span><span class="o">=</span><span class="p">[])</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;`contaminante` Aperture&#39;</span><span class="p">,</span> <span class="n">xticks</span><span class="o">=</span><span class="p">[],</span> <span class="n">yticks</span><span class="o">=</span><span class="p">[])</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>Out[11]:
+</pre></div>
+</div>
+<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
+<span></span>[Text(0.5, 1.0, &#39;`contaminante` Aperture&#39;), [], []]
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_16_1.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_16_1.png" />
+</div>
+</div>
+<p>This causes <code class="docutils literal notranslate"><span class="pre">contaminante</span></code> to produce a slightly shallower transit
+(because we’re including more noise and flux from objects that aren’t
+the target). Because the transit depth is shallower, even though there
+is a small offset, we shouldn’t believe this is a contaminant.</p>
+<p>If you want to see more of where the transit is coming from, you can
+look at the transit depth in each pixel.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
+<span></span>In [12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;transit_depth&#39;</span><span class="p">]</span><span class="o">/</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;transit_depth_err&#39;</span><span class="p">],</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Sigificance of Transit Detection&quot;</span><span class="p">)</span>
+<span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="n">cbar</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s2">&quot;Transit Depth/</span><span class="se">\n</span><span class="s2"> Transit Depth Err&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_18_0.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_18_0.png" />
 </div>
 </div>
 </div>
@@ -876,9 +840,10 @@ harder to interpret. For example, below there is a slight shift in the
 centroid, but the light curve from that target is not different from the
 main target. This is likely due to the pipeline apertures for K2 being
 slightly too small.</p>
+<p>Below are a couple of examples of the tool running on K2 data</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [50]:
+<span></span>In [14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -887,7 +852,7 @@ slightly too small.</p>
 <span class="n">t0</span> <span class="o">=</span> <span class="mf">2308.407161</span>
 <span class="n">duration</span> <span class="o">=</span> <span class="mf">0.3</span>
 
-<span class="n">result</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">TargetPixelFileCollection</span><span class="p">(</span><span class="n">tpfs</span><span class="p">)</span><span class="o">.</span><span class="n">calculate_contamination</span><span class="p">(</span><span class="n">period</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sff</span><span class="o">=</span><span class="kc">True</span><span class="p">);</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">calculate_contamination</span><span class="p">(</span><span class="n">tpfs</span><span class="p">,</span> <span class="n">period</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sff</span><span class="o">=</span><span class="kc">True</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
@@ -896,375 +861,39 @@ slightly too small.</p>
 </div>
 <div class="stderr output_area docutils container">
 <div class="highlight"><pre>
-Modeling TPFs:   0%|          | 0/3 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:180: RuntimeWarning: invalid value encountered in true_divide
-  contaminant_aper = (transit_pixels / transit_pixels_err) &gt; sigma
-/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:231: RuntimeWarning: Mean of empty slice
-  thumb = np.nanmean(tpf.flux.value, axis=0)
-/Users/ch/.pyenv/versions/3.8.0/lib/python3.8/site-packages/numpy/lib/nanfunctions.py:993: RuntimeWarning: All-NaN slice encountered
-  result = np.apply_along_axis(_nanmedian1d, axis, a, overwrite_input)
-Modeling TPFs:  33%|███▎      | 1/3 [00:10&lt;00:21, 10.61s/it]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:180: RuntimeWarning: invalid value encountered in true_divide
-  contaminant_aper = (transit_pixels / transit_pixels_err) &gt; sigma
-/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:231: RuntimeWarning: Mean of empty slice
-  thumb = np.nanmean(tpf.flux.value, axis=0)
-/Users/ch/.pyenv/versions/3.8.0/lib/python3.8/site-packages/numpy/lib/nanfunctions.py:993: RuntimeWarning: All-NaN slice encountered
-  result = np.apply_along_axis(_nanmedian1d, axis, a, overwrite_input)
-Modeling TPFs:  67%|██████▋   | 2/3 [00:26&lt;00:13, 13.59s/it]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:180: RuntimeWarning: invalid value encountered in true_divide
-  contaminant_aper = (transit_pixels / transit_pixels_err) &gt; sigma
-/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:231: RuntimeWarning: Mean of empty slice
-  thumb = np.nanmean(tpf.flux.value, axis=0)
-/Users/ch/.pyenv/versions/3.8.0/lib/python3.8/site-packages/numpy/lib/nanfunctions.py:993: RuntimeWarning: All-NaN slice encountered
-  result = np.apply_along_axis(_nanmedian1d, axis, a, overwrite_input)
-Modeling TPFs: 100%|██████████| 3/3 [00:35&lt;00:00, 11.81s/it]
+Modeling TPFs:   0%|          | 0/3 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:265: RuntimeWarning: invalid value encountered in true_divide
+  aper = (thumb / err &gt; 3) &amp; aper
+Modeling TPFs:  33%|███▎      | 1/3 [00:10&lt;00:20, 10.33s/it]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:265: RuntimeWarning: invalid value encountered in true_divide
+  aper = (thumb / err &gt; 3) &amp; aper
+Modeling TPFs:  67%|██████▋   | 2/3 [00:25&lt;00:13, 13.29s/it]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:265: RuntimeWarning: invalid value encountered in true_divide
+  aper = (thumb / err &gt; 3) &amp; aper
+Modeling TPFs: 100%|██████████| 3/3 [00:33&lt;00:00, 11.26s/it]
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_16_1.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_16_1.png" />
+<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_20_1.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_20_1.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_16_2.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_16_2.png" />
+<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_20_2.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_20_2.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_16_3.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_16_3.png" />
+<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_20_3.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_20_3.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [51]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">result</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>Out[51]:
-</pre></div>
-</div>
-<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>[{&#39;target_depth&#39;: (0.02812000171306683, 1.8639818136448723e-06),
-  &#39;target_ra&#39;: (129.46856528822883, 1.071969654497664e-09),
-  &#39;target_dec&#39;: (16.364792263174362, 9.004679613268661e-10),
-  &#39;target_lc&#39;: &lt;KeplerLightCurve length=3444 LABEL=&quot;EPIC 211732801&quot; QUARTER=None CAMPAIGN=5&gt;
-         time               flux        ... cadenceno quality
-                                        ...
-        object            float64       ...   int32    int32
-  ------------------ ------------------ ... --------- -------
-  2306.6107287567866 1.0004159137500566 ...    107552  524288
-  2306.6311609694603 1.0004660418175038 ...    107553       0
-    2306.65159298214 1.0003631249042917 ...    107554       0
-  2306.6720250943545 1.0003065364825845 ...    107555       0
-   2306.692457306097  1.000264544184093 ...    107556       0
-  2306.7128893173794  1.000203652383969 ...    107557       0
-   2306.733321528198 1.0000873813379907 ...    107558       0
-   2306.753753538542 1.0003241978868656 ...    107559       0
-   2306.774185648428 1.0003517807559297 ...    107560       0
-                 ...                ... ...       ...     ...
-   2381.227530270058  1.000295623469655 ...    111204       0
-  2381.2479621531675 1.0003375602904034 ...    111205       0
-  2381.2683940365023  1.000214322240205 ...    111206       0
-   2381.288826020078 1.0002741754455413 ...    111207       0
-  2381.3092579041113  1.000405805251147 ...    111208       0
-   2381.350121672891  1.000419031130189 ...    111210       0
-  2381.3705535578556 1.0003559830678521 ...    111211       0
-  2381.3909853430596 1.0004822657729855 ...    111212       0
-  2381.4114173287307 1.0005335334539507 ...    111213       0
-  2381.4318492146267 1.0003163140902123 ...    111214  524288,
-  &#39;target_aper&#39;: array([[False, False,  True,  True,  True,  True,  True,  True,  True,
-          False],
-         [False,  True,  True,  True,  True,  True,  True,  True,  True,
-           True],
-         [False,  True,  True,  True,  True,  True,  True,  True,  True,
-           True],
-         [False,  True,  True,  True,  True,  True,  True,  True,  True,
-           True],
-         [False,  True,  True,  True,  True,  True,  True,  True,  True,
-           True],
-         [False,  True,  True,  True,  True,  True,  True,  True,  True,
-           True],
-         [False,  True,  True,  True,  True,  True,  True,  True,  True,
-           True],
-         [False,  True,  True,  True,  True,  True,  True,  True,  True,
-           True],
-         [False, False, False,  True,  True,  True,  True,  True, False,
-          False]]),
-  &#39;contaminator_ra&#39;: (129.46856989723284, 6.9034011113329e-10),
-  &#39;contaminator_dec&#39;: (16.36478945374845, 7.141978525069731e-10),
-  &#39;contaminator_depth&#39;: (0.028195475835130296, 1.8412054214624202e-06),
-  &#39;contaminator_lc&#39;: &lt;KeplerLightCurve length=3444 LABEL=&quot;EPIC 211732801&quot; QUARTER=None CAMPAIGN=5&gt;
-         time               flux        ... cadenceno quality
-                                        ...
-        object            float64       ...   int32    int32
-  ------------------ ------------------ ... --------- -------
-  2306.6107287567866  1.000392682897097 ...    107552  524288
-  2306.6311609694603 1.0004281568530877 ...    107553       0
-    2306.65159298214 1.0003256356784291 ...    107554       0
-  2306.6720250943545  1.000262982139702 ...    107555       0
-   2306.692457306097 1.0002199068654551 ...    107556       0
-  2306.7128893173794 1.0001669908004527 ...    107557       0
-   2306.733321528198 1.0000334227450132 ...    107558       0
-   2306.753753538542 1.0003018321742196 ...    107559       0
-   2306.774185648428  1.000319244217856 ...    107560       0
-                 ...                ... ...       ...     ...
-   2381.227530270058  1.000279240173091 ...    111204       0
-  2381.2479621531675 1.0002663239379879 ...    111205       0
-  2381.2683940365023 1.0001948873055682 ...    111206       0
-   2381.288826020078 1.0002300415255043 ...    111207       0
-  2381.3092579041113 1.0003638797164807 ...    111208       0
-   2381.350121672891 1.0003691104872994 ...    111210       0
-  2381.3705535578556 1.0003140967464252 ...    111211       0
-  2381.3909853430596 1.0004724387556427 ...    111212       0
-  2381.4114173287307  1.000510301081949 ...    111213       0
-  2381.4318492146267 1.0002658104857112 ...    111214  524288,
-  &#39;contaminator_aper&#39;: array([[False, False, False, False, False,  True,  True,  True, False,
-          False],
-         [False, False, False,  True,  True,  True,  True,  True,  True,
-           True],
-         [False, False, False,  True,  True,  True,  True,  True,  True,
-           True],
-         [False, False,  True,  True,  True,  True,  True,  True,  True,
-           True],
-         [False, False,  True,  True,  True,  True,  True,  True,  True,
-           True],
-         [False, False, False,  True,  True,  True,  True,  True,  True,
-           True],
-         [False, False, False, False,  True,  True,  True,  True,  True,
-           True],
-         [False, False, False, False, False, False,  True, False, False,
-          False],
-         [False, False, False, False, False, False, False, False, False,
-          False]]),
-  &#39;delta_transit_depth[sigma]&#39;: 28.80677915989954,
-  &#39;period&#39;: 2.1316925,
-  &#39;t0&#39;: 2308.407161,
-  &#39;duration&#39;: 0.3,
-  &#39;centroid_shift&#39;: (&lt;Quantity 0.01943193 arcsec&gt;,
-   &lt;Quantity 1.91927916e-05 arcsec&gt;),
-  &#39;fig&#39;: &lt;Figure size 1224x252 with 2 Axes&gt;},
- {&#39;target_depth&#39;: (0.02828107016228071, 1.3676429860741176e-06),
-  &#39;target_ra&#39;: (129.46845546916393, 7.903882601393765e-10),
-  &#39;target_dec&#39;: (16.367295241869233, 6.814026917510598e-10),
-  &#39;target_lc&#39;: &lt;KeplerLightCurve length=3638 LABEL=&quot;EPIC 211732801&quot; QUARTER=None CAMPAIGN=16&gt;
-         time               flux        ... cadenceno quality
-                                        ...
-        object            float64       ...   int32    int32
-  ------------------ ------------------ ... --------- -------
-  3262.4678192919528  1.000676355323739 ...    154331  524288
-  3262.4882546674053 1.0004447382663284 ...    154332       0
-   3262.508690143208 1.0002338352627012 ...    154333       0
-  3262.5291257192366 1.0003535545002522 ...    154334       0
-  3262.5495610956204 1.0002456055051452 ...    154335       0
-   3262.569996672355 1.0001094136410047 ...    154336       0
-  3262.5904321493144 1.0000356707322433 ...    154337       0
-  3262.6108675266296 0.9999569399162319 ...    154338       0
-   3262.631303104179 0.9998591539973604 ...    154339       0
-                 ...                ... ...       ...     ...
-   3341.818626560773 1.0000610591437933 ...    158214       0
-   3341.839061434235 0.9999229113603386 ...    158215       0
-  3341.8799308793095 0.9998320606969865 ...    158217       0
-  3341.9003657509093 0.9999584632063995 ...    158218       0
-   3341.920800422049 1.0000678534234437 ...    158219       0
-  3341.9412351922583 1.0001715965952815 ...    158220       0
-  3341.9616700619954  1.000209328263181 ...    158221       0
-  3341.9821047312726 1.0000727119240709 ...    158222       0
-    3342.00253959962 1.0002653929507612 ...    158223       0
-  3342.0229743674936 1.0003453941407447 ...    158224  524288,
-  &#39;target_aper&#39;: array([[False, False, False, False, False, False, False, False, False,
-          False, False, False],
-         [False, False, False,  True,  True,  True,  True,  True,  True,
-           True,  True, False],
-         [False, False, False,  True,  True,  True,  True,  True,  True,
-           True,  True, False],
-         [False, False,  True,  True,  True,  True,  True,  True,  True,
-           True,  True, False],
-         [False, False,  True,  True,  True,  True,  True,  True,  True,
-           True,  True, False],
-         [False, False,  True,  True,  True,  True,  True,  True,  True,
-           True,  True, False],
-         [False, False,  True,  True,  True,  True,  True,  True,  True,
-           True,  True, False],
-         [False, False,  True,  True,  True,  True,  True,  True,  True,
-           True,  True, False],
-         [False, False,  True,  True,  True,  True,  True,  True,  True,
-           True,  True, False],
-         [False, False, False, False, False, False, False, False, False,
-          False, False, False],
-         [False, False, False, False, False, False, False, False, False,
-          False, False, False]]),
-  &#39;contaminator_ra&#39;: (129.46845504562847, 1.0825649143185119e-09),
-  &#39;contaminator_dec&#39;: (16.36729557239828, 9.877377315500845e-10),
-  &#39;contaminator_depth&#39;: (0.028215680730957936, 1.6316947408846933e-06),
-  &#39;contaminator_lc&#39;: &lt;KeplerLightCurve length=3638 LABEL=&quot;EPIC 211732801&quot; QUARTER=None CAMPAIGN=16&gt;
-         time               flux        ... cadenceno quality
-                                        ...
-        object            float64       ...   int32    int32
-  ------------------ ------------------ ... --------- -------
-  3262.4678192919528  1.000633398711802 ...    154331  524288
-  3262.4882546674053 1.0004306418208202 ...    154332       0
-   3262.508690143208 1.0002100925466733 ...    154333       0
-  3262.5291257192366 1.0003785416690076 ...    154334       0
-  3262.5495610956204  1.000225697898868 ...    154335       0
-   3262.569996672355 1.0001094249123288 ...    154336       0
-  3262.5904321493144 1.0000507392331646 ...    154337       0
-  3262.6108675266296 0.9999716840778142 ...    154338       0
-   3262.631303104179 0.9998783394175916 ...    154339       0
-                 ...                ... ...       ...     ...
-   3341.818626560773 1.0000765916557441 ...    158214       0
-   3341.839061434235 0.9999336924664449 ...    158215       0
-  3341.8799308793095 0.9998178840794087 ...    158217       0
-  3341.9003657509093 0.9999618941759483 ...    158218       0
-   3341.920800422049  1.000041257472261 ...    158219       0
-  3341.9412351922583  1.000144445775241 ...    158220       0
-  3341.9616700619954 1.0002255209768993 ...    158221       0
-  3341.9821047312726 1.0000396929411064 ...    158222       0
-    3342.00253959962 1.0002837057534468 ...    158223       0
-  3342.0229743674936 1.0003615292683739 ...    158224  524288,
-  &#39;contaminator_aper&#39;: array([[False,  True,  True,  True,  True,  True,  True,  True,  True,
-           True,  True,  True],
-         [False,  True,  True,  True,  True,  True,  True,  True,  True,
-           True,  True, False],
-         [False,  True,  True,  True,  True,  True,  True,  True,  True,
-           True,  True,  True],
-         [False,  True,  True,  True,  True,  True,  True,  True,  True,
-           True,  True,  True],
-         [False,  True,  True,  True,  True,  True,  True,  True,  True,
-           True,  True,  True],
-         [ True,  True,  True,  True,  True,  True,  True,  True,  True,
-           True,  True,  True],
-         [ True,  True,  True,  True,  True,  True,  True,  True,  True,
-           True,  True,  True],
-         [False, False,  True,  True,  True,  True,  True,  True,  True,
-           True,  True,  True],
-         [False, False,  True,  True,  True,  True,  True,  True,  True,
-           True,  True, False],
-         [False,  True,  True,  True, False,  True,  True,  True,  True,
-           True,  True, False],
-         [False, False,  True, False, False, False,  True, False, False,
-          False, False,  True]]),
-  &#39;delta_transit_depth[sigma]&#39;: -30.71289010745107,
-  &#39;period&#39;: 2.1316925,
-  &#39;t0&#39;: 2308.407161,
-  &#39;duration&#39;: 0.3,
-  &#39;centroid_shift&#39;: (&lt;Quantity 0.00193408 arcsec&gt;,
-   &lt;Quantity 1.8629953e-05 arcsec&gt;),
-  &#39;fig&#39;: &lt;Figure size 1224x252 with 2 Axes&gt;},
- {&#39;target_depth&#39;: (0.027983492128697676, 1.9836327039621135e-06),
-  &#39;target_ra&#39;: (129.46849042754647, 1.0860175072594133e-09),
-  &#39;target_dec&#39;: (16.364788851834945, 1.203703947073219e-09),
-  &#39;target_lc&#39;: &lt;KeplerLightCurve length=2371 LABEL=&quot;EPIC 211732801&quot; QUARTER=None CAMPAIGN=18&gt;
-         time               flux        ... cadenceno quality
-                                        ...
-        object            float64       ...   int32    int32
-  ------------------ ------------------ ... --------- -------
-  3418.5462710770735 1.0000709555750706 ...    161969  524288
-  3418.5667034257203 1.0000803785512522 ...    161970       0
-  3418.5871355734416  1.000136426740289 ...    161971       0
-  3418.6075679211644 1.0001760630981578 ...    161972       0
-  3418.6280001684136 1.0002916449264563 ...    161973  393216
-  3418.6484324147386 1.0003298161638243 ...    161974       0
-  3418.6688646610637 1.0003044277651547 ...    161975       0
-    3418.68929690645 1.0002679481009473 ...    161976       0
-  3418.7097291513783 1.0002657278422864 ...    161977       0
-                 ...                ... ...       ...     ...
-   3469.196784703956  1.000288730505963 ...    164448       0
-   3469.217216435136 1.0002063326872763 ...    164449    8192
-   3469.237647966438 1.0002568663883091 ...    164450       0
-  3469.2580796976836 1.0002790956717944 ...    164451       0
-   3469.278511229044 1.0002388126573742 ...    164452       0
-  3469.2989428603396 1.0002998257255493 ...    164453       0
-  3469.3193745917015 1.0002057332469492 ...    164454       0
-  3469.3398062230553 1.0002553314045777 ...    164455       0
-   3469.360237754474 1.0002682830911245 ...    164456       0
-   3469.380669485894 1.0001734396753004 ...    164457       0,
-  &#39;target_aper&#39;: array([[False, False,  True,  True,  True,  True,  True,  True,  True,
-          False],
-         [False,  True,  True,  True,  True,  True,  True,  True,  True,
-           True],
-         [False,  True,  True,  True,  True,  True,  True,  True,  True,
-           True],
-         [False,  True,  True,  True,  True,  True,  True,  True,  True,
-           True],
-         [False,  True,  True,  True,  True,  True,  True,  True,  True,
-           True],
-         [False,  True,  True,  True,  True,  True,  True,  True,  True,
-           True],
-         [False,  True,  True,  True,  True,  True,  True,  True,  True,
-           True],
-         [False,  True,  True,  True,  True,  True,  True,  True,  True,
-           True],
-         [False, False, False,  True,  True,  True,  True,  True, False,
-          False]]),
-  &#39;contaminator_ra&#39;: (129.46849002565122, 1.1221205687069313e-09),
-  &#39;contaminator_dec&#39;: (16.36478849522657, 1.099350097899916e-09),
-  &#39;contaminator_depth&#39;: (0.028000579139874048, 2.0950148051014577e-06),
-  &#39;contaminator_lc&#39;: &lt;KeplerLightCurve length=2371 LABEL=&quot;EPIC 211732801&quot; QUARTER=None CAMPAIGN=18&gt;
-         time               flux        ... cadenceno quality
-                                        ...
-        object            float64       ...   int32    int32
-  ------------------ ------------------ ... --------- -------
-  3418.5462710770735  1.000083912958849 ...    161969  524288
-  3418.5667034257203  1.000089572336352 ...    161970       0
-  3418.5871355734416  1.000165816571275 ...    161971       0
-  3418.6075679211644 1.0001845415197574 ...    161972       0
-  3418.6280001684136 1.0003039920762427 ...    161973  393216
-  3418.6484324147386 1.0003385035130528 ...    161974       0
-  3418.6688646610637 1.0003286054077787 ...    161975       0
-    3418.68929690645  1.000289535021604 ...    161976       0
-  3418.7097291513783 1.0002981545742478 ...    161977       0
-                 ...                ... ...       ...     ...
-   3469.196784703956 1.0002924341264252 ...    164448       0
-   3469.217216435136  1.000229261327366 ...    164449    8192
-   3469.237647966438 1.0002762815356363 ...    164450       0
-  3469.2580796976836 1.0003094531952632 ...    164451       0
-   3469.278511229044  1.000250481705982 ...    164452       0
-  3469.2989428603396  1.000313873117273 ...    164453       0
-  3469.3193745917015 1.0002347214479566 ...    164454       0
-  3469.3398062230553  1.000266541267142 ...    164455       0
-   3469.360237754474 1.0002778221326643 ...    164456       0
-   3469.380669485894 1.0001856156632165 ...    164457       0,
-  &#39;contaminator_aper&#39;: array([[False, False, False,  True,  True,  True,  True,  True,  True,
-          False],
-         [False, False,  True,  True,  True,  True,  True,  True,  True,
-           True],
-         [False, False,  True,  True,  True,  True,  True,  True,  True,
-           True],
-         [False,  True,  True,  True,  True,  True,  True,  True,  True,
-           True],
-         [ True,  True,  True,  True,  True,  True,  True,  True,  True,
-           True],
-         [ True,  True,  True,  True,  True,  True,  True,  True,  True,
-           True],
-         [ True,  True,  True,  True,  True,  True,  True,  True,  True,
-          False],
-         [False,  True, False,  True,  True,  True,  True,  True,  True,
-          False],
-         [False, False, False, False, False,  True,  True, False, False,
-          False]]),
-  &#39;delta_transit_depth[sigma]&#39;: 5.922472440897489,
-  &#39;period&#39;: 2.1316925,
-  &#39;t0&#39;: 2308.407161,
-  &#39;duration&#39;: 0.3,
-  &#39;centroid_shift&#39;: (&lt;Quantity 0.00193427 arcsec&gt;,
-   &lt;Quantity 2.32096254e-05 arcsec&gt;),
-  &#39;fig&#39;: &lt;Figure size 1224x252 with 2 Axes&gt;}]
-</pre></div>
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [52]:
+<span></span>In [15]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -1273,7 +902,7 @@ Modeling TPFs: 100%|██████████| 3/3 [00:35&lt;00:00, 11.81s/
 <span class="n">t0</span> <span class="o">=</span> <span class="mf">2457585.55131</span> <span class="o">-</span> <span class="mi">2454833</span>
 <span class="n">duration</span> <span class="o">=</span> <span class="mf">0.1</span>
 
-<span class="n">result</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">TargetPixelFileCollection</span><span class="p">(</span><span class="n">tpfs</span><span class="p">)</span><span class="o">.</span><span class="n">calculate_contamination</span><span class="p">(</span><span class="n">period</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sff</span><span class="o">=</span><span class="kc">True</span><span class="p">);</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">calculate_contamination</span><span class="p">(</span><span class="n">tpfs</span><span class="p">,</span> <span class="n">period</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sff</span><span class="o">=</span><span class="kc">True</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
@@ -1282,148 +911,20 @@ Modeling TPFs: 100%|██████████| 3/3 [00:35&lt;00:00, 11.81s/
 </div>
 <div class="stderr output_area docutils container">
 <div class="highlight"><pre>
-Modeling TPFs:   0%|          | 0/1 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:180: RuntimeWarning: invalid value encountered in true_divide
-  contaminant_aper = (transit_pixels / transit_pixels_err) &gt; sigma
-/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:231: RuntimeWarning: Mean of empty slice
-  thumb = np.nanmean(tpf.flux.value, axis=0)
-/Users/ch/.pyenv/versions/3.8.0/lib/python3.8/site-packages/numpy/lib/nanfunctions.py:993: RuntimeWarning: All-NaN slice encountered
-  result = np.apply_along_axis(_nanmedian1d, axis, a, overwrite_input)
-Modeling TPFs: 100%|██████████| 1/1 [00:12&lt;00:00, 12.32s/it]
+Modeling TPFs:   0%|          | 0/1 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:265: RuntimeWarning: invalid value encountered in true_divide
+  aper = (thumb / err &gt; 3) &amp; aper
+Modeling TPFs: 100%|██████████| 1/1 [00:10&lt;00:00, 10.37s/it]
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_18_1.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_18_1.png" />
+<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_21_1.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_21_1.png" />
 </div>
 </div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [53]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">result</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>Out[53]:
-</pre></div>
-</div>
-<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>[{&#39;target_depth&#39;: (0.012536537656302622, 7.703732274583266e-06),
-  &#39;target_ra&#39;: (181.37306553877352, 1.071290365218784e-09),
-  &#39;target_dec&#39;: (-5.847341149378294, 8.554160422815799e-10),
-  &#39;target_lc&#39;: &lt;KeplerLightCurve length=2596 LABEL=&quot;EPIC 201127519&quot; QUARTER=None CAMPAIGN=102&gt;
-         time               flux        ... cadenceno quality
-                                        ...
-        object            float64       ...   int32    int32
-  ------------------ ------------------ ... --------- -------
-    2749.58997504133 1.0001882883897302 ...    129231  524288
-  2749.6104070856672  1.000270404455105 ...    129232       0
-  2749.6308390295453 1.0002913421388742 ...    129233       0
-   2749.651270872957 1.0001222342057066 ...    129234       0
-    2749.67170291613 1.0000832635814336 ...    129235       0
-  2749.6921348590768 0.9999742752965615 ...    129236       0
-    2749.71256670179  1.000619294418987 ...    129237       0
-   2749.732998743799 1.0000287896637916 ...    129238       0
-  2749.7534306858142 1.0001788995203929 ...    129239       0
-                 ...                ... ...       ...     ...
-  2818.5267381396698 1.0002874463586804 ...    132605       0
-   2818.547170098682  1.000431691360352 ...    132606 1048576
-   2818.567601958159 1.0002604273023106 ...    132607       0
-   2818.588034017863 1.0001050868933223 ...    132608       0
-   2818.608465978039 1.0000512735157951 ...    132609       0
-   2818.628897938448   1.00013960283479 ...    132610       0
-  2818.6493298993155 1.0002698742451424 ...    132611       0
-   2818.669761860423 1.0002562331930949 ...    132612       0
-  2818.6901938217634 1.0001511188976873 ...    132613       0
-   2818.710625783562 1.0002009416175834 ...    132614  524288,
-  &#39;target_aper&#39;: array([[False, False, False, False, False, False, False, False, False,
-          False, False, False],
-         [False, False, False, False, False, False, False, False, False,
-          False, False, False],
-         [False, False, False, False, False,  True, False, False, False,
-          False, False, False],
-         [False, False, False, False,  True,  True,  True,  True, False,
-          False, False, False],
-         [False, False, False, False,  True,  True,  True,  True, False,
-          False, False, False],
-         [False, False, False, False, False,  True,  True,  True,  True,
-          False, False, False],
-         [False, False, False, False,  True,  True,  True,  True,  True,
-          False, False, False],
-         [False, False, False, False, False,  True,  True,  True,  True,
-          False, False, False],
-         [False, False, False, False, False, False,  True,  True, False,
-          False, False, False],
-         [False, False, False, False, False, False, False, False, False,
-          False, False, False],
-         [False, False, False, False, False, False, False, False, False,
-          False, False, False]]),
-  &#39;contaminator_ra&#39;: (181.37302040673876, 1.3938823960270398e-09),
-  &#39;contaminator_dec&#39;: (-5.847387989128847, 1.0927340915883223e-09),
-  &#39;contaminator_depth&#39;: (0.012240088507967557, 7.148005965567344e-06),
-  &#39;contaminator_lc&#39;: &lt;KeplerLightCurve length=2596 LABEL=&quot;EPIC 201127519&quot; QUARTER=None CAMPAIGN=102&gt;
-         time               flux        ... cadenceno quality
-                                        ...
-        object            float64       ...   int32    int32
-  ------------------ ------------------ ... --------- -------
-    2749.58997504133 1.0001924644804774 ...    129231  524288
-  2749.6104070856672 1.0000971075252256 ...    129232       0
-  2749.6308390295453  1.000076985351875 ...    129233       0
-   2749.651270872957 0.9998606262937575 ...    129234       0
-    2749.67170291613 0.9998694279428644 ...    129235       0
-  2749.6921348590768 0.9999049866892512 ...    129236       0
-    2749.71256670179 1.0005070448754663 ...    129237       0
-   2749.732998743799 1.0000548476861435 ...    129238       0
-  2749.7534306858142 1.0001096976474217 ...    129239       0
-                 ...                ... ...       ...     ...
-  2818.5267381396698 1.0001484595469488 ...    132605       0
-   2818.547170098682  1.000127522044781 ...    132606 1048576
-   2818.567601958159 0.9999984178466592 ...    132607       0
-   2818.588034017863 1.0001104474455778 ...    132608       0
-   2818.608465978039 1.0000004918184142 ...    132609       0
-   2818.628897938448  1.000085578394183 ...    132610       0
-  2818.6493298993155 1.0002133597534533 ...    132611       0
-   2818.669761860423 0.9999804380460413 ...    132612       0
-  2818.6901938217634 1.0000202640285656 ...    132613       0
-   2818.710625783562 1.0000996516409888 ...    132614  524288,
-  &#39;contaminator_aper&#39;: array([[False, False, False, False, False, False, False, False, False,
-          False, False, False],
-         [False, False, False, False, False, False, False, False, False,
-          False, False, False],
-         [False, False, False, False,  True,  True,  True,  True, False,
-          False, False, False],
-         [False, False, False, False,  True,  True,  True,  True, False,
-          False, False, False],
-         [False, False, False, False,  True,  True,  True,  True,  True,
-           True, False, False],
-         [False, False, False,  True,  True,  True,  True,  True,  True,
-           True, False, False],
-         [False, False, False, False,  True,  True,  True,  True,  True,
-           True, False, False],
-         [False, False, False, False,  True,  True,  True,  True,  True,
-           True,  True, False],
-         [False, False, False, False, False,  True,  True,  True,  True,
-           True,  True, False],
-         [False, False, False, False, False, False,  True,  True,  True,
-          False, False, False],
-         [False, False, False, False, False, False, False, False, False,
-          False, False, False]]),
-  &#39;delta_transit_depth[sigma]&#39;: -28.20876660685693,
-  &#39;period&#39;: 6.178369,
-  &#39;t0&#39;: 2752.55131000001,
-  &#39;duration&#39;: 0.1,
-  &#39;centroid_shift&#39;: (&lt;Quantity 0.2341623 arcsec&gt;,
-   &lt;Quantity 2.29195291e-05 arcsec&gt;),
-  &#39;fig&#39;: &lt;Figure size 1224x252 with 2 Axes&gt;}]
-</pre></div>
-</div>
-</div>
+<p><code class="docutils literal notranslate"><span class="pre">contaminante</span></code> does try to produce reasonable results for saturated
+targets, but especially for K2 this can be quite hard.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
 <span></span>In [48]:
@@ -1435,7 +936,7 @@ Modeling TPFs: 100%|██████████| 1/1 [00:12&lt;00:00, 12.32s/
 <span class="n">t0</span> <span class="o">=</span> <span class="mf">2457393.41539</span> <span class="o">-</span> <span class="mi">2454833</span>
 <span class="n">duration</span> <span class="o">=</span> <span class="mf">1.622</span><span class="o">/</span><span class="mi">24</span>
 
-<span class="n">result</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">TargetPixelFileCollection</span><span class="p">(</span><span class="n">tpfs</span><span class="p">)</span><span class="o">.</span><span class="n">calculate_contamination</span><span class="p">(</span><span class="n">period</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sff</span><span class="o">=</span><span class="kc">True</span><span class="p">);</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">calculate_contamination</span><span class="p">(</span><span class="n">tpfs</span><span class="p">,</span> <span class="n">period</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sff</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">windows</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">spline_period</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">cbvs</span><span class="o">=</span><span class="kc">False</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
@@ -1444,194 +945,16 @@ Modeling TPFs: 100%|██████████| 1/1 [00:12&lt;00:00, 12.32s/
 </div>
 <div class="stderr output_area docutils container">
 <div class="highlight"><pre>
-Modeling TPFs:   0%|          | 0/1 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:180: RuntimeWarning: invalid value encountered in true_divide
-  contaminant_aper = (transit_pixels / transit_pixels_err) &gt; sigma
-/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:231: RuntimeWarning: Mean of empty slice
-  thumb = np.nanmean(tpf.flux.value, axis=0)
-/Users/ch/.pyenv/versions/3.8.0/lib/python3.8/site-packages/numpy/lib/nanfunctions.py:993: RuntimeWarning: All-NaN slice encountered
-  result = np.apply_along_axis(_nanmedian1d, axis, a, overwrite_input)
-Modeling TPFs: 100%|██████████| 1/1 [00:30&lt;00:00, 30.40s/it]
+Modeling TPFs:   0%|          | 0/1 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:266: RuntimeWarning: invalid value encountered in true_divide
+  cxs, cys = [], []
+Modeling TPFs: 100%|██████████| 1/1 [00:23&lt;00:00, 23.57s/it]
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_20_1.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_20_1.png" />
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [7]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">result</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>Out[7]:
-</pre></div>
-</div>
-<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>[{&#39;target_depth&#39;: (0.00022095377807880145, 6.886146280793968e-07),
-  &#39;target_ra&#39;: (8.738502408511327, 5.777671168806453e-10),
-  &#39;target_dec&#39;: (4.380931059748687, 4.255147911812038e-10),
-  &#39;target_lc&#39;: &lt;KeplerLightCurve length=3572 LABEL=&quot;EPIC 220383386&quot; QUARTER=None CAMPAIGN=8&gt;
-         time               flux        ... cadenceno quality
-                                        ...
-        object            float64       ...   int32    int32
-  ------------------ ------------------ ... --------- -------
-  2559.0680847030235 0.9999887371975735 ...    119907  524288
-  2559.0885168063905 0.9997507637380569 ...    119908       0
-   2559.108948909292 1.0000010056685427 ...    119909       0
-   2559.129381012186 1.0003330630207086 ...    119910       0
-   2559.149813114156 1.0004702636294005 ...    119911    8192
-  2559.1702452156605 0.9998855596298264 ...    119912       0
-   2559.190677316692 0.9999300442342476 ...    119913       0
-   2559.211109517266 1.0000389324540386 ...    119914       0
-   2559.231541516907 1.0000795799966182 ...    119915       0
-                 ...                ... ...       ...     ...
-  2637.5870519458404 1.0000220894453529 ...    123750       0
-  2637.6074837431515  1.000087720106122 ...    123751       0
-    2637.62791574093 1.0002347864758725 ...    123752       0
-   2637.648347639166  1.000069300483323 ...    123753       0
-   2637.668779437874 1.0000529735189365 ...    123754       0
-  2637.6892114370494 1.0000569119074236 ...    123755       0
-  2637.7096433366823  1.000026733857963 ...    123756 1048576
-  2637.7300751365547 1.0001085031578438 ...    123757       0
-   2637.750507136894 0.9999099810287739 ...    123758       0
-   2637.770939037924 1.0001129613750566 ...    123759  524288,
-  &#39;target_aper&#39;: array([[False, False, False, False, False, False, False, False, False,
-          False, False, False, False, False, False],
-         [False, False, False, False, False, False, False, False, False,
-          False, False, False, False, False, False],
-         [False, False, False, False, False, False, False, False, False,
-          False, False, False, False, False, False],
-         [False, False, False, False,  True,  True,  True,  True,  True,
-           True, False, False, False, False, False],
-         [False, False, False, False,  True,  True,  True,  True,  True,
-           True, False, False, False, False, False],
-         [False, False, False, False,  True,  True,  True,  True,  True,
-           True, False, False, False, False, False],
-         [False, False, False, False,  True,  True,  True,  True,  True,
-           True, False, False, False, False, False],
-         [False, False, False, False,  True,  True,  True,  True,  True,
-           True,  True,  True,  True, False, False],
-         [False, False, False, False,  True,  True,  True,  True,  True,
-           True,  True,  True,  True, False, False],
-         [False, False, False,  True,  True,  True,  True,  True,  True,
-           True,  True,  True,  True, False, False],
-         [False, False, False,  True,  True,  True,  True,  True,  True,
-           True,  True,  True,  True, False, False],
-         [False, False, False,  True,  True,  True,  True,  True,  True,
-           True,  True,  True,  True, False, False],
-         [False, False, False,  True,  True,  True,  True,  True,  True,
-           True,  True,  True,  True,  True, False],
-         [False, False, False,  True,  True,  True,  True,  True,  True,
-           True,  True,  True,  True,  True, False],
-         [False, False, False,  True,  True,  True,  True,  True,  True,
-           True,  True,  True,  True,  True, False],
-         [False, False, False, False,  True,  True,  True,  True,  True,
-           True,  True,  True,  True,  True, False],
-         [False, False, False, False,  True,  True,  True,  True,  True,
-           True,  True,  True,  True,  True, False],
-         [False, False, False, False,  True,  True,  True,  True,  True,
-           True,  True,  True,  True,  True, False],
-         [False, False, False, False,  True,  True,  True,  True,  True,
-           True,  True,  True, False, False, False],
-         [False, False, False, False, False, False, False, False, False,
-          False, False, False, False, False, False],
-         [False, False, False, False, False, False, False, False, False,
-          False, False, False, False, False, False],
-         [False, False, False, False, False, False, False, False, False,
-          False, False, False, False, False, False],
-         [False, False, False, False, False, False, False, False, False,
-          False, False, False, False, False, False]]),
-  &#39;contaminator_ra&#39;: (8.738429663313083, 5.381217366072814e-10),
-  &#39;contaminator_dec&#39;: (4.380946333566542, 3.930354526801399e-10),
-  &#39;contaminator_depth&#39;: (0.00019514239382013263, 9.462999968299979e-07),
-  &#39;contaminator_lc&#39;: &lt;KeplerLightCurve length=3572 LABEL=&quot;EPIC 220383386&quot; QUARTER=None CAMPAIGN=8&gt;
-         time               flux        ... cadenceno quality
-                                        ...
-        object            float64       ...   int32    int32
-  ------------------ ------------------ ... --------- -------
-  2559.0680847030235 0.9998380531892218 ...    119907  524288
-  2559.0885168063905 0.9997217942952225 ...    119908       0
-   2559.108948909292 0.9999023586645533 ...    119909       0
-   2559.129381012186 0.9999638249742601 ...    119910       0
-   2559.149813114156 1.0004009389019994 ...    119911    8192
-  2559.1702452156605 0.9998978802324128 ...    119912       0
-   2559.190677316692 0.9998107709489865 ...    119913       0
-   2559.211109517266 0.9999045675462659 ...    119914       0
-   2559.231541516907 1.0002280174993354 ...    119915       0
-                 ...                ... ...       ...     ...
-  2637.5870519458404 0.9999226369243519 ...    123750       0
-  2637.6074837431515 0.9999644470300635 ...    123751       0
-    2637.62791574093  1.000104846264146 ...    123752       0
-   2637.648347639166 0.9999218057692814 ...    123753       0
-   2637.668779437874 0.9998675442041669 ...    123754       0
-  2637.6892114370494 0.9999362721889509 ...    123755       0
-  2637.7096433366823 0.9999149079071514 ...    123756 1048576
-  2637.7300751365547 0.9999907180575516 ...    123757       0
-   2637.750507136894 0.9997701035197554 ...    123758       0
-   2637.770939037924  1.000000372374283 ...    123759  524288,
-  &#39;contaminator_aper&#39;: array([[False, False, False, False, False, False, False, False, False,
-          False, False, False, False, False, False],
-         [False, False, False, False, False, False, False, False, False,
-          False, False, False, False, False, False],
-         [False, False, False, False, False, False, False, False, False,
-          False, False, False, False, False, False],
-         [False, False, False, False, False, False, False, False, False,
-          False, False, False, False, False, False],
-         [False, False, False, False, False, False, False, False,  True,
-          False, False, False, False, False, False],
-         [False, False, False, False, False, False,  True,  True,  True,
-          False, False, False, False, False, False],
-         [False, False, False, False, False, False,  True,  True,  True,
-          False, False, False, False, False, False],
-         [False, False, False, False, False,  True,  True,  True,  True,
-          False, False, False, False, False, False],
-         [False, False, False, False, False,  True,  True,  True,  True,
-          False, False,  True, False, False, False],
-         [False, False, False, False, False,  True,  True,  True,  True,
-           True,  True,  True, False, False, False],
-         [False, False, False, False,  True,  True,  True,  True,  True,
-           True,  True, False, False, False, False],
-         [False, False, False, False,  True,  True,  True,  True,  True,
-           True,  True, False, False, False, False],
-         [False, False, False, False,  True,  True,  True,  True,  True,
-           True, False, False, False, False, False],
-         [False, False, False, False, False,  True,  True,  True,  True,
-          False,  True, False, False, False, False],
-         [False, False, False, False, False,  True,  True,  True,  True,
-           True,  True,  True, False, False, False],
-         [False, False, False, False, False,  True,  True,  True,  True,
-           True,  True, False, False, False, False],
-         [False, False, False, False, False,  True,  True,  True,  True,
-           True, False,  True, False, False, False],
-         [False, False, False, False, False, False,  True,  True,  True,
-           True, False, False, False, False, False],
-         [False, False, False, False, False, False, False, False, False,
-          False, False, False, False, False, False],
-         [False, False, False, False, False, False, False, False, False,
-          False, False, False, False, False, False],
-         [False, False, False, False, False, False, False, False, False,
-          False, False, False, False, False, False],
-         [False, False, False, False, False, False, False, False, False,
-          False, False, False, False, False, False],
-         [False, False, False, False, False, False, False, False, False,
-          False, False, False, False, False, False]]),
-  &#39;delta_transit_depth[sigma]&#39;: -22.054779680101824,
-  &#39;period&#39;: 0.959624,
-  &#39;t0&#39;: 2560.415390000213,
-  &#39;duration&#39;: 0.06758333333333334,
-  &#39;centroid_shift&#39;: (&lt;Quantity 0.26759295 arcsec&gt;,
-   &lt;Quantity 2.11117034e-05 arcsec&gt;),
-  &#39;fig&#39;: &lt;Figure size 1224x252 with 2 Axes&gt;}]
-</pre></div>
+<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_23_1.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_23_1.png" />
 </div>
 </div>
 </div>

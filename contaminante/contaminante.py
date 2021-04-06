@@ -19,63 +19,93 @@ import astropy.units as u
 from scipy.sparse import csr_matrix, diags, hstack
 from astropy.timeseries import BoxLeastSquares
 
+#
+# class TargetPixelFileCollection(TPFC):
+#     def __init__(self, tpfs):
+#         """This is an instance of a `lk.TargetPixelFileCollection`, with the additional
+#         method `calculate_contamination`. It's only purpose is to add the functionality to calculate contamination."""
+#         if isinstance(tpfs, (list, TPFC)):
+#             super().__init__(tpfs)
+#         elif isinstance(tpfs, TPF):
+#             super().__init__([tpfs])
+#         else:
+#             raise ValueError(
+#                 "please pass `lk.TargetPixelFile` or `lk.TargetPixelFileCollection`"
+#             )
+#
+#         # remove nans
+#         for idx, tpf in enumerate(self):
+#             aper = tpf.pipeline_mask
+#             if not (aper.any()):
+#                 aper = tpf.create_threshold_mask()
+#             mask = (np.abs((tpf.pos_corr1)) < 10) & ((np.gradient(tpf.pos_corr2)) < 10)
+#             mask &= np.nan_to_num(tpf.to_lightcurve(aperture_mask=aper).flux) != 0
+#             self[idx] = self[idx][mask]
 
-class TargetPixelFileCollection(TPFC):
-    def __init__(self, tpfs):
-        if isinstance(tpfs, (list, TPFC)):
-            super().__init__(tpfs)
-        elif isinstance(tpfs, TPF):
-            super().__init__([tpfs])
-        else:
-            raise ValueError(
-                "please pass `lk.TargetPixelFile` or `lk.TargetPixelFileCollection`"
-            )
 
-        # remove nans
-        for idx, tpf in enumerate(self):
-            aper = tpf.pipeline_mask
-            if not (aper.any()):
-                aper = tpf.create_threshold_mask()
-            mask = (np.abs((tpf.pos_corr1)) < 10) & ((np.gradient(tpf.pos_corr2)) < 10)
-            mask &= np.nan_to_num(tpf.to_lightcurve(aperture_mask=aper).flux) != 0
-            self[idx] = self[idx][mask]
+def calculate_contamination(
+    tpfs, period, t0, duration, sigma=5, plot=True, cbvs=True, **kwargs
+):
+    """Calculate the contamination for a target
+    Parameters
+    ----------
+    period : float
+        Period of transiting object in days
+    t0 : float
+        Transit midpoint of transiting object in days
+    duration : float
+        Duration of transit in days
+    plot: bool
+        If True, will generate a figure
+    cbvs : bool
+        If True, will use Kepler/TESS CBVs to detrend. Default is True
+    sff : bool
+        If True, will use the SFF method to correct variability. Default is False.
+    spline_period : float
+        The period of a spline to fit. For short period variability,
+        set this value to a smaller number. Default is 0.75 days.
 
-    def calculate_contamination(
-        self, period, t0, duration, sigma=5, plot=True, cbvs=True, **kwargs
-    ):
-        """Calculate the contamination for a target
-        Parameters
-        ----------
-        period : float
-            Period of transiting object in days
-        t0 : float
-            Transit midpoint of transiting object in days
-        duration : float
-            Duration of transit in days
-        plot: bool
-            If True, will generate a figure
 
-        Returns
-        -------
-        result : list of dict
-            List of dictionaries containing the contamination properties
-            If plot is True, will show a figure, and will put the
-            matplotlib.pyplot.figure object into the result dictionary.
-        """
-        results = []
-        for tpf in tqdm(self, desc="Modeling TPFs"):
+    Returns
+    -------
+    result : list of dict
+        List of dictionaries containing the contamination properties
+        If plot is True, will show a figure, and will put the
+        matplotlib.pyplot.figure object into the result dictionary.
+    """
 
-            aper = tpf.pipeline_mask
-            if not (aper.any()):
-                aper = tpf.create_threshold_mask()
+    if isinstance(tpfs, (list)):
+        tpfs = TPFC(tpfs)
+    elif isinstance(tpfs, TPF):
+        tpfs = TPFC([tpfs])
+    elif not isinstance(tpfs, TPFC):
+        raise ValueError(
+            "please pass `lk.TargetPixelFile` or `lk.TargetPixelFileCollection`"
+        )
 
-            lc = tpf.to_lightcurve(aperture_mask=aper).normalize()
-            bls = lc.to_periodogram("bls", period=[period, period], duration=duration)
-            t_mask = bls.get_transit_mask(
-                period=period, transit_time=t0, duration=duration
-            )
-            # Correct light curve
-            if cbvs:
+    # remove nans
+    for idx, tpf in enumerate(tpfs):
+        aper = tpf.pipeline_mask
+        if not (aper.any()):
+            aper = tpf.create_threshold_mask()
+        mask = (np.abs((tpf.pos_corr1)) < 10) & ((np.gradient(tpf.pos_corr2)) < 10)
+        mask &= np.nan_to_num(tpf.to_lightcurve(aperture_mask=aper).flux) != 0
+        tpfs[idx] = tpfs[idx][mask]
+
+    results = []
+    for tpf in tqdm(tpfs, desc="Modeling TPFs"):
+
+        aper = tpf.pipeline_mask
+        if not (aper.any()):
+            aper = tpf.create_threshold_mask()
+
+        lc = tpf.to_lightcurve(aperture_mask=aper).normalize()
+        bls = lc.to_periodogram("bls", period=[period, period], duration=duration)
+        t_mask = bls.get_transit_mask(period=period, transit_time=t0, duration=duration)
+        # Correct light curve
+        if cbvs:
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore")
                 cbv_array = (
                     lk.correctors.CBVCorrector(
                         tpf.to_lightcurve(aperture_mask=aper),
@@ -86,46 +116,47 @@ class TargetPixelFileCollection(TPFC):
                     .to_designmatrix()
                     .X[:, :4]
                 )
-            else:
-                cbv_array = None
+        else:
+            cbv_array = None
 
-            r1, c1 = tpf.estimate_centroids(aperture_mask=aper)
-            r1 -= np.median(r1)
-            c1 -= np.median(c1)
-            X = build_X(lc.time.jd, r1.value, c1.value, cbvs=cbv_array, **kwargs)
+        r1, c1 = tpf.estimate_centroids(aperture_mask=aper)
+        r1 -= np.median(r1)
+        c1 -= np.median(c1)
+        X = build_X(lc.time.jd, r1.value, c1.value, cbvs=cbv_array, **kwargs)
 
-            X = X[:, np.asarray(X.sum(axis=0))[0] != 0]
+        X = X[:, np.asarray(X.sum(axis=0))[0] != 0]
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
             dm1 = lk.SparseDesignMatrix(
                 X,
                 name="X",
                 prior_mu=np.hstack([np.zeros(X.shape[1] - 1), 1]),
                 prior_sigma=np.hstack([np.ones(X.shape[1] - 1) * 1e2, 0.1]),
             )
-            r = lk.RegressionCorrector(lc.copy())
-            target = r.correct(dm1, cadence_mask=~t_mask)
+        r = lk.RegressionCorrector(lc.copy())
+        target = r.correct(dm1, cadence_mask=~t_mask)
+        stellar_lc = r.diagnostic_lightcurves["X"].flux
+        # Find a transit model
+        bls = target.to_periodogram("bls", period=[period, period], duration=duration)
+        t_model = (
+            ~bls.get_transit_mask(period=period, transit_time=t0, duration=duration)
+        ).astype(float) - 1
+        depth = bls.compute_stats(period=period, transit_time=t0, duration=duration)[
+            "depth"
+        ][0]
 
-            stellar_lc = r.diagnostic_lightcurves["X"].flux
-            # Find a transit model
-            bls = target.to_periodogram(
-                "bls", period=[period, period], duration=duration
-            )
-            t_model = (
-                ~bls.get_transit_mask(period=period, transit_time=t0, duration=duration)
-            ).astype(float) - 1
-            depth = bls.compute_stats(
-                period=period, transit_time=t0, duration=duration
-            )["depth"][0]
-
-            X = build_X(
-                lc.time.jd,
-                r1.value,
-                c1.value,
-                flux=stellar_lc,
-                t_model=t_model,
-                cbvs=cbv_array,
-                **kwargs
-            )
-            X = X[:, np.asarray(X.sum(axis=0))[0] != 0]
+        X = build_X(
+            lc.time.jd,
+            r1.value,
+            c1.value,
+            flux=stellar_lc,
+            t_model=t_model,
+            cbvs=cbv_array,
+            **kwargs
+        )
+        X = X[:, np.asarray(X.sum(axis=0))[0] != 0]
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
             dm = lk.SparseDesignMatrix(
                 X,
                 name="X",
@@ -133,73 +164,72 @@ class TargetPixelFileCollection(TPFC):
                 prior_sigma=np.hstack([np.ones(X.shape[1] - 2) * 1e4, 0.1, 0.1]),
             )
 
-            model = np.zeros(tpf.flux.shape)
-            model_err = np.zeros(tpf.flux.shape)
+        model = np.zeros(tpf.flux.shape)
+        model_err = np.zeros(tpf.flux.shape)
 
-            saturated = np.max(np.nan_to_num(tpf.flux.value), axis=0) > 1.4e5
-            saturated |= np.abs(np.gradient(saturated.astype(float), axis=0)) != 0
-            pixels = tpf.flux.value.copy()
-            pixels_err = tpf.flux_err.value.copy()
+        saturated = np.max(np.nan_to_num(tpf.flux.value), axis=0) > 1.2e5
+        saturated |= np.abs(np.gradient(saturated.astype(float), axis=0)) != 0
+        saturated |= np.abs(np.gradient(saturated.astype(float), axis=0)) != 0
+        pixels = tpf.flux.value.copy()
+        pixels_err = tpf.flux_err.value.copy()
 
-            transit_pixels = np.zeros(tpf.flux.shape[1:])
-            transit_pixels_err = np.zeros(tpf.flux.shape[1:])
+        transit_pixels = np.zeros(tpf.flux.shape[1:])
+        transit_pixels_err = np.zeros(tpf.flux.shape[1:])
 
-            for jdx, s in enumerate(saturated.T):
-                if any(s):
-                    l = np.where(s)[0][s.sum() // 2]
-                    pixels[:, s, jdx] = np.nan
-                    pixels[:, l, jdx] = tpf.flux.value[:, s, jdx].sum(axis=(1))
-                    pixels_err[:, l, jdx] = (
-                        (tpf.flux_err.value[:, s, jdx] ** 2).sum(axis=(1)) ** 0.5
-                    ) / s.sum()
+        for jdx, s in enumerate(saturated.T):
+            if any(s):
+                l = np.where(s)[0][s.sum() // 2]
+                pixels[:, s, jdx] = np.nan
+                pixels[:, l, jdx] = tpf.flux.value[:, s, jdx].sum(axis=(1))
+                pixels_err[:, l, jdx] = (
+                    (tpf.flux_err.value[:, s, jdx] ** 2).sum(axis=(1)) ** 0.5
+                ) / s.sum()
 
-            for idx in range(tpf.shape[1]):
-                for jdx in range(tpf.shape[2]):
-                    if np.nansum(pixels[:, idx, jdx]) == 0:
-                        continue
-                    r.lc.flux = pixels[:, idx, jdx] / np.median(pixels[:, idx, jdx])
-                    r.lc.flux_err = pixels_err[:, idx, jdx] / np.median(
-                        pixels[:, idx, jdx]
-                    )
+        for idx in range(tpf.shape[1]):
+            for jdx in range(tpf.shape[2]):
+                if np.nansum(pixels[:, idx, jdx]) == 0:
+                    continue
+                r.lc.flux = pixels[:, idx, jdx] / np.median(pixels[:, idx, jdx])
+                r.lc.flux_err = pixels_err[:, idx, jdx] / np.median(pixels[:, idx, jdx])
 
-                    r.correct(dm)
-                    transit_pixels[idx, jdx] = r.coefficients[-1]
-                    sigma_w_inv = X.T.dot(X / r.lc.flux_err[:, None] ** 2) + np.diag(
-                        1 / dm.prior_sigma ** 2
-                    )
-                    transit_pixels_err[idx, jdx] = (
-                        np.asarray(np.linalg.inv(sigma_w_inv)).diagonal()[-1] ** 0.5
-                    )
-
-            for jdx, s in enumerate(saturated.T):
-                if any(s):
-                    l = np.where(s)[0][s.sum() // 2]
-                    transit_pixels[s, jdx] = transit_pixels[l, jdx]
-                    transit_pixels_err[s, jdx] = transit_pixels_err[l, jdx]
-
-            contaminant_aper = (transit_pixels / transit_pixels_err) > sigma
-            contaminated_lc = tpf.to_lightcurve(
-                aperture_mask=contaminant_aper
-            ).normalize()
-            r.lc = contaminated_lc
-            contaminator = r.correct(dm1, cadence_mask=~t_mask)
-
-            results.append(
-                _package_results(
-                    tpf,
-                    target=target,
-                    contaminator=contaminator,
-                    aper=aper,
-                    contaminant_aper=contaminant_aper,
-                    transit_pixels=transit_pixels,
-                    transit_pixels_err=transit_pixels_err,
-                    period=period,
-                    t0=t0,
-                    duration=duration,
-                    plot=plot,
+                r.correct(dm)
+                transit_pixels[idx, jdx] = r.coefficients[-1]
+                sigma_w_inv = X.T.dot(X / r.lc.flux_err[:, None] ** 2) + np.diag(
+                    1 / dm.prior_sigma ** 2
                 )
+                transit_pixels_err[idx, jdx] = (
+                    np.asarray(np.linalg.inv(sigma_w_inv)).diagonal()[-1] ** 0.5
+                )
+
+        for jdx, s in enumerate(saturated.T):
+            if any(s):
+                l = np.where(s)[0][s.sum() // 2]
+                transit_pixels[s, jdx] = transit_pixels[l, jdx]
+                transit_pixels_err[s, jdx] = transit_pixels_err[l, jdx]
+
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            contaminant_aper = (transit_pixels / transit_pixels_err) > sigma
+        contaminated_lc = tpf.to_lightcurve(aperture_mask=contaminant_aper).normalize()
+        r.lc = contaminated_lc
+        contaminator = r.correct(dm1, cadence_mask=~t_mask)
+
+        results.append(
+            _package_results(
+                tpf,
+                target=target,
+                contaminator=contaminator,
+                aper=aper,
+                contaminant_aper=contaminant_aper,
+                transit_pixels=transit_pixels,
+                transit_pixels_err=transit_pixels_err,
+                period=period,
+                t0=t0,
+                duration=duration,
+                plot=plot,
             )
-        return results
+        )
+    return results
 
 
 def _package_results(
@@ -217,20 +247,39 @@ def _package_results(
 ):
     """Helper function for packaging up results"""
 
-    def get_coords(thumb, err, aper, count=400):
-        Y, X = np.mgrid[: tpf.shape[1], : tpf.shape[2]]
-        cxs, cys = [], []
-        for count in range(count):
-            err1 = np.random.normal(0, err[aper])
-            cxs.append(np.average(X[aper], weights=thumb[aper] + err1))
-            cys.append(np.average(Y[aper], weights=thumb[aper] + err1))
-        cxs, cys = np.asarray(cxs), np.asarray(cys)
-        cras, cdecs = tpf.wcs.wcs_pix2world(np.asarray([cxs, cys]).T, 1).T
+    # def get_coords(thumb, err, aper, count=400):
+    #     Y, X = np.mgrid[: tpf.shape[1], : tpf.shape[2]]
+    #     cxs, cys = [], []
+    #     for count in range(count):
+    #         err1 = np.random.normal(0, err[aper])
+    #         cxs.append(np.average(X[aper], weights=thumb[aper] + err1))
+    #         cys.append(np.average(Y[aper], weights=thumb[aper] + err1))
+    #     cxs, cys = np.asarray(cxs), np.asarray(cys)
+    #     cras, cdecs = tpf.wcs.wcs_pix2world(np.asarray([cxs, cys]).T, 1).T
+    #     return cras, cdecs
+
+    def get_coords(thumb, err, aper=None):
+        if aper is None:
+            aper = np.ones(tpf.flux.shape[1:], bool)
+        with np.errstate(divide="ignore"):
+            Y, X = np.mgrid[: tpf.shape[1], : tpf.shape[2]]
+            aper = (thumb / err > 3) & aper
+            cxs, cys = [], []
+            for count in range(500):
+                w = np.random.normal(loc=thumb[aper], scale=err[aper])
+                cxs.append(np.average(X[aper], weights=w))
+                cys.append(np.average(Y[aper], weights=w))
+            cxs, cys = np.asarray(cxs), np.asarray(cys)
+            k = (cxs > 0) & (cxs < tpf.shape[2]) & (cys > 0) & (cys < tpf.shape[1])
+            cxs, cys = cxs[k], cys[k]
+            cras, cdecs = tpf.wcs.all_pix2world(np.asarray([cxs, cys]).T, 1).T
         return cras, cdecs
 
-    thumb = np.nanmean(tpf.flux.value, axis=0)
-    err = (np.sum(tpf.flux_err.value ** 2, axis=0) ** 0.5) / len(tpf.time)
-    ra_target, dec_target = get_coords(thumb, err, aper)
+    thumb = np.nanmean(np.nan_to_num(tpf.flux.value), axis=0)
+    err = (np.sum(np.nan_to_num(tpf.flux_err.value) ** 2, axis=0) ** 0.5) / len(
+        tpf.time
+    )
+    ra_target, dec_target = get_coords(thumb, err, aper=aper)
     bls = BoxLeastSquares(target.time, target.flux, target.flux_err)
     depths = []
     for i in range(50):
@@ -239,13 +288,14 @@ def _package_results(
     target_depth = (np.mean(depths), np.std(depths))
 
     res = {"target_depth": target_depth}
-    res["target_ra"] = np.mean(ra_target), np.std(ra_target)
-    res["target_dec"] = np.mean(dec_target), np.std(dec_target)
+    res["target_ra"] = np.median(ra_target), np.std(ra_target)
+    res["target_dec"] = np.median(dec_target), np.std(dec_target)
     res["target_lc"] = target
     res["target_aper"] = aper
 
     if contaminant_aper.any():
-        ra_contaminant, dec_contaminant = get_coords(thumb, err, contaminant_aper)
+
+        ra_contaminant, dec_contaminant = get_coords(transit_pixels, transit_pixels_err)
         bls = BoxLeastSquares(
             contaminator.time, contaminator.flux, contaminator.flux_err
         )
@@ -254,8 +304,8 @@ def _package_results(
             bls.y = contaminator.flux + np.random.normal(0, contaminator.flux_err)
             depths.append(bls.power(period, duration)["depth"][0])
         contaminator_depth = (np.mean(depths), np.std(depths))
-        res["contaminator_ra"] = np.mean(ra_contaminant), np.std(ra_contaminant)
-        res["contaminator_dec"] = np.mean(dec_contaminant), np.std(dec_contaminant)
+        res["contaminator_ra"] = np.median(ra_contaminant), np.std(ra_contaminant)
+        res["contaminator_dec"] = np.median(dec_contaminant), np.std(dec_contaminant)
         res["contaminator_depth"] = contaminator_depth
         res["contaminator_lc"] = contaminator
         res["contaminator_aper"] = contaminant_aper
@@ -281,7 +331,8 @@ def _package_results(
         centroid_shift * ((2 * edra / dra) ** 2 + (2 * eddec / ddec) ** 2) ** 0.5
     )
     res["centroid_shift"] = (centroid_shift, ecentroid_shift)
-
+    res["transit_depth"] = transit_pixels
+    res["transit_depth_err"] = transit_pixels_err
     if plot:
         res["fig"] = _make_plot(tpf, res)
     return res
@@ -297,7 +348,7 @@ def build_X(
     cbvs=None,
     spline=True,
     spline_period=0.75,
-    sff=True,
+    sff=False,
     windows=20,
     bins=15,
 ):
@@ -327,15 +378,17 @@ def build_X(
     r, c = np.nan_to_num(pos_corr1), np.nan_to_num(pos_corr2)
     r[np.abs(r) > 10] = 0
     c[np.abs(r) > 10] = 0
-    breaks = np.where((np.diff(time) > (np.median(np.diff(time)) * 10)))[0] - 1
+    breaks = np.where((np.diff(time) > (np.median(np.diff(time)) * 20)))[0] - 1
     breaks = breaks[breaks > 0]
     if sff:
         lc = lk.KeplerLightCurve(
             time=time, flux=time ** 0, centroid_col=pos_corr1, centroid_row=pos_corr2
         )
-        s = lk.correctors.SFFCorrector(lc)
-        _ = s.correct()
-        centroids = s.dmc["sff"].X
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            s = lk.correctors.SFFCorrector(lc)
+            _ = s.correct()
+            centroids = s.dmc["sff"].X
 
     else:
         if np.nansum(r) == 0:
@@ -356,19 +409,18 @@ def build_X(
                         for idx in np.arange(0, 4)
                         for jdx in range(0, 4)
                     ]
-                ).T[:, 1:]
+                ).T
             )
-            centroids = (
-                lk.correctors.DesignMatrix(centroids)
-                .append_constant()
-                .split(list(breaks))
-                .X
-            )
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore")
+                centroids = lk.correctors.DesignMatrix(centroids).split(list(breaks)).X
     A = csr_matrix(np.copy(centroids))
     if cbvs is not None:
-        A = hstack(
-            [A, lk.DesignMatrix(np.nan_to_num(cbvs)).split(list(breaks)).X]
-        ).tocsr()
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            A = hstack(
+                [A, lk.DesignMatrix(np.nan_to_num(cbvs)).split(list(breaks)).X]
+            ).tocsr()
     if spline:
         spline_dm = create_sparse_spline_matrix(
             time, n_knots=int(np.max([4, int((time[-1] - time[0]) // spline_period)]))
@@ -399,13 +451,14 @@ def _make_plot(tpf, res):
         xlim = [1e10, -1e10]
         ylim = [1e10, -1e10]
         ra, dec = np.asarray(np.median(tpf.get_coordinates(), axis=1))
-        ax.pcolormesh(
-            ra,
-            dec,
-            np.log10(np.nanmedian(tpf.flux.value, axis=0)),
-            cmap="Greys_r",
-            shading="auto",
-        )
+        with np.errstate(divide="ignore"):
+            ax.pcolormesh(
+                ra,
+                dec,
+                np.log10(np.nanmedian(np.nan_to_num(tpf.flux.value), axis=0)),
+                cmap="Greys_r",
+                shading="auto",
+            )
         xlim[0] = np.min([np.percentile(ra, 1), xlim[0]])
         xlim[1] = np.max([np.percentile(ra, 99), xlim[1]])
         ylim[0] = np.min([np.percentile(dec, 1), ylim[0]])

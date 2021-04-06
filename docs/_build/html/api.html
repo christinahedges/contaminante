@@ -34,8 +34,70 @@
             
   <div class="section" id="contaminante-api">
 <h1><cite>contaminante</cite> API<a class="headerlink" href="#contaminante-api" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="contaminante-core-functions">
-<h2><cite>contaminante</cite> Core Functions<a class="headerlink" href="#contaminante-core-functions" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-contaminante.contaminante">
+<span id="contaminante-core-functions"></span><h2><cite>contaminante</cite> Core Functions<a class="headerlink" href="#module-contaminante.contaminante" title="Permalink to this headline">¶</a></h2>
+<p>Basic contaminante functionality</p>
+<dl class="function">
+<dt id="contaminante.contaminante.build_X">
+<code class="descclassname">contaminante.contaminante.</code><code class="descname">build_X</code><span class="sig-paren">(</span><em>time</em>, <em>pos_corr1</em>, <em>pos_corr2</em>, <em>flux=None</em>, <em>t_model=None</em>, <em>background=False</em>, <em>cbvs=None</em>, <em>spline=True</em>, <em>spline_period=0.75</em>, <em>sff=False</em>, <em>windows=20</em>, <em>bins=15</em><span class="sig-paren">)</span><a class="headerlink" href="#contaminante.contaminante.build_X" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build a design matrix to model pixel in target pixel files</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>tpf</strong> (<em>lightkurve.TargetPixelFile</em>) -- Input target pixel file to make the design matrix for</li>
+<li><strong>flux</strong> (<em>np.ndarray</em>) -- The SAP flux to use for creating the design matrix</li>
+<li><strong>t_model</strong> (<em>None</em><em> or </em><em>np.ndarray</em>) -- The transit model, if None no transit model will be used in the design matrix</li>
+<li><strong>cbvs</strong> (<em>None</em><em> or </em><em>np.ndarray</em>) -- Cotrending Basis vectors. If None will not be used in design matrix</li>
+<li><strong>spline</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) -- Whether to use a B-Spline in time</li>
+<li><strong>spline_period</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) -- If using a spline, what time period the knots should be spaced at</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>SA</strong> -- The design matrix to use to detrend the input TPF</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csr_matrix.html#scipy.sparse.csr_matrix" title="(in SciPy v1.6.2)">scipy.sparse.csr_matrix</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="contaminante.contaminante.calculate_contamination">
+<code class="descclassname">contaminante.contaminante.</code><code class="descname">calculate_contamination</code><span class="sig-paren">(</span><em>tpfs</em>, <em>period</em>, <em>t0</em>, <em>duration</em>, <em>sigma=5</em>, <em>plot=True</em>, <em>cbvs=True</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#contaminante.contaminante.calculate_contamination" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the contamination for a target
+:param period: Period of transiting object in days
+:type period: float
+:param t0: Transit midpoint of transiting object in days
+:type t0: float
+:param duration: Duration of transit in days
+:type duration: float
+:param plot: If True, will generate a figure
+:type plot: bool
+:param cbvs: If True, will use Kepler/TESS CBVs to detrend. Default is True
+:type cbvs: bool
+:param sff: If True, will use the SFF method to correct variability. Default is False.
+:type sff: bool
+:param spline_period: The period of a spline to fit. For short period variability,</p>
+<blockquote>
+<div>set this value to a smaller number. Default is 0.75 days.</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>result</strong> -- List of dictionaries containing the contamination properties
+If plot is True, will show a figure, and will put the
+matplotlib.pyplot.figure object into the result dictionary.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list of dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 </div>
 
@@ -51,7 +113,7 @@
 <li class="toctree-l1"><a class="reference internal" href="README.html">contaminante</a></li>
 <li class="toctree-l1"><a class="reference internal" href="how-does-it-work.html">How does <code class="docutils literal notranslate"><span class="pre">contaminante</span></code> work?</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#contaminante-core-functions"><cite>contaminante</cite> Core Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-contaminante.contaminante"><cite>contaminante</cite> Core Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
