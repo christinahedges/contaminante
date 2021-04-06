@@ -75,19 +75,16 @@ class TargetPixelFileCollection(TPFC):
             )
             # Correct light curve
             if cbvs:
-                if (tpf.mission.lower() == "kepler") | (tpf.mission.lower() == "k2"):
-                    cbv_array = (
-                        lk.correctors.CBVCorrector(
-                            tpf.to_lightcurve(aperture_mask=aper),
-                            interpolate_cbvs=True,
-                            extrapolate_cbvs=True,
-                        )
-                        .cbvs[0]
-                        .to_designmatrix()
-                        .X
+                cbv_array = (
+                    lk.correctors.CBVCorrector(
+                        tpf.to_lightcurve(aperture_mask=aper),
+                        interpolate_cbvs=True,
+                        extrapolate_cbvs=True,
                     )
-                else:
-                    cbv_array = None
+                    .cbvs[0]
+                    .to_designmatrix()
+                    .X[:, :4]
+                )
             else:
                 cbv_array = None
 
@@ -104,8 +101,8 @@ class TargetPixelFileCollection(TPFC):
                 prior_sigma=np.hstack([np.ones(X.shape[1] - 1) * 1e2, 0.1]),
             )
             r = lk.RegressionCorrector(lc.copy())
-
             target = r.correct(dm1, cadence_mask=~t_mask)
+
             stellar_lc = r.diagnostic_lightcurves["X"].flux
             # Find a transit model
             bls = target.to_periodogram(
@@ -227,7 +224,7 @@ def _package_results(
             cxs.append(np.average(X[aper], weights=thumb[aper] + err1))
             cys.append(np.average(Y[aper], weights=thumb[aper] + err1))
         cxs, cys = np.asarray(cxs), np.asarray(cys)
-        cras, cdecs = tpf.wcs.wcs_pix2world(np.asarray([cxs + 0.5, cys + 0.5]).T, 1).T
+        cras, cdecs = tpf.wcs.wcs_pix2world(np.asarray([cxs, cys]).T, 1).T
         return cras, cdecs
 
     thumb = np.nanmean(tpf.flux.value, axis=0)
@@ -329,24 +326,24 @@ def build_X(
     breaks = np.where((np.diff(time) > (np.median(np.diff(time)) * 10)))[0] - 1
     breaks = breaks[breaks > 0]
 
-    ts0 = np.asarray([np.in1d(time, t) for t in np.array_split(time, breaks)])
-    ts1 = np.asarray(
-        [
-            np.in1d(time, t) * (time - t.mean()) / (t[-1] - t[0])
-            for t in np.array_split(time, breaks)
-        ]
-    )
-    time_array = np.vstack([ts0, ts1, ts1 ** 2]).T
-    A = np.copy(time_array)
-
-    if np.nansum(r) != 0:
-        centroids = np.vstack(
-            [r ** idx * c ** jdx for idx in np.arange(0, 4) for jdx in range(0, 4)]
-        ).T[:, 1:]
+    if np.nansum(r) == 0:
+        ts0 = np.asarray([np.in1d(time, t) for t in np.array_split(time, breaks)])
+        ts1 = np.asarray(
+            [
+                np.in1d(time, t) * (time - t.mean()) / (t[-1] - t[0])
+                for t in np.array_split(time, breaks)
+            ]
+        )
+        time_array = np.vstack([ts0, ts1, ts1 ** 2]).T
+        centroids = np.copy(time_array)
+    else:
+        centroids = np.nan_to_num(
+            np.vstack(
+                [r ** idx * c ** jdx for idx in np.arange(0, 4) for jdx in range(0, 4)]
+            ).T[:, 1:]
+        )
         centroids = lk.DesignMatrix(centroids).split(list(breaks)).X
-
-    A = np.hstack([A, np.copy(centroids)])
-    A = csr_matrix(A)
+    A = csr_matrix(np.copy(centroids))
     if cbvs is not None:
         A = hstack([A, np.nan_to_num(cbvs)]).tocsr()
     if spline:
@@ -380,7 +377,11 @@ def _make_plot(tpf, res):
         ylim = [1e10, -1e10]
         ra, dec = np.asarray(np.median(tpf.get_coordinates(), axis=1))
         ax.pcolormesh(
-            ra, dec, np.log10(np.nanmedian(tpf.flux.value, axis=0)), cmap="Greys_r"
+            ra,
+            dec,
+            np.log10(np.nanmedian(tpf.flux.value, axis=0)),
+            cmap="Greys_r",
+            shading="auto",
         )
         xlim[0] = np.min([np.percentile(ra, 1), xlim[0]])
         xlim[1] = np.max([np.percentile(ra, 99), xlim[1]])
@@ -392,7 +393,7 @@ def _make_plot(tpf, res):
             np.hstack(res["target_dec"]),
             c="C0",
             marker=".",
-            s=2,
+            s=10,
             label="Target",
             zorder=11,
         )
@@ -401,7 +402,7 @@ def _make_plot(tpf, res):
             np.hstack(res["contaminator_dec"]),
             c="r",
             marker=".",
-            s=5,
+            s=13,
             label="Source Of Transit",
             zorder=10,
         )
