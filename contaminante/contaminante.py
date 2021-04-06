@@ -11,6 +11,7 @@ from mpl_toolkits.axes_grid1.anchored_artists import AnchoredSizeBar
 import lightkurve as lk
 from lightkurve import TargetPixelFileCollection as TPFC
 from lightkurve.targetpixelfile import TargetPixelFile as TPF
+from lightkurve.correctors.designmatrix import create_sparse_spline_matrix
 
 
 import astropy.units as u
@@ -296,6 +297,9 @@ def build_X(
     cbvs=None,
     spline=True,
     spline_period=0.75,
+    sff=True,
+    windows=20,
+    bins=15,
 ):
     """Build a design matrix to model pixel in target pixel files
 
@@ -325,29 +329,48 @@ def build_X(
     c[np.abs(r) > 10] = 0
     breaks = np.where((np.diff(time) > (np.median(np.diff(time)) * 10)))[0] - 1
     breaks = breaks[breaks > 0]
+    if sff:
+        lc = lk.KeplerLightCurve(
+            time=time, flux=time ** 0, centroid_col=pos_corr1, centroid_row=pos_corr2
+        )
+        s = lk.correctors.SFFCorrector(lc)
+        _ = s.correct()
+        centroids = s.dmc["sff"].X
 
-    if np.nansum(r) == 0:
-        ts0 = np.asarray([np.in1d(time, t) for t in np.array_split(time, breaks)])
-        ts1 = np.asarray(
-            [
-                np.in1d(time, t) * (time - t.mean()) / (t[-1] - t[0])
-                for t in np.array_split(time, breaks)
-            ]
-        )
-        time_array = np.vstack([ts0, ts1, ts1 ** 2]).T
-        centroids = np.copy(time_array)
     else:
-        centroids = np.nan_to_num(
-            np.vstack(
-                [r ** idx * c ** jdx for idx in np.arange(0, 4) for jdx in range(0, 4)]
-            ).T[:, 1:]
-        )
-        centroids = lk.DesignMatrix(centroids).split(list(breaks)).X
+        if np.nansum(r) == 0:
+            ts0 = np.asarray([np.in1d(time, t) for t in np.array_split(time, breaks)])
+            ts1 = np.asarray(
+                [
+                    np.in1d(time, t) * (time - t.mean()) / (t[-1] - t[0])
+                    for t in np.array_split(time, breaks)
+                ]
+            )
+            time_array = np.vstack([ts0, ts1, ts1 ** 2]).T
+            centroids = np.copy(time_array)
+        else:
+            centroids = np.nan_to_num(
+                np.vstack(
+                    [
+                        r ** idx * c ** jdx
+                        for idx in np.arange(0, 4)
+                        for jdx in range(0, 4)
+                    ]
+                ).T[:, 1:]
+            )
+            centroids = (
+                lk.correctors.DesignMatrix(centroids)
+                .append_constant()
+                .split(list(breaks))
+                .X
+            )
     A = csr_matrix(np.copy(centroids))
     if cbvs is not None:
-        A = hstack([A, np.nan_to_num(cbvs)]).tocsr()
+        A = hstack(
+            [A, lk.DesignMatrix(np.nan_to_num(cbvs)).split(list(breaks)).X]
+        ).tocsr()
     if spline:
-        spline_dm = lk.correctors.designmatrix.create_sparse_spline_matrix(
+        spline_dm = create_sparse_spline_matrix(
             time, n_knots=int(np.max([4, int((time[-1] - time[0]) // spline_period)]))
         ).X
         A = hstack([csr_matrix(A), spline_dm]).tocsr()

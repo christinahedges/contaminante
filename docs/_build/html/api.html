@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>contaminante API &#8212; contaminante 0.2 documentation</title>
+    <title>contaminante API &#8212; contaminante 0.5 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" src="_static/documentation_options.js"></script>
@@ -34,178 +34,8 @@
             
   <div class="section" id="contaminante-api">
 <h1><cite>contaminante</cite> API<a class="headerlink" href="#contaminante-api" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="module-contaminante.contaminante">
-<span id="contaminante-core-functions"></span><h2><cite>contaminante</cite> Core Functions<a class="headerlink" href="#module-contaminante.contaminante" title="Permalink to this headline">¶</a></h2>
-<p>Basic contaminante functionality</p>
-<dl class="function">
-<dt id="contaminante.contaminante.calculate_contamination">
-<code class="descclassname">contaminante.contaminante.</code><code class="descname">calculate_contamination</code><span class="sig-paren">(</span><em>targetid</em>, <em>period</em>, <em>t0</em>, <em>duration</em>, <em>mission='kepler'</em>, <em>plot=True</em>, <em>gaia=False</em>, <em>quarter=None</em>, <em>sector=None</em>, <em>campaign=None</em>, <em>bin_points=None</em><span class="sig-paren">)</span><a class="headerlink" href="#contaminante.contaminante.calculate_contamination" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate the contamination for a target</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>targetid</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) -- The ID of the target, either KIC, EPIC or TIC from Kepler, K2 or TESS</li>
-<li><strong>period</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) -- Period of transiting object in days</li>
-<li><strong>t0</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) -- Transit midpoint of transiting object in days</li>
-<li><strong>duration</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) -- Duration of transit in days</li>
-<li><strong>mission</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) -- Kepler, K2 or TESS</li>
-<li><strong>plot</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) -- If True, will generate a figure</li>
-<li><strong>gaia</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) -- If True, will plot gaia sources over image</li>
-<li><strong>quarter</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em> or </em><em>None</em>) -- Quarter of Kepler data to use. Specify either using an integer (e.g. <cite>1</cite>) or
-a range (e.g. <cite>[1, 2, 3]</cite>). <cite>None</cite> will return all quarters.</li>
-<li><strong>sector</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em> or </em><em>None</em>) -- Sector of TESS data to use. Specify either using an integer (e.g. <cite>1</cite>) or
-a range (e.g. <cite>[1, 2, 3]</cite>). <cite>None</cite> will return all sectors.</li>
-<li><strong>campaign</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em> or </em><em>None</em>) -- Campaign of K2 data to use. Specify either using an integer (e.g. <cite>1</cite>) or
-a range (e.g. <cite>[1, 2, 3]</cite>). <cite>None</cite> will return all campaigns.</li>
-<li><strong>bin_points</strong> (<em>None</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) -- Number of points to bin the data by, if None a sensible default will be chosen.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
-<li><strong>fig</strong> (<em>matplotlib.pyplot.figure</em>) -- If plot is True, will return a figure showing the contamination</li>
-<li><strong>result</strong> (<em>dict</em>) -- Dictionary containing the contamination properties</li>
-</ul>
-</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</div>
-<div class="section" id="module-contaminante.utils">
-<span id="contaminante-utility-functions"></span><h2><cite>contaminante</cite> Utility Functions<a class="headerlink" href="#module-contaminante.utils" title="Permalink to this headline">¶</a></h2>
-<p>Utility functions for contaminante</p>
-<dl class="function">
-<dt id="contaminante.utils.build_X">
-<code class="descclassname">contaminante.utils.</code><code class="descname">build_X</code><span class="sig-paren">(</span><em>tpf</em>, <em>flux</em>, <em>t_model=None</em>, <em>background=False</em>, <em>cbvs=None</em>, <em>spline=True</em>, <em>spline_period=2</em>, <em>sff=False</em><span class="sig-paren">)</span><a class="headerlink" href="#contaminante.utils.build_X" title="Permalink to this definition">¶</a></dt>
-<dd><p>Build a design matrix to model pixel in target pixel files</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>tpf</strong> (<em>lightkurve.TargetPixelFile</em>) -- Input target pixel file to make the design matrix for</li>
-<li><strong>flux</strong> (<em>np.ndarray</em>) -- The SAP flux to use for creating the design matrix</li>
-<li><strong>t_model</strong> (<em>None</em><em> or </em><em>np.ndarray</em>) -- The transit model, if None no transit model will be used in the design matrix</li>
-<li><strong>background</strong> (<em>None</em><em> or </em><em>np.ndarray</em>) -- Background model, useful for TESS data. If None will not be used in design matrix</li>
-<li><strong>cbvs</strong> (<em>None</em><em> or </em><em>np.ndarray</em>) -- Cotrending Basis vectors. If None will not be used in design matrix</li>
-<li><strong>spline</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) -- Whether to use a B-Spline in time</li>
-<li><strong>spline_period</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) -- If using a spline, what time period the knots should be spaced at</li>
-<li><strong>sff</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) -- Whether to use the SFF method of buildign centroids</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>SA</strong> -- The design matrix to use to detrend the input TPF</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.csr_matrix.html#scipy.sparse.csr_matrix" title="(in SciPy v1.4.1)">scipy.sparse.csr_matrix</a></p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="contaminante.utils.build_lc">
-<code class="descclassname">contaminante.utils.</code><code class="descname">build_lc</code><span class="sig-paren">(</span><em>tpf</em>, <em>aperture_mask</em>, <em>cbvs=None</em>, <em>errors=False</em>, <em>cadence_mask=None</em>, <em>background=False</em>, <em>spline=True</em>, <em>spline_period=2</em><span class="sig-paren">)</span><a class="headerlink" href="#contaminante.utils.build_lc" title="Permalink to this definition">¶</a></dt>
-<dd><p>Build a corrected light curve</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>tpf</strong> (<em>lightkurve.TargetPixelFile</em>) -- Input target pixel file to make the design matrix for</li>
-<li><strong>aperture_mask</strong> (<em>np.ndarray of bool</em>) -- Aperture mask to sum the light curve over</li>
-<li><strong>cbvs</strong> (<em>None</em><em> or </em><em>np.ndarray</em>) -- Cotrending Basis vectors. If None will not be used in design matrix</li>
-<li><strong>errors</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) -- Whether to calculate the errors on the model and propagate them</li>
-<li><strong>cadence_mask</strong> (<em>None</em><em> or </em><em>np.ndarray</em>) -- A mask to specify which cadences to use. Cadences where True will not be used in the analysis.</li>
-<li><strong>background</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) -- Whether to calculate a background model</li>
-<li><strong>spline</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) -- Whether to use a B-Spline in time</li>
-<li><strong>spline_period</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) -- If using a spline, what time period the knots should be spaced at</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>corrected_lc</strong> -- The corrected light curve</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">lightkurve.LightCurve</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="contaminante.utils.build_model">
-<code class="descclassname">contaminante.utils.</code><code class="descname">build_model</code><span class="sig-paren">(</span><em>tpf</em>, <em>flux</em>, <em>cbvs=None</em>, <em>t_model=None</em>, <em>errors=False</em>, <em>cadence_mask=None</em>, <em>background=False</em>, <em>spline=True</em><span class="sig-paren">)</span><a class="headerlink" href="#contaminante.utils.build_model" title="Permalink to this definition">¶</a></dt>
-<dd><p>Build a model for the pixel level light curve</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>tpf</strong> (<em>lightkurve.TargetPixelFile</em>) -- Input target pixel file to make the design matrix for</li>
-<li><strong>flux</strong> (<em>np.ndarray</em>) -- The SAP flux to use for creating the design matrix</li>
-<li><strong>cbvs</strong> (<em>None</em><em> or </em><em>np.ndarray</em>) -- Cotrending Basis vectors. If None will not be used in design matrix</li>
-<li><strong>t_model</strong> (<em>None</em><em> or </em><em>np.ndarray</em>) -- The transit model, if None no transit model will be used in the design matrix</li>
-<li><strong>errors</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) -- Whether to return the errors of the models</li>
-<li><strong>cadence_mask</strong> (<em>None</em><em> or </em><em>np.ndarray</em>) -- A mask to specify which cadences to use. Cadences where True will not be used in the analysis.</li>
-<li><strong>background</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) -- Whether to estimate the background flux, useful for TESS</li>
-<li><strong>spline</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) -- Whether to use a B-Spline in time</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
-<li><strong>model</strong> (<em>np.ndarray</em>) -- Model of the TPF, with shape ncadences x npixels x npixels.</li>
-<li><strong>model_err</strong> (<em>np.ndarray</em>) -- If errors is true, returns model errors</li>
-<li><strong>transit_pixels</strong> (<em>np.ndarray</em>) -- If t_model is specified, the weight of the transit in each pixel.
-Shape npixel x npixel</li>
-<li><strong>transit_pixels_err</strong> (<em>np.ndarray</em>) -- If t_model is specified, the error of the weight of the transit in each pixel.
-Shape npixel x npixel</li>
-<li><strong>aper</strong> (<em>bool</em>) -- The aperture that contains the transit signal (npixels x npixels)</li>
-</ul>
-</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="contaminante.utils.search">
-<code class="descclassname">contaminante.utils.</code><code class="descname">search</code><span class="sig-paren">(</span><em>targetid</em>, <em>mission</em>, <em>search_func=&lt;function search_targetpixelfile&gt;</em>, <em>quarter=None</em>, <em>sector=None</em>, <em>campaign=None</em><span class="sig-paren">)</span><a class="headerlink" href="#contaminante.utils.search" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convenience function to help lightkurve searches</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>targetid</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) -- The ID of the target, either KIC, EPIC or TIC from Kepler, K2 or TESS</li>
-<li><strong>mission</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) -- Kepler, K2 or TESS</li>
-<li><strong>search_func</strong> (<em>func</em>) -- The search function to use, default is <cite>lk.search_targetpixelfile</cite>. Users may
-want <cite>lk.search_tesscut</cite></li>
-<li><strong>quarter</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em> or </em><em>None</em>) -- Quarter of Kepler data to use. Specify either using an integer (e.g. <cite>1</cite>) or
-a range (e.g. <cite>[1, 2, 3]</cite>). <cite>None</cite> will return all quarters.</li>
-<li><strong>sector</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em> or </em><em>None</em>) -- Sector of TESS data to use. Specify either using an integer (e.g. <cite>1</cite>) or
-a range (e.g. <cite>[1, 2, 3]</cite>). <cite>None</cite> will return all sectors.</li>
-<li><strong>campaign</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em> or </em><em>None</em>) -- Campaign of K2 data to use. Specify either using an integer (e.g. <cite>1</cite>) or
-a range (e.g. <cite>[1, 2, 3]</cite>). <cite>None</cite> will return all campaigns.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>sr</strong> -- Search result object containing the valid files.</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">lk.search.SearchResult</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
+<div class="section" id="contaminante-core-functions">
+<h2><cite>contaminante</cite> Core Functions<a class="headerlink" href="#contaminante-core-functions" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -221,8 +51,7 @@ a range (e.g. <cite>[1, 2, 3]</cite>). <cite>None</cite> will return all campaig
 <li class="toctree-l1"><a class="reference internal" href="README.html">contaminante</a></li>
 <li class="toctree-l1"><a class="reference internal" href="how-does-it-work.html">How does <code class="docutils literal notranslate"><span class="pre">contaminante</span></code> work?</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#module-contaminante.contaminante"><cite>contaminante</cite> Core Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-contaminante.utils"><cite>contaminante</cite> Utility Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#contaminante-core-functions"><cite>contaminante</cite> Core Functions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
