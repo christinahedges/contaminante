@@ -167,7 +167,7 @@ def calculate_contamination(
         model = np.zeros(tpf.flux.shape)
         model_err = np.zeros(tpf.flux.shape)
 
-        saturated = np.max(np.nan_to_num(tpf.flux.value), axis=0) > 1.4e5
+        saturated = np.max(np.nan_to_num(tpf.flux.value), axis=0) > 1.3e5
         saturated |= np.abs(np.gradient(saturated.astype(float), axis=0)) != 0
         pixels = tpf.flux.value.copy()
         pixels_err = tpf.flux_err.value.copy()
@@ -314,24 +314,22 @@ def _package_results(
         )
         res["delta_transit_depth[sigma]"] = d / de
 
-    else:
-        contaminator == None
+        dra = res["contaminator_ra"][0] - res["target_ra"][0]
+        ddec = res["contaminator_dec"][0] - res["target_dec"][0]
+        edra = (res["contaminator_ra"][1] ** 2 + res["target_ra"][1] ** 2) ** 0.5
+        eddec = (res["contaminator_dec"][1] ** 2 + res["target_dec"][1] ** 2) ** 0.5
+        centroid_shift = (((dra ** 2 + ddec ** 2) ** 0.5) * u.deg).to(u.arcsecond)
+        ecentroid_shift = (
+            centroid_shift * ((2 * edra / dra) ** 2 + (2 * eddec / ddec) ** 2) ** 0.5
+        )
+        res["centroid_shift"] = (centroid_shift, ecentroid_shift)
 
     res["period"] = period
     res["t0"] = t0
     res["duration"] = duration
-
-    dra = res["contaminator_ra"][0] - res["target_ra"][0]
-    ddec = res["contaminator_dec"][0] - res["target_dec"][0]
-    edra = (res["contaminator_ra"][1] ** 2 + res["target_ra"][1] ** 2) ** 0.5
-    eddec = (res["contaminator_dec"][1] ** 2 + res["target_dec"][1] ** 2) ** 0.5
-    centroid_shift = (((dra ** 2 + ddec ** 2) ** 0.5) * u.deg).to(u.arcsecond)
-    ecentroid_shift = (
-        centroid_shift * ((2 * edra / dra) ** 2 + (2 * eddec / ddec) ** 2) ** 0.5
-    )
-    res["centroid_shift"] = (centroid_shift, ecentroid_shift)
     res["transit_depth"] = transit_pixels
     res["transit_depth_err"] = transit_pixels_err
+
     if plot:
         res["fig"] = _make_plot(tpf, res)
     return res
@@ -472,15 +470,16 @@ def _make_plot(tpf, res):
             label="Target",
             zorder=11,
         )
-        ax.scatter(
-            np.hstack(res["contaminator_ra"]),
-            np.hstack(res["contaminator_dec"]),
-            c="r",
-            marker=".",
-            s=13,
-            label="Source Of Transit",
-            zorder=10,
-        )
+        if "contaminator_ra" in res.keys():
+            ax.scatter(
+                np.hstack(res["contaminator_ra"]),
+                np.hstack(res["contaminator_dec"]),
+                c="r",
+                marker=".",
+                s=13,
+                label="Source Of Transit",
+                zorder=10,
+            )
 
         ax.set_xlim(*xlim)
         ax.set_ylim(*ylim)
