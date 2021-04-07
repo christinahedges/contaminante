@@ -167,8 +167,7 @@ def calculate_contamination(
         model = np.zeros(tpf.flux.shape)
         model_err = np.zeros(tpf.flux.shape)
 
-        saturated = np.max(np.nan_to_num(tpf.flux.value), axis=0) > 1.2e5
-        saturated |= np.abs(np.gradient(saturated.astype(float), axis=0)) != 0
+        saturated = np.max(np.nan_to_num(tpf.flux.value), axis=0) > 1.4e5
         saturated |= np.abs(np.gradient(saturated.astype(float), axis=0)) != 0
         pixels = tpf.flux.value.copy()
         pixels_err = tpf.flux_err.value.copy()
