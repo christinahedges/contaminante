@@ -271,7 +271,7 @@ should take less than 5 minutes.</p>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [19]:
+<span></span>In [5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -284,13 +284,13 @@ should take less than 5 minutes.</p>
 </div>
 <div class="stderr output_area docutils container">
 <div class="highlight"><pre>
-Modeling TPFs:   0%|          | 0/3 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:268: RuntimeWarning: invalid value encountered in true_divide
+Modeling TPFs:   0%|          | 0/3 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:279: RuntimeWarning: invalid value encountered in true_divide
   aper = create_threshold_mask(thumb / err, 3) &amp; aper
-Modeling TPFs:  33%|███▎      | 1/3 [00:06&lt;00:12,  6.12s/it]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:268: RuntimeWarning: invalid value encountered in true_divide
+Modeling TPFs:  33%|███▎      | 1/3 [00:06&lt;00:13,  6.58s/it]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:279: RuntimeWarning: invalid value encountered in true_divide
   aper = create_threshold_mask(thumb / err, 3) &amp; aper
-Modeling TPFs:  67%|██████▋   | 2/3 [00:11&lt;00:05,  5.84s/it]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:268: RuntimeWarning: invalid value encountered in true_divide
+Modeling TPFs:  67%|██████▋   | 2/3 [00:12&lt;00:06,  6.26s/it]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:279: RuntimeWarning: invalid value encountered in true_divide
   aper = create_threshold_mask(thumb / err, 3) &amp; aper
-Modeling TPFs: 100%|██████████| 3/3 [00:16&lt;00:00,  5.54s/it]
+Modeling TPFs: 100%|██████████| 3/3 [00:17&lt;00:00,  5.84s/it]
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -335,7 +335,7 @@ between the contaminator and the target.</p>
 Below I run the parameters for <strong>Kepler-10</strong> through <code class="docutils literal notranslate"><span class="pre">contaminate</span></code>.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [23]:
+<span></span>In [ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -348,31 +348,15 @@ Below I run the parameters for <strong>Kepler-10</strong> through <code class="d
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
+<div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="stderr output_area docutils container">
 <div class="highlight"><pre>
-Modeling TPFs:   0%|          | 0/2 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:268: RuntimeWarning: invalid value encountered in true_divide
+Modeling TPFs:   0%|          | 0/2 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:279: RuntimeWarning: invalid value encountered in true_divide
   aper = create_threshold_mask(thumb / err, 3) &amp; aper
-Modeling TPFs:  50%|█████     | 1/2 [00:08&lt;00:08,  8.92s/it]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:268: RuntimeWarning: invalid value encountered in true_divide
-  aper = create_threshold_mask(thumb / err, 3) &amp; aper
-Modeling TPFs: 100%|██████████| 2/2 [00:16&lt;00:00,  8.20s/it]
+Modeling TPFs:  50%|█████     | 1/2 [00:07&lt;00:07,  7.64s/it]
 </pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/tutorial_10_1.png" src="_images/tutorial_10_1.png" />
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/tutorial_10_2.png" src="_images/tutorial_10_2.png" />
-</div>
 </div>
 <p>Sometimes there will be no significant transiting source that was not
 the target, and so the <code class="docutils literal notranslate"><span class="pre">contaminator</span></code> and <code class="docutils literal notranslate"><span class="pre">target</span></code> fields will be
@@ -386,9 +370,9 @@ transit depth, this would indicate there is no contaminant.</p>
 <p><code class="docutils literal notranslate"><span class="pre">contaminante</span></code> works on TESS data too. We don’t currently have a way
 to remove TESS background, so make sure to pass in TPFs that have
 already been background corrected.</p>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [28]:
+<span></span>In [ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -402,32 +386,13 @@ already been background corrected.</p>
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="stderr output_area docutils container">
-<div class="highlight"><pre>
-/Users/ch/.pyenv/versions/3.8.0/lib/python3.8/site-packages/lightkurve/search.py:346: LightkurveWarning: Warning: 2 files available to download. Only the first file has been downloaded. Please use `download_all()` or specify additional criteria (e.g. quarter, campaign, or sector) to limit your search.
-  warnings.warn(
-Modeling TPFs:   0%|          | 0/1 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:465: RuntimeWarning: invalid value encountered in log10
-  ylim[1] = np.max([np.percentile(dec, 99), ylim[1]])
-Modeling TPFs: 100%|██████████| 1/1 [00:47&lt;00:00, 47.63s/it]
-</pre></div></div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/tutorial_13_1.png" src="_images/tutorial_13_1.png" />
-</div>
-</div>
 <p>In this case, it looks like there is a small offset, however the transit
 depth from contaminante is actually shallower. The aperture selected by
 <code class="docutils literal notranslate"><span class="pre">contaminante</span></code> is quite large, we can see this when we plot the two
 apertures side by side:</p>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [25]:
+<span></span>In [ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -440,32 +405,15 @@ apertures side by side:</p>
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>Out[25]:
-</pre></div>
-</div>
-<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>[Text(0.5, 1.0, &#39;`contaminante` Aperture&#39;), [], []]
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/tutorial_15_1.png" src="_images/tutorial_15_1.png" />
-</div>
-</div>
 <p>This causes <code class="docutils literal notranslate"><span class="pre">contaminante</span></code> to produce a slightly shallower transit
 (because we’re including more noise and flux from objects that aren’t
 the target). Because the transit depth is shallower, even though there
 is a small offset, we shouldn’t believe this is a contaminant.</p>
 <p>If you want to see more of where the transit is coming from, you can
 look at the transit depth in each pixel.</p>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [29]:
+<span></span>In [ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -474,13 +422,6 @@ look at the transit depth in each pixel.</p>
 <span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
 <span class="n">cbar</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s2">&quot;Transit Depth/</span><span class="se">\n</span><span class="s2"> Transit Depth Err&quot;</span><span class="p">)</span>
 </pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/tutorial_17_0.png" src="_images/tutorial_17_0.png" />
 </div>
 </div>
 </div>
@@ -494,9 +435,9 @@ centroid, but the light curve from that target is not different from the
 main target. This is likely due to the pipeline apertures for K2 being
 slightly too small.</p>
 <p>Below are a couple of examples of the tool running on K2 data</p>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [43]:
+<span></span>In [ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -509,44 +450,9 @@ slightly too small.</p>
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="stderr output_area docutils container">
-<div class="highlight"><pre>
-Modeling TPFs:   0%|          | 0/3 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:279: RuntimeWarning: invalid value encountered in true_divide
-  aper = create_threshold_mask(thumb / err, 3) &amp; aper
-Modeling TPFs:  33%|███▎      | 1/3 [00:10&lt;00:20, 10.23s/it]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:279: RuntimeWarning: invalid value encountered in true_divide
-  aper = create_threshold_mask(thumb / err, 3) &amp; aper
-Modeling TPFs:  67%|██████▋   | 2/3 [00:26&lt;00:13, 13.57s/it]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:279: RuntimeWarning: invalid value encountered in true_divide
-  aper = create_threshold_mask(thumb / err, 3) &amp; aper
-Modeling TPFs: 100%|██████████| 3/3 [00:34&lt;00:00, 11.43s/it]
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/tutorial_19_1.png" src="_images/tutorial_19_1.png" />
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/tutorial_19_2.png" src="_images/tutorial_19_2.png" />
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/tutorial_19_3.png" src="_images/tutorial_19_3.png" />
-</div>
-</div>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [33]:
+<span></span>In [ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -559,29 +465,11 @@ Modeling TPFs: 100%|██████████| 3/3 [00:34&lt;00:00, 11.43s/
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="stderr output_area docutils container">
-<div class="highlight"><pre>
-Warning: 25% (854/3384) of the cadences will be ignored due to the quality mask (quality_bitmask=1130799).
-Modeling TPFs:   0%|          | 0/1 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:277: RuntimeWarning: invalid value encountered in true_divide
-  aper = create_threshold_mask(thumb / err, 3) &amp; aper
-Modeling TPFs: 100%|██████████| 1/1 [00:09&lt;00:00,  9.93s/it]
-</pre></div></div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/tutorial_20_1.png" src="_images/tutorial_20_1.png" />
-</div>
-</div>
 <p><code class="docutils literal notranslate"><span class="pre">contaminante</span></code> does try to produce reasonable results for saturated
 targets, but especially for K2 this can be quite hard.</p>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [39]:
+<span></span>In [ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -593,26 +481,9 @@ targets, but especially for K2 this can be quite hard.</p>
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="stderr output_area docutils container">
-<div class="highlight"><pre>
-Modeling TPFs:   0%|          | 0/1 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:278: RuntimeWarning: invalid value encountered in true_divide
-  aper = create_threshold_mask(thumb / err, 3) &amp; aper
-Modeling TPFs: 100%|██████████| 1/1 [00:20&lt;00:00, 20.20s/it]
-</pre></div></div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/tutorial_22_1.png" src="_images/tutorial_22_1.png" />
-</div>
-</div>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [45]:
+<span></span>In [ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -624,28 +495,11 @@ Modeling TPFs: 100%|██████████| 1/1 [00:20&lt;00:00, 20.20s/
 </pre></div>
 </div>
 </div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="stderr output_area docutils container">
-<div class="highlight"><pre>
-Modeling TPFs:   0%|          | 0/1 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:279: RuntimeWarning: invalid value encountered in true_divide
-  aper = create_threshold_mask(thumb / err, 3) &amp; aper
-Modeling TPFs: 100%|██████████| 1/1 [00:17&lt;00:00, 17.01s/it]
-</pre></div></div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/tutorial_23_1.png" src="_images/tutorial_23_1.png" />
-</div>
-</div>
 <p>We can take a look at the best contaminante aperture and compare it to
 the pipeline aperture:</p>
-<div class="nbinput docutils container">
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [50]:
+<span></span>In [ ]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -653,23 +507,6 @@ the pipeline aperture:</p>
 <span class="n">tpfs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">aperture_mask</span><span class="o">=</span><span class="n">tpfs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">pipeline_mask</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Pipeline&#39;</span><span class="p">)</span>
 <span class="n">tpfs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">aperture_mask</span><span class="o">=</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;contaminator_aper&#39;</span><span class="p">],</span> <span class="n">scale</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;contamainante&#39;</span><span class="p">)</span>
 </pre></div>
-</div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>Out[50]:
-</pre></div>
-</div>
-<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>&lt;AxesSubplot:title={&#39;center&#39;:&#39;contamainante&#39;}, xlabel=&#39;Pixel Column Number&#39;, ylabel=&#39;Pixel Row Number&#39;&gt;
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<img alt="_images/tutorial_25_1.png" src="_images/tutorial_25_1.png" />
 </div>
 </div>
 </div>
