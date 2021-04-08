@@ -119,6 +119,9 @@ def calculate_contamination(
         lc = tpf.to_lightcurve(aperture_mask=aper).normalize()
         bls = lc.to_periodogram("bls", period=[period, period], duration=duration)
         t_mask = bls.get_transit_mask(period=period, transit_time=t0, duration=duration)
+        if t_mask.sum() == 0:
+            results.append(None)
+            continue
         # Correct light curve
         if cbvs:
             with warnings.catch_warnings():
@@ -158,6 +161,7 @@ def calculate_contamination(
         t_model = (
             ~bls.get_transit_mask(period=period, transit_time=t0, duration=duration)
         ).astype(float) - 1
+
         depth = bls.compute_stats(period=period, transit_time=t0, duration=duration)[
             "depth"
         ][0]
