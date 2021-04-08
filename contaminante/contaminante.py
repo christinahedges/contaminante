@@ -20,6 +20,18 @@ import astropy.units as u
 from scipy.sparse import csr_matrix, diags, hstack
 from astropy.timeseries import BoxLeastSquares
 
+
+def _label(tpf):
+    if hasattr(tpf, "quarter"):
+        return f"{tpf.to_lightcurve().label}, Quarter {tpf.quarter}"
+    elif hasattr(tpf, "campaign"):
+        return f"{tpf.to_lightcurve().label}, Campaign {tpf.campaign}"
+    elif hasattr(tpf, "sector"):
+        return f"{tpf.to_lightcurve().label}, Sector {tpf.sector}"
+    else:
+        return "{tpf.to_lightcurve().label}"
+
+
 #
 # class TargetPixelFileCollection(TPFC):
 #     def __init__(self, tpfs):
@@ -157,7 +169,7 @@ def calculate_contamination(
             flux=stellar_lc,
             t_model=t_model,
             cbvs=cbv_array,
-            **kwargs
+            **kwargs,
         )
         X = X[:, np.asarray(X.sum(axis=0))[0] != 0]
         with warnings.catch_warnings():
@@ -457,7 +469,7 @@ def _make_plot(tpf, res):
     with plt.style.context("seaborn-white"):
         fig = plt.figure(figsize=(17, 3.5))
         ax = plt.subplot2grid((1, 4), (0, 0))
-        ax.set_title("Target ID: {}".format(tpf.targetid))
+        ax.set_title(_label(tpf))
 
         if tpf.mission.lower() == "tess":
             pix = 27 * u.arcsec.to(u.deg)
@@ -532,12 +544,13 @@ def _make_plot(tpf, res):
         ax.set_ylabel("Dec [deg]")
 
         ax = plt.subplot2grid((1, 4), (0, 1), colspan=3)
-        ax.set_title("Target ID: {}".format(tpf.targetid))
-        res["target_lc"].fold(res["period"], res["t0"]).errorbar(
+        period, t0 = res["period"], res["t0"]
+        ax.set_title(_label(tpf) + f" Period: {period}d, T0: {t0}")
+        res["target_lc"].fold(period, t0).errorbar(
             c="C0", label="Target", ax=ax, marker=".", markersize=2
         )
         if "contaminator_lc" in res.keys():
-            res["contaminator_lc"].fold(res["period"], res["t0"]).errorbar(
+            res["contaminator_lc"].fold(period, t0).errorbar(
                 ax=ax,
                 c="r",
                 marker=".",
