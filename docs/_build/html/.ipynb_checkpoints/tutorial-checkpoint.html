@@ -215,43 +215,12 @@ the <em>Kepler</em> quarters.</p>
 should take less than 5 minutes.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [1]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="o">%</span><span class="k">load_ext</span> autoreload
-<span class="o">%</span><span class="k">autoreload</span> 2
-</pre></div>
-</div>
-</div>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
 <span></span>In [2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">contaminante</span> <span class="k">as</span> <span class="nn">ct</span>
 <span class="kn">import</span> <span class="nn">lightkurve</span> <span class="k">as</span> <span class="nn">lk</span>
-</pre></div>
-</div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [3]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">lk</span><span class="o">.</span><span class="n">__version__</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>Out[3]:
-</pre></div>
-</div>
-<div class="output_area highlight-none notranslate"><div class="highlight"><pre>
-<span></span>&#39;2.0.9&#39;
 </pre></div>
 </div>
 </div>
@@ -270,7 +239,7 @@ should take less than 5 minutes.</p>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [19]:
+<span></span>In [5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -283,34 +252,34 @@ should take less than 5 minutes.</p>
 </div>
 <div class="stderr output_area docutils container">
 <div class="highlight"><pre>
-Modeling TPFs:   0%|          | 0/3 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:268: RuntimeWarning: invalid value encountered in true_divide
+Modeling TPFs:   0%|          | 0/3 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:279: RuntimeWarning: invalid value encountered in true_divide
   aper = create_threshold_mask(thumb / err, 3) &amp; aper
-Modeling TPFs:  33%|███▎      | 1/3 [00:06&lt;00:12,  6.12s/it]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:268: RuntimeWarning: invalid value encountered in true_divide
+Modeling TPFs:  33%|███▎      | 1/3 [00:06&lt;00:13,  6.58s/it]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:279: RuntimeWarning: invalid value encountered in true_divide
   aper = create_threshold_mask(thumb / err, 3) &amp; aper
-Modeling TPFs:  67%|██████▋   | 2/3 [00:11&lt;00:05,  5.84s/it]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:268: RuntimeWarning: invalid value encountered in true_divide
+Modeling TPFs:  67%|██████▋   | 2/3 [00:12&lt;00:06,  6.26s/it]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:279: RuntimeWarning: invalid value encountered in true_divide
   aper = create_threshold_mask(thumb / err, 3) &amp; aper
-Modeling TPFs: 100%|██████████| 3/3 [00:16&lt;00:00,  5.54s/it]
+Modeling TPFs: 100%|██████████| 3/3 [00:17&lt;00:00,  5.84s/it]
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_7_1.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_7_1.png" />
+<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_5_1.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_5_1.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_7_2.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_7_2.png" />
+<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_5_2.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_5_2.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_7_3.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_7_3.png" />
+<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_5_3.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_5_3.png" />
 </div>
 </div>
 <p>Using <code class="docutils literal notranslate"><span class="pre">contaminante</span></code> we can see two pieces of evidence that this
@@ -334,7 +303,7 @@ between the contaminator and the target.</p>
 Below I run the parameters for <strong>Kepler-10</strong> through <code class="docutils literal notranslate"><span class="pre">contaminate</span></code>.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [23]:
+<span></span>In [6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -352,25 +321,25 @@ Below I run the parameters for <strong>Kepler-10</strong> through <code class="d
 </div>
 <div class="stderr output_area docutils container">
 <div class="highlight"><pre>
-Modeling TPFs:   0%|          | 0/2 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:268: RuntimeWarning: invalid value encountered in true_divide
+Modeling TPFs:   0%|          | 0/2 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:279: RuntimeWarning: invalid value encountered in true_divide
   aper = create_threshold_mask(thumb / err, 3) &amp; aper
-Modeling TPFs:  50%|█████     | 1/2 [00:08&lt;00:08,  8.92s/it]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:268: RuntimeWarning: invalid value encountered in true_divide
+Modeling TPFs:  50%|█████     | 1/2 [00:07&lt;00:07,  7.64s/it]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:279: RuntimeWarning: invalid value encountered in true_divide
   aper = create_threshold_mask(thumb / err, 3) &amp; aper
-Modeling TPFs: 100%|██████████| 2/2 [00:16&lt;00:00,  8.20s/it]
+Modeling TPFs: 100%|██████████| 2/2 [00:14&lt;00:00,  7.34s/it]
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_10_1.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_10_1.png" />
+<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_8_1.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_8_1.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_10_2.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_10_2.png" />
+<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_8_2.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_8_2.png" />
 </div>
 </div>
 <p>Sometimes there will be no significant transiting source that was not
@@ -387,7 +356,7 @@ to remove TESS background, so make sure to pass in TPFs that have
 already been background corrected.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [28]:
+<span></span>In [7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -408,16 +377,16 @@ already been background corrected.</p>
 <div class="highlight"><pre>
 /Users/ch/.pyenv/versions/3.8.0/lib/python3.8/site-packages/lightkurve/search.py:346: LightkurveWarning: Warning: 2 files available to download. Only the first file has been downloaded. Please use `download_all()` or specify additional criteria (e.g. quarter, campaign, or sector) to limit your search.
   warnings.warn(
-Modeling TPFs:   0%|          | 0/1 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:465: RuntimeWarning: invalid value encountered in log10
-  ylim[1] = np.max([np.percentile(dec, 99), ylim[1]])
-Modeling TPFs: 100%|██████████| 1/1 [00:47&lt;00:00, 47.63s/it]
+Modeling TPFs:   0%|          | 0/1 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:476: RuntimeWarning: invalid value encountered in log10
+  np.log10(np.nanmedian(np.nan_to_num(tpf.flux.value), axis=0)),
+Modeling TPFs: 100%|██████████| 1/1 [00:49&lt;00:00, 49.31s/it]
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_13_1.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_13_1.png" />
+<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_11_1.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_11_1.png" />
 </div>
 </div>
 <p>In this case, it looks like there is a small offset, however the transit
@@ -426,7 +395,7 @@ depth from contaminante is actually shallower. The aperture selected by
 apertures side by side:</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [25]:
+<span></span>In [8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -441,7 +410,7 @@ apertures side by side:</p>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>Out[25]:
+<span></span>Out[8]:
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
@@ -453,7 +422,7 @@ apertures side by side:</p>
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_15_1.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_15_1.png" />
+<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_13_1.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_13_1.png" />
 </div>
 </div>
 <p>This causes <code class="docutils literal notranslate"><span class="pre">contaminante</span></code> to produce a slightly shallower transit
@@ -464,7 +433,7 @@ is a small offset, we shouldn’t believe this is a contaminant.</p>
 look at the transit depth in each pixel.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [29]:
+<span></span>In [9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -479,7 +448,7 @@ look at the transit depth in each pixel.</p>
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_17_0.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_17_0.png" />
+<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_15_0.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_15_0.png" />
 </div>
 </div>
 </div>
@@ -495,7 +464,7 @@ slightly too small.</p>
 <p>Below are a couple of examples of the tool running on K2 data</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [43]:
+<span></span>In [10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -515,37 +484,37 @@ slightly too small.</p>
 <div class="highlight"><pre>
 Modeling TPFs:   0%|          | 0/3 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:279: RuntimeWarning: invalid value encountered in true_divide
   aper = create_threshold_mask(thumb / err, 3) &amp; aper
-Modeling TPFs:  33%|███▎      | 1/3 [00:10&lt;00:20, 10.23s/it]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:279: RuntimeWarning: invalid value encountered in true_divide
+Modeling TPFs:  33%|███▎      | 1/3 [00:10&lt;00:20, 10.49s/it]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:279: RuntimeWarning: invalid value encountered in true_divide
   aper = create_threshold_mask(thumb / err, 3) &amp; aper
-Modeling TPFs:  67%|██████▋   | 2/3 [00:26&lt;00:13, 13.57s/it]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:279: RuntimeWarning: invalid value encountered in true_divide
+Modeling TPFs:  67%|██████▋   | 2/3 [00:27&lt;00:14, 14.09s/it]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:279: RuntimeWarning: invalid value encountered in true_divide
   aper = create_threshold_mask(thumb / err, 3) &amp; aper
-Modeling TPFs: 100%|██████████| 3/3 [00:34&lt;00:00, 11.43s/it]
+Modeling TPFs: 100%|██████████| 3/3 [00:36&lt;00:00, 12.06s/it]
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_19_1.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_19_1.png" />
+<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_17_1.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_17_1.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_19_2.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_19_2.png" />
+<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_17_2.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_17_2.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_19_3.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_19_3.png" />
+<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_17_3.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_17_3.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [33]:
+<span></span>In [11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -564,23 +533,23 @@ Modeling TPFs: 100%|██████████| 3/3 [00:34&lt;00:00, 11.43s/
 <div class="stderr output_area docutils container">
 <div class="highlight"><pre>
 Warning: 25% (854/3384) of the cadences will be ignored due to the quality mask (quality_bitmask=1130799).
-Modeling TPFs:   0%|          | 0/1 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:277: RuntimeWarning: invalid value encountered in true_divide
+Modeling TPFs:   0%|          | 0/1 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:279: RuntimeWarning: invalid value encountered in true_divide
   aper = create_threshold_mask(thumb / err, 3) &amp; aper
-Modeling TPFs: 100%|██████████| 1/1 [00:09&lt;00:00,  9.93s/it]
+Modeling TPFs: 100%|██████████| 1/1 [00:10&lt;00:00, 10.95s/it]
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_20_1.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_20_1.png" />
+<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_18_1.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_18_1.png" />
 </div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">contaminante</span></code> does try to produce reasonable results for saturated
 targets, but especially for K2 this can be quite hard.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [39]:
+<span></span>In [12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -597,29 +566,29 @@ targets, but especially for K2 this can be quite hard.</p>
 </div>
 <div class="stderr output_area docutils container">
 <div class="highlight"><pre>
-Modeling TPFs:   0%|          | 0/1 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:278: RuntimeWarning: invalid value encountered in true_divide
+Modeling TPFs:   0%|          | 0/1 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:279: RuntimeWarning: invalid value encountered in true_divide
   aper = create_threshold_mask(thumb / err, 3) &amp; aper
-Modeling TPFs: 100%|██████████| 1/1 [00:20&lt;00:00, 20.20s/it]
+Modeling TPFs: 100%|██████████| 1/1 [00:20&lt;00:00, 20.54s/it]
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_22_1.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_22_1.png" />
+<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_20_1.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_20_1.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [45]:
+<span></span>In [13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">tpfs</span> <span class="o">=</span> <span class="n">lk</span><span class="o">.</span><span class="n">search_targetpixelfile</span><span class="p">(</span><span class="s2">&quot;K2-78&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">download_all</span><span class="p">()</span>
 <span class="n">period</span> <span class="o">=</span> <span class="mf">2.29016</span>
 <span class="n">t0</span> <span class="o">=</span> <span class="mf">2457065.1444</span> <span class="o">-</span> <span class="mi">2454833</span>
-<span class="n">dur</span> <span class="o">=</span> <span class="mf">0.1204</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">calculate_contamination</span><span class="p">(</span><span class="n">tpfs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">period</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sff</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">windows</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">spline_period</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">cbvs</span><span class="o">=</span><span class="kc">True</span><span class="p">);</span>
+<span class="n">duration</span> <span class="o">=</span> <span class="mf">0.1204</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">calculate_contamination</span><span class="p">(</span><span class="n">tpfs</span><span class="p">,</span> <span class="n">period</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sff</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">windows</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">spline_period</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">cbvs</span><span class="o">=</span><span class="kc">True</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
@@ -630,21 +599,21 @@ Modeling TPFs: 100%|██████████| 1/1 [00:20&lt;00:00, 20.20s/
 <div class="highlight"><pre>
 Modeling TPFs:   0%|          | 0/1 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:279: RuntimeWarning: invalid value encountered in true_divide
   aper = create_threshold_mask(thumb / err, 3) &amp; aper
-Modeling TPFs: 100%|██████████| 1/1 [00:17&lt;00:00, 17.01s/it]
+Modeling TPFs: 100%|██████████| 1/1 [00:17&lt;00:00, 17.59s/it]
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_23_1.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_23_1.png" />
+<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_21_1.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_21_1.png" />
 </div>
 </div>
 <p>We can take a look at the best contaminante aperture and compare it to
 the pipeline aperture:</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [50]:
+<span></span>In [14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -656,7 +625,7 @@ the pipeline aperture:</p>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>Out[50]:
+<span></span>Out[14]:
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
@@ -668,7 +637,7 @@ the pipeline aperture:</p>
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_25_1.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_25_1.png" />
+<img alt="../_images/.ipynb_checkpoints_tutorial-checkpoint_23_1.png" src="../_images/.ipynb_checkpoints_tutorial-checkpoint_23_1.png" />
 </div>
 </div>
 </div>
