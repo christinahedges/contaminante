@@ -16,6 +16,7 @@ from lightkurve.correctors.designmatrix import create_sparse_spline_matrix
 
 
 import astropy.units as u
+from astropy.stats import sigma_clip
 
 from scipy.sparse import csr_matrix, diags, hstack
 from astropy.timeseries import BoxLeastSquares
@@ -57,7 +58,18 @@ def _label(tpf):
 
 
 def calculate_contamination(
-    tpfs, period, t0, duration, sigma=5, plot=True, cbvs=True, **kwargs
+    tpfs,
+    period,
+    t0,
+    duration,
+    sigma=5,
+    plot=True,
+    cbvs=True,
+    sff=False,
+    windows=20,
+    bins=5,
+    spline_period=0.75,
+    **kwargs,
 ):
     """Calculate the contamination for a target
     Parameters
@@ -105,8 +117,27 @@ def calculate_contamination(
         aper = tpf.pipeline_mask
         if not (aper.any()):
             aper = tpf.create_threshold_mask()
-        mask = (np.abs((tpf.pos_corr1)) < 10) & ((np.gradient(tpf.pos_corr2)) < 10)
+        mask = (np.abs((tpf.pos_corr1)) < 5) & ((np.gradient(tpf.pos_corr2)) < 5)
         mask &= np.nan_to_num(tpf.to_lightcurve(aperture_mask=aper).flux) != 0
+
+        if tpf.mission.lower() in ["k2", "ktwo"]:
+            # For k2 we have to get rid of some serious outliers...
+            r, c = tpf.estimate_centroids("all")
+            r, c = np.nan_to_num(r.value), np.nan_to_num(c.value)
+            arclength = np.hypot(r - np.min(r), c - np.min(c))
+            reg = lk.RegressionCorrector(
+                lk.LightCurve(time=tpf.time, flux=np.gradient(arclength))
+            )
+            dm = lk.correctors.designmatrix.create_sparse_spline_matrix(
+                tpf.time.value,
+                n_knots=int((tpf.time[-1].value - tpf.time[0].value) // 1),
+            ).append_constant()
+
+            _ = reg.correct(dm, sigma=3)
+            # If there aren't too many outliers
+            if (reg.outlier_mask.sum()) / len(reg.outlier_mask) < 0.2:
+                mask &= ~reg.outlier_mask
+
         tpfs[idx] = tpfs[idx][mask]
 
     results = []
@@ -117,11 +148,17 @@ def calculate_contamination(
             aper = tpf.create_threshold_mask()
 
         lc = tpf.to_lightcurve(aperture_mask=aper).normalize()
+
+        if sff:
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore")
+                s = lk.correctors.SFFCorrector(lc)
+                _ = s.correct(windows=windows, bins=bins, timescale=spline_period)
+                sff_dm = s.dmc
+
         bls = lc.to_periodogram("bls", period=[period, period], duration=duration)
         t_mask = bls.get_transit_mask(period=period, transit_time=t0, duration=duration)
-        if t_mask.sum() == 0:
-            results.append(None)
-            continue
+
         # Correct light curve
         if cbvs:
             with warnings.catch_warnings():
@@ -142,7 +179,17 @@ def calculate_contamination(
         r1, c1 = tpf.estimate_centroids(aperture_mask=aper)
         r1 -= np.median(r1)
         c1 -= np.median(c1)
-        X = build_X(lc.time.jd, r1.value, c1.value, cbvs=cbv_array, **kwargs)
+        X = build_X(
+            lc.time.jd,
+            r1.value,
+            c1.value,
+            cbvs=cbv_array,
+            windows=windows,
+            bins=bins,
+            spline_period=spline_period,
+            sff=sff,
+            **kwargs,
+        )
 
         X = X[:, np.asarray(X.sum(axis=0))[0] != 0]
         with warnings.catch_warnings():
@@ -150,7 +197,7 @@ def calculate_contamination(
             dm1 = lk.SparseDesignMatrix(
                 X,
                 name="X",
-                prior_mu=np.hstack([np.zeros(X.shape[1] - 1), 1]),
+                prior_mu=np.hstack([np.zeros(X.shape[1] - 1), 0]),
                 prior_sigma=np.hstack([np.ones(X.shape[1] - 1) * 1e2, 0.1]),
             )
         r = lk.RegressionCorrector(lc.copy())
@@ -192,6 +239,10 @@ def calculate_contamination(
             flux=stellar_lc,
             t_model=t_model,
             cbvs=cbv_array,
+            windows=windows,
+            bins=bins,
+            spline_period=spline_period,
+            sff=sff,
             **kwargs,
         )
         X = X[:, np.asarray(X.sum(axis=0))[0] != 0]
@@ -220,7 +271,7 @@ def calculate_contamination(
         pixels_err = tpf.flux_err.value.copy()
 
         transit_pixels = np.zeros(tpf.flux.shape[1:])
-        transit_pixels_err = np.zeros(tpf.flux.shape[1:])
+        transit_pixels_err = np.zeros(tpf.flux.shape[1:]) * np.inf
 
         for jdx, s in enumerate(saturated.T):
             if any(s):
@@ -235,10 +286,38 @@ def calculate_contamination(
             for jdx in range(tpf.shape[2]):
                 if np.nansum(pixels[:, idx, jdx]) == 0:
                     continue
+
+                # If we wanted a box smooth...
+                # lb1, lb2 = np.max([idx - 1, 0]), np.max([jdx - 1, 0])
+                # ub1, ub2 = np.min([idx + 2, pixels.shape[1]]), np.min(
+                #     [jdx + 2, pixels.shape[2]]
+                # )
+                #
+                # r.lc.flux = np.nansum(
+                #     pixels[:, lb1:ub1][:, :, lb2:ub2],
+                #     axis=(1, 2),
+                # )
+                # r.lc.flux_err = (
+                #     np.nansum((pixels_err[:, lb1:ub1][:, :, lb2:ub2] ** 2), axis=(1, 2))
+                #     ** 0.5
+                # )
+                # r.lc.flux_err /= np.nanmedian(r.lc.flux)
+                # r.lc.flux /= np.nanmedian(r.lc.flux)
+                # clc = r.correct(dm)
+
                 r.lc.flux = pixels[:, idx, jdx] / np.median(pixels[:, idx, jdx])
                 r.lc.flux_err = pixels_err[:, idx, jdx] / np.median(pixels[:, idx, jdx])
 
-                r.correct(dm)
+                if sff:
+                    # Do a first multiplicative correction
+                    _ = r.correct(sff_dm, cadence_mask=~t_mask)
+                    mlc = r.model_lc + np.median(r.lc.flux)
+                    mlc /= np.percentile(mlc.flux, 95)
+                    r.lc /= mlc
+                    r.lc = r.lc / np.median(r.lc.flux)
+
+                clc = r.correct(dm)
+
                 transit_pixels[idx, jdx] = r.coefficients[-1]
                 sigma_w_inv = X.T.dot(X / r.lc.flux_err[:, None] ** 2) + np.diag(
                     1 / dm.prior_sigma ** 2
@@ -246,6 +325,11 @@ def calculate_contamination(
                 transit_pixels_err[idx, jdx] = (
                     np.asarray(np.linalg.inv(sigma_w_inv)).diagonal()[-1] ** 0.5
                 )
+
+                # if transit_pixels[idx, jdx] / transit_pixels_err[idx, jdx] < -5:
+                #     import pdb
+                #
+                #     pdb.set_trace()
 
         for jdx, s in enumerate(saturated.T):
             if any(s):
@@ -258,6 +342,12 @@ def calculate_contamination(
             contaminant_aper = create_threshold_mask(
                 transit_pixels / transit_pixels_err, sigma
             )
+        if tpf.mission.lower() in ["k2", "ktwo"]:
+            # Ktwo is noisy so we have to make the aperture a bit bigger.
+            contaminant_aper |= (
+                np.asarray(np.gradient(contaminant_aper.astype(float))) != 0
+            ).any(axis=0)
+
         contaminated_lc = tpf.to_lightcurve(aperture_mask=contaminant_aper).normalize()
         r.lc = contaminated_lc
         contaminator = r.correct(dm1, cadence_mask=~t_mask)
@@ -433,9 +523,8 @@ def build_X(
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
             s = lk.correctors.SFFCorrector(lc)
-            _ = s.correct()
+            _ = s.correct(windows=windows, bins=bins, timescale=spline_period)
             centroids = s.dmc["sff"].X
-
     else:
         if np.nansum(r) == 0:
             ts0 = np.asarray([np.in1d(time, t) for t in np.array_split(time, breaks)])
@@ -461,6 +550,7 @@ def build_X(
                 warnings.simplefilter("ignore")
                 centroids = lk.correctors.DesignMatrix(centroids).split(list(breaks)).X
     A = csr_matrix(np.copy(centroids))
+
     if cbvs is not None:
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
@@ -477,13 +567,11 @@ def build_X(
             return hstack([A, np.atleast_2d(t_model).T]).tocsr()
         return A
 
-    SA = A.multiply(np.atleast_2d(flux).T).tocsr()
+    #    SA = A.multiply(np.atleast_2d(flux).T).tocsr()
     if t_model is not None:
-        SA = hstack(
-            [SA, np.atleast_2d(np.ones(len(time))).T, np.atleast_2d(t_model).T]
-        ).tocsr()
+        SA = hstack([A, np.atleast_2d(t_model).T]).tocsr()
     else:
-        SA = hstack([SA, np.atleast_2d(np.ones(len(time))).T]).tocsr()
+        SA = A.tocsr()
     return SA
 
 
