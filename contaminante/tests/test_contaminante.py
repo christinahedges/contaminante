@@ -55,4 +55,4 @@ def test_contaminante():
     res = contaminante.calculate_contamination(
         tpfc, 1000, t0, duration, plot=False, cbvs=True, sff=True
     )
-    assert (res[0]['transit_depth'] == 0).all()
+    assert (res[0]["transit_depth"] == 0).all()
