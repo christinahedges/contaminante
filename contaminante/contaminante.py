@@ -156,6 +156,25 @@ def calculate_contamination(
         r = lk.RegressionCorrector(lc.copy())
         target = r.correct(dm1, cadence_mask=~t_mask)
         stellar_lc = r.diagnostic_lightcurves["X"].flux
+
+        if t_mask.sum() == 0:
+            results.append(
+                _package_results(
+                    tpf,
+                    target=target,
+                    contaminator=target * 0,
+                    aper=aper,
+                    contaminant_aper=aper * False,
+                    transit_pixels=np.zeros(aper.shape),
+                    transit_pixels_err=np.inf * np.ones(aper.shape),
+                    period=period,
+                    t0=t0,
+                    duration=duration,
+                    plot=plot,
+                )
+            )
+            continue
+
         # Find a transit model
         bls = target.to_periodogram("bls", period=[period, period], duration=duration)
         t_model = (
