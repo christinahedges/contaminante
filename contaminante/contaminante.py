@@ -251,15 +251,21 @@ def calculate_contamination(
             dm = lk.SparseDesignMatrix(
                 X,
                 name="X",
-                prior_mu=np.hstack([np.zeros(X.shape[1] - 2), 1, depth]),
-                prior_sigma=np.hstack([np.ones(X.shape[1] - 2) * 1e4, 0.1, 0.1]),
+                prior_mu=np.hstack([np.zeros(X.shape[1] - 1), depth]),
+                prior_sigma=np.hstack([np.ones(X.shape[1] - 1) * 1e4, 0.1]),
+            )
+            dm_no_transit = lk.SparseDesignMatrix(
+                X[:, :-1],
+                name="X",
+                prior_mu=np.hstack([np.zeros(X.shape[1] - 1)]),
+                prior_sigma=np.hstack([np.ones(X.shape[1] - 1) * 1e4]),
             )
 
         model = np.zeros(tpf.flux.shape)
         model_err = np.zeros(tpf.flux.shape)
 
         # Hard coded saturation limit. Probably not ideal.
-        saturated = np.max(np.nan_to_num(tpf.flux.value), axis=0) > 1.4e5
+        saturated = np.percentile(np.nan_to_num(tpf.flux.value), 95, axis=0) > 1.5e5
         if saturated.any():
             dsat = np.gradient(saturated.astype(float), axis=0)
             if (~np.any(dsat == 0.5)) | (~np.any(dsat == -0.5)):
@@ -272,6 +278,7 @@ def calculate_contamination(
 
         transit_pixels = np.zeros(tpf.flux.shape[1:])
         transit_pixels_err = np.zeros(tpf.flux.shape[1:]) * np.inf
+        chi_ratio = np.zeros(tpf.flux.shape[1:]) * np.inf
 
         for jdx, s in enumerate(saturated.T):
             if any(s):
@@ -317,7 +324,6 @@ def calculate_contamination(
                     r.lc = r.lc / np.median(r.lc.flux)
 
                 clc = r.correct(dm)
-
                 transit_pixels[idx, jdx] = r.coefficients[-1]
                 sigma_w_inv = X.T.dot(X / r.lc.flux_err[:, None] ** 2) + np.diag(
                     1 / dm.prior_sigma ** 2
@@ -325,11 +331,6 @@ def calculate_contamination(
                 transit_pixels_err[idx, jdx] = (
                     np.asarray(np.linalg.inv(sigma_w_inv)).diagonal()[-1] ** 0.5
                 )
-
-                # if transit_pixels[idx, jdx] / transit_pixels_err[idx, jdx] < -5:
-                #     import pdb
-                #
-                #     pdb.set_trace()
 
         for jdx, s in enumerate(saturated.T):
             if any(s):
