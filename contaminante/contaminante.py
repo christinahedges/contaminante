@@ -68,7 +68,7 @@ def calculate_contamination(
     sff=False,
     windows=20,
     bins=5,
-    spline_period=0.75,
+    spline_period=1,
     **kwargs,
 ):
     """Calculate the contamination for a target

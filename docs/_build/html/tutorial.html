@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>How to use contaminante &#8212; contaminante 0.5.2 documentation</title>
+    <title>How to use contaminante &#8212; contaminante 0.5.5 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" src="_static/documentation_options.js"></script>
@@ -253,13 +253,25 @@ should take less than 5 minutes.</p>
 </div>
 <div class="stderr output_area docutils container">
 <div class="highlight"><pre>
-Modeling TPFs:   0%|          | 0/3 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:279: RuntimeWarning: invalid value encountered in true_divide
+Modeling TPFs:   0%|          | 0/3 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:280: RuntimeWarning: invalid value encountered in multiply
+  transit_pixels_err = np.zeros(tpf.flux.shape[1:]) * np.inf
+/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:281: RuntimeWarning: invalid value encountered in multiply
+  chi_ratio = np.zeros(tpf.flux.shape[1:]) * np.inf
+/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:405: RuntimeWarning: invalid value encountered in true_divide
   aper = create_threshold_mask(thumb / err, 3) &amp; aper
-Modeling TPFs:  33%|███▎      | 1/3 [00:06&lt;00:12,  6.13s/it]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:279: RuntimeWarning: invalid value encountered in true_divide
+Modeling TPFs:  33%|███▎      | 1/3 [00:06&lt;00:12,  6.38s/it]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:280: RuntimeWarning: invalid value encountered in multiply
+  transit_pixels_err = np.zeros(tpf.flux.shape[1:]) * np.inf
+/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:281: RuntimeWarning: invalid value encountered in multiply
+  chi_ratio = np.zeros(tpf.flux.shape[1:]) * np.inf
+/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:405: RuntimeWarning: invalid value encountered in true_divide
   aper = create_threshold_mask(thumb / err, 3) &amp; aper
-Modeling TPFs:  67%|██████▋   | 2/3 [00:11&lt;00:05,  5.81s/it]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:279: RuntimeWarning: invalid value encountered in true_divide
+Modeling TPFs:  67%|██████▋   | 2/3 [00:11&lt;00:05,  5.91s/it]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:280: RuntimeWarning: invalid value encountered in multiply
+  transit_pixels_err = np.zeros(tpf.flux.shape[1:]) * np.inf
+/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:281: RuntimeWarning: invalid value encountered in multiply
+  chi_ratio = np.zeros(tpf.flux.shape[1:]) * np.inf
+/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:405: RuntimeWarning: invalid value encountered in true_divide
   aper = create_threshold_mask(thumb / err, 3) &amp; aper
-Modeling TPFs: 100%|██████████| 3/3 [00:16&lt;00:00,  5.61s/it]
+Modeling TPFs: 100%|██████████| 3/3 [00:16&lt;00:00,  5.65s/it]
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -322,11 +334,19 @@ Below I run the parameters for <strong>Kepler-10</strong> through <code class="d
 </div>
 <div class="stderr output_area docutils container">
 <div class="highlight"><pre>
-Modeling TPFs:   0%|          | 0/2 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:279: RuntimeWarning: invalid value encountered in true_divide
+Modeling TPFs:   0%|          | 0/2 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:280: RuntimeWarning: invalid value encountered in multiply
+  transit_pixels_err = np.zeros(tpf.flux.shape[1:]) * np.inf
+/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:281: RuntimeWarning: invalid value encountered in multiply
+  chi_ratio = np.zeros(tpf.flux.shape[1:]) * np.inf
+/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:405: RuntimeWarning: invalid value encountered in true_divide
   aper = create_threshold_mask(thumb / err, 3) &amp; aper
-Modeling TPFs:  50%|█████     | 1/2 [00:07&lt;00:07,  7.96s/it]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:279: RuntimeWarning: invalid value encountered in true_divide
+Modeling TPFs:  50%|█████     | 1/2 [00:07&lt;00:07,  7.78s/it]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:280: RuntimeWarning: invalid value encountered in multiply
+  transit_pixels_err = np.zeros(tpf.flux.shape[1:]) * np.inf
+/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:281: RuntimeWarning: invalid value encountered in multiply
+  chi_ratio = np.zeros(tpf.flux.shape[1:]) * np.inf
+/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:405: RuntimeWarning: invalid value encountered in true_divide
   aper = create_threshold_mask(thumb / err, 3) &amp; aper
-Modeling TPFs: 100%|██████████| 2/2 [00:16&lt;00:00,  8.11s/it]
+Modeling TPFs: 100%|██████████| 2/2 [00:14&lt;00:00,  7.22s/it]
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -378,9 +398,13 @@ already been background corrected.</p>
 <div class="highlight"><pre>
 /Users/ch/.pyenv/versions/3.8.0/lib/python3.8/site-packages/lightkurve/search.py:346: LightkurveWarning: Warning: 2 files available to download. Only the first file has been downloaded. Please use `download_all()` or specify additional criteria (e.g. quarter, campaign, or sector) to limit your search.
   warnings.warn(
-Modeling TPFs:   0%|          | 0/1 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:476: RuntimeWarning: invalid value encountered in log10
+Modeling TPFs:   0%|          | 0/1 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:280: RuntimeWarning: invalid value encountered in multiply
+  transit_pixels_err = np.zeros(tpf.flux.shape[1:]) * np.inf
+/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:281: RuntimeWarning: invalid value encountered in multiply
+  chi_ratio = np.zeros(tpf.flux.shape[1:]) * np.inf
+/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:600: RuntimeWarning: invalid value encountered in log10
   np.log10(np.nanmedian(np.nan_to_num(tpf.flux.value), axis=0)),
-Modeling TPFs: 100%|██████████| 1/1 [00:53&lt;00:00, 53.96s/it]
+Modeling TPFs: 100%|██████████| 1/1 [00:43&lt;00:00, 43.89s/it]
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -483,13 +507,25 @@ slightly too small.</p>
 </div>
 <div class="stderr output_area docutils container">
 <div class="highlight"><pre>
-Modeling TPFs:   0%|          | 0/3 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:279: RuntimeWarning: invalid value encountered in true_divide
+Modeling TPFs:   0%|          | 0/3 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:280: RuntimeWarning: invalid value encountered in multiply
+  transit_pixels_err = np.zeros(tpf.flux.shape[1:]) * np.inf
+/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:281: RuntimeWarning: invalid value encountered in multiply
+  chi_ratio = np.zeros(tpf.flux.shape[1:]) * np.inf
+/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:405: RuntimeWarning: invalid value encountered in true_divide
   aper = create_threshold_mask(thumb / err, 3) &amp; aper
-Modeling TPFs:  33%|███▎      | 1/3 [00:09&lt;00:18,  9.49s/it]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:279: RuntimeWarning: invalid value encountered in true_divide
+Modeling TPFs:  33%|███▎      | 1/3 [00:17&lt;00:35, 17.91s/it]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:280: RuntimeWarning: invalid value encountered in multiply
+  transit_pixels_err = np.zeros(tpf.flux.shape[1:]) * np.inf
+/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:281: RuntimeWarning: invalid value encountered in multiply
+  chi_ratio = np.zeros(tpf.flux.shape[1:]) * np.inf
+/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:405: RuntimeWarning: invalid value encountered in true_divide
   aper = create_threshold_mask(thumb / err, 3) &amp; aper
-Modeling TPFs:  67%|██████▋   | 2/3 [00:24&lt;00:12, 12.62s/it]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:279: RuntimeWarning: invalid value encountered in true_divide
+Modeling TPFs:  67%|██████▋   | 2/3 [00:44&lt;00:22, 22.89s/it]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:280: RuntimeWarning: invalid value encountered in multiply
+  transit_pixels_err = np.zeros(tpf.flux.shape[1:]) * np.inf
+/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:281: RuntimeWarning: invalid value encountered in multiply
+  chi_ratio = np.zeros(tpf.flux.shape[1:]) * np.inf
+/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:405: RuntimeWarning: invalid value encountered in true_divide
   aper = create_threshold_mask(thumb / err, 3) &amp; aper
-Modeling TPFs: 100%|██████████| 3/3 [00:31&lt;00:00, 10.67s/it]
+Modeling TPFs: 100%|██████████| 3/3 [00:57&lt;00:00, 19.23s/it]
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -515,16 +551,24 @@ Modeling TPFs: 100%|██████████| 3/3 [00:31&lt;00:00, 10.67s/
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [9]:
+<span></span>In [59]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">tpfs</span> <span class="o">=</span> <span class="n">lk</span><span class="o">.</span><span class="n">search_targetpixelfile</span><span class="p">(</span><span class="s2">&quot;EPIC 201127519&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">download_all</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]</span>
+<span></span><span class="n">tpf</span> <span class="o">=</span> <span class="n">lk</span><span class="o">.</span><span class="n">search_targetpixelfile</span><span class="p">(</span><span class="s2">&quot;EPIC 201127519&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">download_all</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
 <span class="n">period</span> <span class="o">=</span> <span class="mf">6.178369</span>
 <span class="n">t0</span> <span class="o">=</span> <span class="mf">2457585.55131</span> <span class="o">-</span> <span class="mi">2454833</span>
 <span class="n">duration</span> <span class="o">=</span> <span class="mf">0.1</span>
 
-<span class="n">result</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">calculate_contamination</span><span class="p">(</span><span class="n">tpfs</span><span class="p">,</span> <span class="n">period</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sff</span><span class="o">=</span><span class="kc">True</span><span class="p">);</span>
+
+<span class="c1"># Part of the TPF is saturated from an unrelated star.</span>
+<span class="c1"># This interferes with our result.</span>
+<span class="c1"># We can multiply the TPF by a mask of 0s and 1s to remove this</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="n">saturation_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">tpf</span><span class="o">.</span><span class="n">flux</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+<span class="n">saturation_mask</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">:]</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">calculate_contamination</span><span class="p">(</span><span class="n">tpf</span><span class="p">[</span><span class="mi">400</span><span class="p">:]</span> <span class="o">*</span> <span class="n">saturation_mask</span><span class="p">,</span> <span class="n">period</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">spline_period</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">sff</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">10</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
@@ -534,9 +578,14 @@ Modeling TPFs: 100%|██████████| 3/3 [00:31&lt;00:00, 10.67s/
 <div class="stderr output_area docutils container">
 <div class="highlight"><pre>
 Warning: 25% (854/3384) of the cadences will be ignored due to the quality mask (quality_bitmask=1130799).
-Modeling TPFs:   0%|          | 0/1 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:279: RuntimeWarning: invalid value encountered in true_divide
+WARNING:lightkurve.utils:Warning: 25% (854/3384) of the cadences will be ignored due to the quality mask (quality_bitmask=1130799).
+Modeling TPFs:   0%|          | 0/1 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:280: RuntimeWarning: invalid value encountered in multiply
+  transit_pixels_err = np.zeros(tpf.flux.shape[1:]) * np.inf
+/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:281: RuntimeWarning: invalid value encountered in multiply
+  chi_ratio = np.zeros(tpf.flux.shape[1:]) * np.inf
+/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:405: RuntimeWarning: invalid value encountered in true_divide
   aper = create_threshold_mask(thumb / err, 3) &amp; aper
-Modeling TPFs: 100%|██████████| 1/1 [00:09&lt;00:00,  9.70s/it]
+Modeling TPFs: 100%|██████████| 1/1 [00:19&lt;00:00, 19.34s/it]
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -567,9 +616,13 @@ targets, but especially for K2 this can be quite hard.</p>
 </div>
 <div class="stderr output_area docutils container">
 <div class="highlight"><pre>
-Modeling TPFs:   0%|          | 0/1 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:279: RuntimeWarning: invalid value encountered in true_divide
+Modeling TPFs:   0%|          | 0/1 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:280: RuntimeWarning: invalid value encountered in multiply
+  transit_pixels_err = np.zeros(tpf.flux.shape[1:]) * np.inf
+/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:281: RuntimeWarning: invalid value encountered in multiply
+  chi_ratio = np.zeros(tpf.flux.shape[1:]) * np.inf
+/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:405: RuntimeWarning: invalid value encountered in true_divide
   aper = create_threshold_mask(thumb / err, 3) &amp; aper
-Modeling TPFs: 100%|██████████| 1/1 [00:18&lt;00:00, 18.66s/it]
+Modeling TPFs: 100%|██████████| 1/1 [00:50&lt;00:00, 50.62s/it]
 </pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
@@ -581,7 +634,7 @@ Modeling TPFs: 100%|██████████| 1/1 [00:18&lt;00:00, 18.66s/
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [11]:
+<span></span>In [17]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -589,7 +642,7 @@ Modeling TPFs: 100%|██████████| 1/1 [00:18&lt;00:00, 18.66s/
 <span class="n">period</span> <span class="o">=</span> <span class="mf">2.29016</span>
 <span class="n">t0</span> <span class="o">=</span> <span class="mf">2457065.1444</span> <span class="o">-</span> <span class="mi">2454833</span>
 <span class="n">duration</span> <span class="o">=</span> <span class="mf">0.1204</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">calculate_contamination</span><span class="p">(</span><span class="n">tpfs</span><span class="p">,</span> <span class="n">period</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sff</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">windows</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">spline_period</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">cbvs</span><span class="o">=</span><span class="kc">True</span><span class="p">);</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">ct</span><span class="o">.</span><span class="n">calculate_contamination</span><span class="p">(</span><span class="n">tpfs</span><span class="p">,</span> <span class="n">period</span><span class="p">,</span> <span class="n">t0</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sff</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">windows</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">spline_period</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">cbvs</span><span class="o">=</span><span class="kc">True</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
@@ -598,9 +651,37 @@ Modeling TPFs: 100%|██████████| 1/1 [00:18&lt;00:00, 18.66s/
 </div>
 <div class="stderr output_area docutils container">
 <div class="highlight"><pre>
-Modeling TPFs:   0%|          | 0/3 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:279: RuntimeWarning: invalid value encountered in true_divide
+Modeling TPFs:   0%|          | 0/3 [00:00&lt;?, ?it/s]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:280: RuntimeWarning: invalid value encountered in multiply
+  transit_pixels_err = np.zeros(tpf.flux.shape[1:]) * np.inf
+/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:281: RuntimeWarning: invalid value encountered in multiply
+  chi_ratio = np.zeros(tpf.flux.shape[1:]) * np.inf
+/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:405: RuntimeWarning: invalid value encountered in true_divide
   aper = create_threshold_mask(thumb / err, 3) &amp; aper
-Modeling TPFs:  33%|███▎      | 1/3 [00:15&lt;00:31, 15.63s/it]Warning: aperture mask contains zero pixels.
+Modeling TPFs:  33%|███▎      | 1/3 [00:29&lt;00:59, 29.65s/it]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:280: RuntimeWarning: invalid value encountered in multiply
+  transit_pixels_err = np.zeros(tpf.flux.shape[1:]) * np.inf
+/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:281: RuntimeWarning: invalid value encountered in multiply
+  chi_ratio = np.zeros(tpf.flux.shape[1:]) * np.inf
+/Users/ch/.pyenv/versions/3.8.0/lib/python3.8/site-packages/lightkurve/lightcurve.py:545: RuntimeWarning: divide by zero encountered in true_divide
+  self.flux_err / self.flux, other.flux_err / other.flux
+/Users/ch/.pyenv/versions/3.8.0/lib/python3.8/site-packages/astropy/units/quantity.py:479: RuntimeWarning: invalid value encountered in multiply
+  result = super().__array_ufunc__(function, method, *arrays, **kwargs)
+WARNING: Input data contains invalid values (NaNs or infs), which were automatically clipped. [astropy.stats.sigma_clipping]
+/Users/ch/.pyenv/versions/3.8.0/lib/python3.8/site-packages/lightkurve/lightcurve.py:545: RuntimeWarning: divide by zero encountered in true_divide
+  self.flux_err / self.flux, other.flux_err / other.flux
+/Users/ch/.pyenv/versions/3.8.0/lib/python3.8/site-packages/astropy/units/quantity.py:479: RuntimeWarning: invalid value encountered in multiply
+  result = super().__array_ufunc__(function, method, *arrays, **kwargs)
+WARNING: Input data contains invalid values (NaNs or infs), which were automatically clipped. [astropy.stats.sigma_clipping]
+/Users/ch/.pyenv/versions/3.8.0/lib/python3.8/site-packages/lightkurve/lightcurve.py:545: RuntimeWarning: divide by zero encountered in true_divide
+  self.flux_err / self.flux, other.flux_err / other.flux
+/Users/ch/.pyenv/versions/3.8.0/lib/python3.8/site-packages/astropy/units/quantity.py:479: RuntimeWarning: invalid value encountered in multiply
+  result = super().__array_ufunc__(function, method, *arrays, **kwargs)
+WARNING: Input data contains invalid values (NaNs or infs), which were automatically clipped. [astropy.stats.sigma_clipping]
+/Users/ch/.pyenv/versions/3.8.0/lib/python3.8/site-packages/lightkurve/lightcurve.py:545: RuntimeWarning: divide by zero encountered in true_divide
+  self.flux_err / self.flux, other.flux_err / other.flux
+/Users/ch/.pyenv/versions/3.8.0/lib/python3.8/site-packages/astropy/units/quantity.py:479: RuntimeWarning: invalid value encountered in multiply
+  result = super().__array_ufunc__(function, method, *arrays, **kwargs)
+WARNING: Input data contains invalid values (NaNs or infs), which were automatically clipped. [astropy.stats.sigma_clipping]
+Warning: aperture mask contains zero pixels.
 /Users/ch/.pyenv/versions/3.8.0/lib/python3.8/site-packages/numpy/lib/nanfunctions.py:1113: RuntimeWarning: All-NaN slice encountered
   r, k = function_base._ureduce(a, func=_nanmedian, axis=axis, out=out,
 &lt;__array_function__ internals&gt;:5: RuntimeWarning: Degrees of freedom &lt;= 0 for slice.
@@ -609,9 +690,13 @@ WARNING: Input data contains invalid values (NaNs or infs), which were automatic
 WARNING: Input data contains invalid values (NaNs or infs), which were automatically clipped. [astropy.stats.sigma_clipping]
 WARNING: Input data contains invalid values (NaNs or infs), which were automatically clipped. [astropy.stats.sigma_clipping]
 WARNING: Input data contains invalid values (NaNs or infs), which were automatically clipped. [astropy.stats.sigma_clipping]
-/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:476: RuntimeWarning: invalid value encountered in log10
+/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:600: RuntimeWarning: invalid value encountered in log10
   np.log10(np.nanmedian(np.nan_to_num(tpf.flux.value), axis=0)),
-Modeling TPFs:  67%|██████▋   | 2/3 [00:53&lt;00:28, 28.49s/it]Warning: aperture mask contains zero pixels.
+Modeling TPFs:  67%|██████▋   | 2/3 [01:34&lt;00:50, 50.34s/it]/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:280: RuntimeWarning: invalid value encountered in multiply
+  transit_pixels_err = np.zeros(tpf.flux.shape[1:]) * np.inf
+/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:281: RuntimeWarning: invalid value encountered in multiply
+  chi_ratio = np.zeros(tpf.flux.shape[1:]) * np.inf
+Warning: aperture mask contains zero pixels.
 /Users/ch/.pyenv/versions/3.8.0/lib/python3.8/site-packages/numpy/lib/nanfunctions.py:1113: RuntimeWarning: All-NaN slice encountered
   r, k = function_base._ureduce(a, func=_nanmedian, axis=axis, out=out,
 &lt;__array_function__ internals&gt;:5: RuntimeWarning: Degrees of freedom &lt;= 0 for slice.
@@ -620,9 +705,9 @@ WARNING: Input data contains invalid values (NaNs or infs), which were automatic
 WARNING: Input data contains invalid values (NaNs or infs), which were automatically clipped. [astropy.stats.sigma_clipping]
 WARNING: Input data contains invalid values (NaNs or infs), which were automatically clipped. [astropy.stats.sigma_clipping]
 WARNING: Input data contains invalid values (NaNs or infs), which were automatically clipped. [astropy.stats.sigma_clipping]
-/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:476: RuntimeWarning: invalid value encountered in log10
+/Users/ch/K2/projects/contaminante/contaminante/contaminante.py:600: RuntimeWarning: invalid value encountered in log10
   np.log10(np.nanmedian(np.nan_to_num(tpf.flux.value), axis=0)),
-Modeling TPFs: 100%|██████████| 3/3 [00:59&lt;00:00, 19.76s/it]
+Modeling TPFs: 100%|██████████| 3/3 [01:45&lt;00:00, 35.06s/it]
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -650,7 +735,7 @@ Modeling TPFs: 100%|██████████| 3/3 [00:59&lt;00:00, 19.76s/
 the pipeline aperture:</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>In [12]:
+<span></span>In [18]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -662,7 +747,7 @@ the pipeline aperture:</p>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre>
-<span></span>Out[12]:
+<span></span>Out[18]:
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
