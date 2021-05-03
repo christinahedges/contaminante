@@ -405,7 +405,7 @@ def _package_results(
             aper = create_threshold_mask(thumb / err, 3) & aper
             cxs, cys = [], []
             for count in range(500):
-                w = np.random.normal(loc=thumb[aper], scale=err[aper])
+                w = np.random.normal(loc=np.abs(thumb[aper]), scale=err[aper])
                 cxs.append(np.average(X[aper], weights=w))
                 cys.append(np.average(Y[aper], weights=w))
             cxs, cys = np.asarray(cxs), np.asarray(cys)
@@ -699,7 +699,7 @@ def create_threshold_mask(thumb, threshold=3, reference_pixel="max"):
         reference_pixel = (reference_pixel[1][0], reference_pixel[0][0])
     vals = thumb[np.isfinite(thumb)].flatten()
     # Create a mask containing the pixels above the threshold flux
-    threshold_mask = np.nan_to_num(thumb) >= threshold
+    threshold_mask = np.abs(np.nan_to_num(thumb)) >= threshold
     if (reference_pixel is None) or (not threshold_mask.any()):
         # return all regions above threshold
         return threshold_mask
