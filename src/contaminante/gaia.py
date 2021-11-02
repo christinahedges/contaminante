@@ -55,7 +55,7 @@ def get_gaia(tpf, magnitude_limit=18):
 
 
 def plot_gaia(tpfs, ax=None, color="lime", magnitude_limit=20):
-    """ Plot the Gaia sources in TPFs, including their space motion. """
+    """Plot the Gaia sources in TPFs, including their space motion."""
     cs = get_gaia(tpfs[0], magnitude_limit=magnitude_limit)
     if ax is None:
         _, ax = plt.subplots()

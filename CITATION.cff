@@ -1,0 +1,22 @@
+# YAML 1.2
+---
+authors:
+  -
+    family-names: Hedges
+    given-names: Christina
+    orcid: "https://orcid.org/0000-0002-3385-8391"
+    family-names: Saunders
+    given-names: Nicholas
+    orcid: "https://orcid.org/0000-0003-2657-3889"
+    family-names: Martínez-Palomera
+    given-names: Jorge
+    orcid: "https://orcid.org/0000-0002-7395-4935"
+cff-version: "1.1.0"
+date-released: 2021-11-2
+doi: ""
+license: MIT
+message: "If you use this software, please cite it using these metadata."
+repository-code: "https://github.com/christinahedges/contaminante"
+title: contaminante
+version: "v0.5.6"
+...
