@@ -1445,7 +1445,7 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 
 [[package]]
 name = "vetting"
-version = "0.1.9"
+version = "0.2"
 description = "Simple, stand-alone vetting tools for transiting signals in Keper, K2 and TESS data"
 category = "dev"
 optional = false
@@ -1498,7 +1498,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8,<3.10"
-content-hash = "fba20a06ae37df6c4f979ebc5618f9a97e067c95543f46480b8d0fcf4afa7390"
+content-hash = "1d84c535e9b8a84350cbf909e0deb20b2ae2c96ee0560fd8df7e74c944331679"
 
 [metadata.files]
 anyio = [
@@ -2500,8 +2500,8 @@ urllib3 = [
     {file = "urllib3-1.26.7.tar.gz", hash = "sha256:4987c65554f7a2dbf30c18fd48778ef124af6fab771a377103da0585e2336ece"},
 ]
 vetting = [
-    {file = "vetting-0.1.9-py3-none-any.whl", hash = "sha256:066a4489a31cdc4a71aa0f5e76f13f9d64a83049372f0e8cdc877b79856d8e67"},
-    {file = "vetting-0.1.9.tar.gz", hash = "sha256:0b74dc84d1077cea2acd8f36439e0f8e6dc413cb76408c80e02da3965d50ec30"},
+    {file = "vetting-0.2-py3-none-any.whl", hash = "sha256:86d8fb1aa3911e972aae850983a69c3e9b816be8526cd82df20b7970ae9f0bfe"},
+    {file = "vetting-0.2.tar.gz", hash = "sha256:91caa8f7b533b158795c3aef56f401bbf69685c5899784dda67ab9f12e268481"},
 ]
 wcwidth = [
     {file = "wcwidth-0.2.5-py2.py3-none-any.whl", hash = "sha256:beb4802a9cebb9144e99086eff703a642a13d6a0052920003a230f3294bbe784"},

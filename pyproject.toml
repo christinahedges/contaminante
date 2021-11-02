@@ -18,8 +18,8 @@ lightkurve = "^2.0.11"
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
 jupyterlab = "^3.2.1"
-vetting = "^0.1.9"
 black = "^21.10b0"
+vetting = "^0.2"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
