@@ -33,30 +33,6 @@ def _label(tpf):
         return "{tpf.to_lightcurve().label}"
 
 
-#
-# class TargetPixelFileCollection(TPFC):
-#     def __init__(self, tpfs):
-#         """This is an instance of a `lk.TargetPixelFileCollection`, with the additional
-#         method `calculate_contamination`. It's only purpose is to add the functionality to calculate contamination."""
-#         if isinstance(tpfs, (list, TPFC)):
-#             super().__init__(tpfs)
-#         elif isinstance(tpfs, TPF):
-#             super().__init__([tpfs])
-#         else:
-#             raise ValueError(
-#                 "please pass `lk.TargetPixelFile` or `lk.TargetPixelFileCollection`"
-#             )
-#
-#         # remove nans
-#         for idx, tpf in enumerate(self):
-#             aper = tpf.pipeline_mask
-#             if not (aper.any()):
-#                 aper = tpf.create_threshold_mask()
-#             mask = (np.abs((tpf.pos_corr1)) < 10) & ((np.gradient(tpf.pos_corr2)) < 10)
-#             mask &= np.nan_to_num(tpf.to_lightcurve(aperture_mask=aper).flux) != 0
-#             self[idx] = self[idx][mask]
-
-
 def calculate_contamination(
     tpfs,
     period,
@@ -294,24 +270,6 @@ def calculate_contamination(
                 if np.nansum(pixels[:, idx, jdx]) == 0:
                     continue
 
-                # If we wanted a box smooth...
-                # lb1, lb2 = np.max([idx - 1, 0]), np.max([jdx - 1, 0])
-                # ub1, ub2 = np.min([idx + 2, pixels.shape[1]]), np.min(
-                #     [jdx + 2, pixels.shape[2]]
-                # )
-                #
-                # r.lc.flux = np.nansum(
-                #     pixels[:, lb1:ub1][:, :, lb2:ub2],
-                #     axis=(1, 2),
-                # )
-                # r.lc.flux_err = (
-                #     np.nansum((pixels_err[:, lb1:ub1][:, :, lb2:ub2] ** 2), axis=(1, 2))
-                #     ** 0.5
-                # )
-                # r.lc.flux_err /= np.nanmedian(r.lc.flux)
-                # r.lc.flux /= np.nanmedian(r.lc.flux)
-                # clc = r.correct(dm)
-
                 r.lc.flux = pixels[:, idx, jdx] / np.median(pixels[:, idx, jdx])
                 r.lc.flux_err = pixels_err[:, idx, jdx] / np.median(pixels[:, idx, jdx])
 
@@ -385,17 +343,6 @@ def _package_results(
     plot=False,
 ):
     """Helper function for packaging up results"""
-
-    # def get_coords(thumb, err, aper, count=400):
-    #     Y, X = np.mgrid[: tpf.shape[1], : tpf.shape[2]]
-    #     cxs, cys = [], []
-    #     for count in range(count):
-    #         err1 = np.random.normal(0, err[aper])
-    #         cxs.append(np.average(X[aper], weights=thumb[aper] + err1))
-    #         cys.append(np.average(Y[aper], weights=thumb[aper] + err1))
-    #     cxs, cys = np.asarray(cxs), np.asarray(cys)
-    #     cras, cdecs = tpf.wcs.wcs_pix2world(np.asarray([cxs, cys]).T, 1).T
-    #     return cras, cdecs
 
     def get_coords(thumb, err, aper=None):
         if aper is None:
