@@ -1,0 +1,38 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: Hedges
+  given-names: Christina
+  orcid: "https://orcid.org/0000-0002-3385-8391"
+- family-names: Saunders
+  given-names: Nicholas
+  orcid: "https://orcid.org/0000-0003-2657-3889"
+- family-names: Martínez-Palomera
+  given-names: Jorge
+  orcid: "https://orcid.org/0000-0002-7395-4935"
+title: "contaminante"
+version: 0.5.6
+doi: 10.3847/2515-5172/ac3765
+date-released: 2021-11-2
+url: "https://github.com/christinahedges/contaminante"
+preferred-citation:
+  type: article
+  authors:
+  - family-names: Hedges
+    given-names: Christina
+    orcid: "https://orcid.org/0000-0002-3385-8391"
+  - family-names: Saunders
+    given-names: Nicholas
+    orcid: "https://orcid.org/0000-0003-2657-3889"
+  - family-names: Martínez-Palomera
+    given-names: Jorge
+    orcid: "https://orcid.org/0000-0002-7395-4935"
+  doi: 10.3847/2515-5172/ac3765
+  journal: "Research Notes of the American Astronomical Society"
+  month: 11
+  start: 260 # First page number
+  end: 261 # Last page number
+  title: "Contaminante: A Tool for Automatically Finding a Close-to-optimal Aperture for Transiting Signals in Kepler, K2, and TESS Data"
+  issue: 11
+  volume: 5
+  year: 2021

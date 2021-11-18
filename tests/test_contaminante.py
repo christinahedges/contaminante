@@ -1,11 +1,22 @@
+import os
+
+import lightkurve as lk
+import matplotlib.pyplot as plt
 import pytest
 import numpy as np
-import lightkurve as lk
-from .. import contaminante
+
+import contaminante
 from astropy.utils.data import get_pkg_data_filename
 
-
 fname = get_pkg_data_filename("data/test.fits")
+
+
+def is_action():
+    try:
+        ga = os.environ["GITHUB_ACTIONS"]
+        return True
+    except KeyError:
+        return False
 
 
 def pytest_runtest_setup(item):
