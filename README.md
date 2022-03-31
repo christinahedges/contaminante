@@ -41,7 +41,7 @@ You can also install `contaminante` by cloning this repo:
 ```
 git clone https://github.com/christinahedges/contaminante
 cd contaminante
-python setup.py install
+python -m pip install .
 ```
 
 ### Help, I can't install `contaminante`!
@@ -51,4 +51,4 @@ You might not be able to install `contaminante` because your computer doesn't su
 
 ## Dependencies
 
-`contaminante` uses the most up to date version of [`lightkurve`](https://github.com/keplerGO/lightkurve), and uses some of the features available in v2.0. Make sure your `lightkurve` installation is up to date before using contaminante.
+`contaminante` uses the most up to date version of [`lightkurve`](https://github.com/lightkurve/lightkurve), and uses some of the features available in v2.0. Make sure your `lightkurve` installation is up to date before using contaminante.
