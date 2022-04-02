@@ -567,8 +567,8 @@ def _make_plot(tpf, res):
                 np.hstack(res["contaminator_ra"]),
                 np.hstack(res["contaminator_dec"]),
                 c="r",
-                marker=".",
-                s=13,
+                marker="+",
+                s=40,
                 label="Center of Transit Pixels",
                 zorder=10,
             )
