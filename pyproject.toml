@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "contaminante"
-version = "0.5.6"
+version = "0.5.7"
 description = "A package to help find the contaminant transiting source in NASA's *Kepler*, *K2* or *TESS* data."
 authors = ["Christina Hedges <christina.l.hedges@nasa.gov>"]
 license = "MIT"

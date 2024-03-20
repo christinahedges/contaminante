@@ -525,97 +525,96 @@ def build_X(
 
 def _make_plot(tpf, res):
     """Helper function for making a plot of contamination results"""
-    with plt.style.context("seaborn-white"):
-        fig = plt.figure(figsize=(17, 3.5))
-        ax = plt.subplot2grid((1, 4), (0, 0))
-        ax.set_title(_label(tpf))
+    fig = plt.figure(figsize=(17, 3.5))
+    ax = plt.subplot2grid((1, 4), (0, 0))
+    ax.set_title(_label(tpf))
 
-        if tpf.mission.lower() == "tess":
-            pix = 27 * u.arcsec.to(u.deg)
-        elif tpf.mission.lower() in ["kepler", "ktwo", "k2"]:
-            pix = 4 * u.arcsec.to(u.deg)
-        else:
-            pix = 0
+    if tpf.mission.lower() == "tess":
+        pix = 27 * u.arcsec.to(u.deg)
+    elif tpf.mission.lower() in ["kepler", "ktwo", "k2"]:
+        pix = 4 * u.arcsec.to(u.deg)
+    else:
+        pix = 0
 
-        xlim = [1e10, -1e10]
-        ylim = [1e10, -1e10]
-        ra, dec = np.asarray(np.median(tpf.get_coordinates(), axis=1))
-        with np.errstate(divide="ignore"):
-            ax.pcolormesh(
-                ra,
-                dec,
-                np.log10(np.nanmedian(np.nan_to_num(tpf.flux.value), axis=0)),
-                cmap="Greys_r",
-                shading="auto",
-            )
-        xlim[0] = np.min([np.percentile(ra, 1) - pix, xlim[0]])
-        xlim[1] = np.max([np.percentile(ra, 99) + pix, xlim[1]])
-        ylim[0] = np.min([np.percentile(dec, 1) - pix, ylim[0]])
-        ylim[1] = np.max([np.percentile(dec, 99) + pix, ylim[1]])
-        #        import pdb;pdb.set_trace()
+    xlim = [1e10, -1e10]
+    ylim = [1e10, -1e10]
+    ra, dec = np.asarray(np.median(tpf.get_coordinates(), axis=1))
+    with np.errstate(divide="ignore"):
+        ax.pcolormesh(
+            ra,
+            dec,
+            np.log10(np.nanmedian(np.nan_to_num(tpf.flux.value), axis=0)),
+            cmap="Greys_r",
+            shading="auto",
+        )
+    xlim[0] = np.min([np.percentile(ra, 1) - pix, xlim[0]])
+    xlim[1] = np.max([np.percentile(ra, 99) + pix, xlim[1]])
+    ylim[0] = np.min([np.percentile(dec, 1) - pix, ylim[0]])
+    ylim[1] = np.max([np.percentile(dec, 99) + pix, ylim[1]])
+    #        import pdb;pdb.set_trace()
+    ax.scatter(
+        np.hstack(res["target_ra"]),
+        np.hstack(res["target_dec"]),
+        c="C0",
+        marker=".",
+        s=10,
+        label="Center of Pipeline Aperture",
+        zorder=11,
+    )
+    if "contaminator_ra" in res.keys():
         ax.scatter(
-            np.hstack(res["target_ra"]),
-            np.hstack(res["target_dec"]),
-            c="C0",
+            np.hstack(res["contaminator_ra"]),
+            np.hstack(res["contaminator_dec"]),
+            c="r",
             marker=".",
-            s=10,
-            label="Center of Pipeline Aperture",
-            zorder=11,
+            s=13,
+            label="Center of Transit Pixels",
+            zorder=10,
         )
-        if "contaminator_ra" in res.keys():
-            ax.scatter(
-                np.hstack(res["contaminator_ra"]),
-                np.hstack(res["contaminator_dec"]),
-                c="r",
-                marker=".",
-                s=13,
-                label="Center of Transit Pixels",
-                zorder=10,
-            )
-        ax.legend(frameon=True)
-        ax.set_xlim(*xlim)
-        ax.set_ylim(*ylim)
-        if tpf.mission.lower() == "tess":
-            scalebar = AnchoredSizeBar(
-                ax.transData,
-                27 * u.arcsec.to(u.deg),
-                "27 arcsec",
-                "lower center",
-                pad=0.1,
-                color="black",
-                frameon=False,
-                size_vertical=27 / 100 * u.arcsec.to(u.deg),
-            )
-        else:
-            scalebar = AnchoredSizeBar(
-                ax.transData,
-                4 * u.arcsec.to(u.deg),
-                "4 arcsec",
-                "lower center",
-                pad=0.1,
-                color="black",
-                frameon=False,
-                size_vertical=4 / 100 * u.arcsec.to(u.deg),
-            )
-
-        ax.add_artist(scalebar)
-        ax.set_xlabel("RA [deg]")
-        ax.set_ylabel("Dec [deg]")
-
-        ax = plt.subplot2grid((1, 4), (0, 1), colspan=3)
-        period, t0 = res["period"], res["t0"]
-        ax.set_title(_label(tpf) + f" Period: {period}d, T0: {t0}")
-        res["target_lc"].fold(period, t0).errorbar(
-            c="C0", label="Target", ax=ax, marker=".", markersize=2
+    ax.legend(frameon=True)
+    ax.set_xlim(*xlim)
+    ax.set_ylim(*ylim)
+    if tpf.mission.lower() == "tess":
+        scalebar = AnchoredSizeBar(
+            ax.transData,
+            27 * u.arcsec.to(u.deg),
+            "27 arcsec",
+            "lower center",
+            pad=0.1,
+            color="black",
+            frameon=False,
+            size_vertical=27 / 100 * u.arcsec.to(u.deg),
         )
-        if "contaminator_lc" in res.keys():
-            res["contaminator_lc"].fold(period, t0).errorbar(
-                ax=ax,
-                c="r",
-                marker=".",
-                label="Source of Transit",
-                markersize=2,
-            )
+    else:
+        scalebar = AnchoredSizeBar(
+            ax.transData,
+            4 * u.arcsec.to(u.deg),
+            "4 arcsec",
+            "lower center",
+            pad=0.1,
+            color="black",
+            frameon=False,
+            size_vertical=4 / 100 * u.arcsec.to(u.deg),
+        )
+
+    ax.add_artist(scalebar)
+    ax.set_xlabel("RA [deg]")
+    ax.set_ylabel("Dec [deg]")
+
+    ax = plt.subplot2grid((1, 4), (0, 1), colspan=3)
+    period, t0 = res["period"], res["t0"]
+    ax.set_title(_label(tpf) + f" Period: {period}d, T0: {t0}")
+    res["target_lc"].fold(period, t0).errorbar(
+        c="C0", label="Target", ax=ax, marker=".", markersize=2
+    )
+    if "contaminator_lc" in res.keys():
+        res["contaminator_lc"].fold(period, t0).errorbar(
+            ax=ax,
+            c="r",
+            marker=".",
+            label="Source of Transit",
+            markersize=2,
+        )
     return fig
 
 
